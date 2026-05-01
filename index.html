@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIÈRE — Premium Human Hair Wigs</title>
+<meta name="description" content="Hand-crafted, ethically-sourced human hair wigs. Worldwide shipping.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 公告条 -->
+<div class="announcement">
+  <span>✦  Free Worldwide Shipping on Orders Over $199  ✦  30-Day Returns  ✦</span>
+</div>
+
+<!-- 导航 -->
+<header class="header">
+  <nav class="nav container">
+    <a href="#" class="logo" onclick="showPage('home'); return false;">
+      <span class="logo-mark">L</span>
+      <span class="logo-text">LUMIÈRE</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('home'); return false;">Home</a></li>
+      <li><a href="#" onclick="showPage('shop'); return false;">Shop All</a></li>
+      <li><a href="#" onclick="showPage('about'); return false;">Our Story</a></li>
+      <li><a href="#" onclick="showPage('contact'); return false;">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="toggleCart()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 3h2l2.4 12.5a2 2 0 002 1.5h9.7a2 2 0 002-1.6L23 6H6"/>
+          <circle cx="9" cy="21" r="1.5"/>
+          <circle cx="18" cy="21" r="1.5"/>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- 首页 -->
+<main id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content container">
+      <p class="hero-eyebrow">— Est. 2025 · Crafted by hand —</p>
+      <h1 class="hero-title">Hair that<br><em>becomes you.</em></h1>
+      <p class="hero-sub">Premium human hair wigs, hand-tied by master artisans. Undetectable lace, lasting comfort, effortless confidence.</p>
+      <button class="btn-primary" onclick="showPage('shop')">Explore the Collection →</button>
+    </div>
+    <div class="hero-decor">
+      <span class="decor-line"></span>
+      <span class="decor-text">No. 01 — The Atelier</span>
+    </div>
+  </section>
+
+  <section class="features container">
+    <div class="feature">
+      <div class="feature-num">01</div>
+      <h3>100% Virgin Hair</h3>
+      <p>Ethically sourced. Never chemically treated. Soft to the touch, healthy at the root.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-num">02</div>
+      <h3>HD Swiss Lace</h3>
+      <p>Melts seamlessly into every skin tone. Truly invisible, even up close.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-num">03</div>
+      <h3>Made to Last</h3>
+      <p>With proper care, our wigs hold their shape and shine for two years and beyond.</p>
+    </div>
+  </section>
+
+  <section class="featured container">
+    <div class="section-head">
+      <p class="eyebrow">— Bestsellers —</p>
+      <h2>Loved by thousands</h2>
+    </div>
+    <div class="product-grid" id="featuredGrid"></div>
+    <div style="text-align:center; margin-top:48px;">
+      <button class="btn-secondary" onclick="showPage('shop')">View All Styles</button>
+    </div>
+  </section>
+
+  <section class="testimonial">
+    <div class="container">
+      <p class="quote-mark">"</p>
+      <blockquote>
+        I have tried half a dozen brands over the years. Nothing compares. The lace truly disappears, and the hair gets compliments everywhere I go.
+      </blockquote>
+      <cite>— Amara J., verified buyer</cite>
+    </div>
+  </section>
+</main>
+
+<!-- 商品列表页 -->
+<main id="page-shop" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— The Collection —</p>
+      <h1>All Styles</h1>
+      <p class="page-sub">Curated pieces, crafted for the modern woman.</p>
+    </div>
+  </section>
+  <section class="container" style="padding: 60px 24px 120px;">
+    <div class="product-grid" id="shopGrid"></div>
+  </section>
+</main>
+
+<!-- 商品详情页 -->
+<main id="page-product" class="page">
+  <section class="container product-detail" id="productDetail"></section>
+</main>
+
+<!-- 关于页 -->
+<main id="page-about" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Our Story —</p>
+      <h1>A craft, not a trend.</h1>
+    </div>
+  </section>
+  <section class="about-content container">
+    <div class="about-grid">
+      <div>
+        <p>LUMIÈRE was born from a simple belief: that a wig should not feel like a wig. It should feel like the hair you were always meant to have.</p>
+        <p>Each of our pieces is hand-tied by artisans with decades of experience. We source only virgin human hair — never blended, never chemically processed — and finish every wig with HD Swiss lace that vanishes against the skin.</p>
+        <p>From our atelier to your doorstep, we ship worldwide with care, discretion, and a 30-day promise of satisfaction.</p>
+      </div>
+      <div class="about-stats">
+        <div><strong>10,000+</strong><span>happy customers</span></div>
+        <div><strong>4.9 / 5</strong><span>average rating</span></div>
+        <div><strong>30 days</strong><span>easy returns</span></div>
+        <div><strong>2 years+</strong><span>average lifespan</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 联系页 -->
+<main id="page-contact" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Get in Touch —</p>
+      <h1>We'd love to hear from you.</h1>
+    </div>
+  </section>
+  <section class="container" style="padding: 60px 24px 120px; max-width: 640px;">
+    <div class="contact-info">
+      <p><strong>Customer Care</strong><br>hello@lumiere-hair.com</p>
+      <p><strong>Hours</strong><br>Monday – Friday, 9am – 6pm EST</p>
+      <p><strong>Response Time</strong><br>Within 24 hours, always.</p>
+    </div>
+  </section>
+</main>
+
+<!-- 购物车抽屉 -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Bag</h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-footer" id="cartFooter"></div>
+</aside>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="logo">
+        <span class="logo-mark">L</span>
+        <span class="logo-text">LUMIÈRE</span>
+      </div>
+      <p class="footer-tag">Hair, hand-crafted.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="#" onclick="showPage('shop'); return false;">All Styles</a>
+      <a href="#" onclick="showPage('shop'); return false;">Lace Front</a>
+      <a href="#" onclick="showPage('shop'); return false;">Full Lace</a>
+    </div>
+    <div>
+      <h4>Help</h4>
+      <a href="#" onclick="showPage('contact'); return false;">Contact</a>
+      <a href="#">Shipping</a>
+      <a href="#">Returns</a>
+      <a href="#">FAQ</a>
+    </div>
+    <div>
+      <h4>Newsletter</h4>
+      <p>Get 10% off your first order.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="your@email.com" id="emailInput">
+        <button onclick="subscribe()">Join</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 LUMIÈRE. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
