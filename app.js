@@ -7,7 +7,7 @@ const CONFIG = {
   paypalMe: '',  // 例如:'https://paypal.me/yourname'
 
   // 你的接单邮箱(必填),客户的订单信息会发送到这里
-  orderEmail: 'orders@yourdomain.com',
+  orderEmail: 'msun09897@gmail.com',
 
   // 货币符号
   currency: '$'
