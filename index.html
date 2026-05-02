@@ -427,6 +427,81 @@
   <div class="cart-footer" id="cartFooter"></div>
 </aside>
 
+<!-- 结账弹窗 -->
+<div class="modal-overlay" id="checkoutOverlay" onclick="closeCheckout()"></div>
+<div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Checkout">
+  <div class="modal-header">
+    <h3>Complete Your Order</h3>
+    <button class="modal-close" onclick="closeCheckout()" aria-label="Close">✕</button>
+  </div>
+  <div class="modal-body">
+    <!-- 订单摘要 -->
+    <div id="checkoutSummary"></div>
+
+    <!-- 填写表单 -->
+    <form id="checkoutForm" onsubmit="submitOrder(event)" novalidate>
+      <p class="co-section-title">Shipping Information</p>
+      <div class="co-row">
+        <div class="co-field">
+          <label>Full Name <span>*</span></label>
+          <input type="text" name="customer_name" placeholder="Jane Smith" required>
+        </div>
+        <div class="co-field">
+          <label>Email <span>*</span></label>
+          <input type="email" name="customer_email" placeholder="jane@email.com" required>
+        </div>
+      </div>
+      <div class="co-field">
+        <label>Phone <em>(optional)</em></label>
+        <input type="tel" name="customer_phone" placeholder="+1 555 000 0000">
+      </div>
+      <div class="co-field">
+        <label>Street Address <span>*</span></label>
+        <input type="text" name="address_street" placeholder="123 Main St, Apt 4B" required>
+      </div>
+      <div class="co-row">
+        <div class="co-field">
+          <label>City <span>*</span></label>
+          <input type="text" name="address_city" required>
+        </div>
+        <div class="co-field">
+          <label>State / Province</label>
+          <input type="text" name="address_state">
+        </div>
+      </div>
+      <div class="co-row">
+        <div class="co-field">
+          <label>ZIP / Postal Code</label>
+          <input type="text" name="address_zip">
+        </div>
+        <div class="co-field">
+          <label>Country <span>*</span></label>
+          <input type="text" name="address_country" placeholder="United States" required>
+        </div>
+      </div>
+      <div class="co-field">
+        <label>Order Notes <em>(optional)</em></label>
+        <textarea name="order_notes" rows="2" placeholder="Special requests, colour preferences…"></textarea>
+      </div>
+      <button type="submit" class="btn-checkout" id="coSubmitBtn">Place Order</button>
+      <p class="co-legal">By placing your order you agree to our
+        <a href="#" onclick="closeCheckout();showPage('terms');return false;">Terms of Service</a> and
+        <a href="#" onclick="closeCheckout();showPage('privacy');return false;">Privacy Policy</a>.
+        Payment instructions will be sent to your email after confirmation.
+      </p>
+    </form>
+
+    <!-- 成功状态 -->
+    <div id="orderSuccess" class="order-success" style="display:none;">
+      <div class="success-icon">✦</div>
+      <h3>Order Received!</h3>
+      <p>Thank you, <strong id="successName"></strong>. A confirmation has been sent to <strong id="successEmail"></strong>.</p>
+      <p>We'll follow up with payment instructions within 24 hours.</p>
+      <button class="btn-secondary" onclick="closeCheckout(); showPage('shop');">Continue Shopping</button>
+    </div>
+  </div>
+</div>
+
 <!-- 页脚 -->
 <footer class="footer">
   <div class="container footer-grid">
@@ -465,6 +540,7 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="products.js"></script>
 <script src="app.js"></script>
 </body>

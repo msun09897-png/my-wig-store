@@ -2,15 +2,22 @@
 // 配置区 — 上线前修改这里
 // ============================================
 const CONFIG = {
-  // 你的 PayPal.me 链接(注册后替换),客户结账时会跳转过去付款
-  // 没注册前先留空,系统会引导客户邮件下单
-  paypalMe: '',  // 例如:'https://paypal.me/yourname'
+  // 货币符号
+  currency: '$',
 
-  // 你的接单邮箱(必填),客户的订单信息会发送到这里
+  // 你的接单邮箱
   orderEmail: 'msun09897@gmail.com',
 
-  // 货币符号
-  currency: '$'
+  // ── EmailJS 配置 ──────────────────────────────
+  // 1. 去 emailjs.com 注册后,在 Account → API Keys 找到 Public Key
+  // 2. 创建一个 Email Service,记下 Service ID
+  // 3. 创建两个 Email Template,记下各自的 Template ID
+  //    template_order   : 发给你(店主)的订单通知
+  //    template_confirm : 发给客户的确认邮件
+  emailjs_public_key:      'YOUR_PUBLIC_KEY',
+  emailjs_service_id:      'YOUR_SERVICE_ID',
+  emailjs_template_order:  'YOUR_TEMPLATE_ORDER_ID',
+  emailjs_template_confirm:'YOUR_TEMPLATE_CONFIRM_ID',
 };
 
 // ============================================
@@ -320,7 +327,7 @@ function updateCartUI() {
       <span>${fmt(subtotal)}</span>
     </div>
     <p class="cart-note">${shipping === 0 ? '✓ Free shipping unlocked' : `Add ${fmt(199 - subtotal)} for free shipping`} · Tax calculated at checkout</p>
-    <button class="btn-checkout" onclick="checkout()">Checkout — ${fmt(total)}</button>
+    <button class="btn-checkout" onclick="openCheckout()">Checkout — ${fmt(total)}</button>
   `;
 }
 
@@ -334,38 +341,113 @@ function toggleCart(forceOpen) {
 }
 
 // ============================================
-// 结账
+// 结账弹窗
 // ============================================
-function checkout() {
+function openCheckout() {
   if (cart.length === 0) return;
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const shipping = subtotal >= 199 ? 0 : 15;
-  const total = subtotal + shipping;
+  const total    = subtotal + shipping;
 
-  // 生成订单摘要
-  let orderText = 'NEW ORDER — LUMIÈRE\n\n';
-  cart.forEach(i => {
-    orderText += `• ${i.name} (${i.color}, ${i.length}) × ${i.qty} = ${fmt(i.price * i.qty)}\n`;
-  });
-  orderText += `\nSubtotal: ${fmt(subtotal)}\nShipping: ${fmt(shipping)}\nTotal: ${fmt(total)}\n`;
+  // 渲染订单摘要
+  $('checkoutSummary').innerHTML = `
+    <div class="co-summary-title">Order Summary</div>
+    ${cart.map(i => `
+      <div class="co-item">
+        <img src="${(i.images || [i.image])[0]}" alt="">
+        <div class="co-item-info">
+          <strong>${i.name}</strong>
+          <span>${i.color} · ${i.length} · Qty ${i.qty}</span>
+        </div>
+        <span class="co-item-price">${fmt(i.price * i.qty)}</span>
+      </div>`).join('')}
+    <div class="co-totals">
+      <span>Subtotal</span><span>${fmt(subtotal)}</span>
+      <span>Shipping</span><span>${shipping === 0 ? '<em>Free</em>' : fmt(shipping)}</span>
+      <strong>Total</strong><strong>${fmt(total)}</strong>
+    </div>
+  `;
 
-  // 如果配置了 PayPal,跳转 PayPal
-  if (CONFIG.paypalMe && CONFIG.paypalMe.startsWith('http')) {
-    const note = encodeURIComponent(orderText);
-    const paypalUrl = `${CONFIG.paypalMe}/${total}USD`;
+  // 重置表单到初始状态
+  const form = $('checkoutForm');
+  form.reset();
+  form.style.display = '';
+  $('orderSuccess').style.display = 'none';
+  const btn = $('coSubmitBtn');
+  btn.disabled = false;
+  btn.textContent = 'Place Order';
 
-    if (confirm(`Order Summary:\n\n${orderText}\nClick OK to pay with PayPal.\n\nIMPORTANT: After payment, please email your shipping address to ${CONFIG.orderEmail} along with your PayPal transaction ID.`)) {
-      window.open(paypalUrl, '_blank');
-      cart = [];
-      saveCart();
-      toggleCart(false);
-    }
-  } else {
-    // 没有 PayPal 时,引导客户发邮件
-    const subject = encodeURIComponent('New Order — LUMIÈRE');
-    const body = encodeURIComponent(orderText + '\n\nPlease send me payment instructions and confirm shipping address.\n\nMy address:\n[Please fill in your shipping address]');
-    window.location.href = `mailto:${CONFIG.orderEmail}?subject=${subject}&body=${body}`;
+  $('checkoutOverlay').classList.add('open');
+  $('checkoutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckout() {
+  $('checkoutOverlay').classList.remove('open');
+  $('checkoutModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function submitOrder(e) {
+  e.preventDefault();
+  const form   = e.target;
+  const btn    = $('coSubmitBtn');
+  const data   = Object.fromEntries(new FormData(form));
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const shipping = subtotal >= 199 ? 0 : 15;
+  const total    = subtotal + shipping;
+
+  const itemLines = cart.map(i =>
+    `• ${i.name} (${i.color}, ${i.length}) × ${i.qty}  =  ${fmt(i.price * i.qty)}`
+  ).join('\n');
+
+  const shippingAddr = [
+    data.address_street,
+    data.address_city,
+    data.address_state,
+    data.address_zip,
+    data.address_country
+  ].filter(Boolean).join(', ');
+
+  const params = {
+    customer_name:    data.customer_name,
+    customer_email:   data.customer_email,
+    customer_phone:   data.customer_phone  || '—',
+    shipping_address: shippingAddr,
+    order_notes:      data.order_notes     || '—',
+    order_items:      itemLines,
+    order_subtotal:   fmt(subtotal),
+    order_shipping:   shipping === 0 ? 'Free' : fmt(shipping),
+    order_total:      fmt(total),
+    store_email:      CONFIG.orderEmail,
+  };
+
+  btn.disabled    = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    // 发给店主
+    await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_order, {
+      ...params, to_email: CONFIG.orderEmail
+    });
+    // 发给客户
+    await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_confirm, {
+      ...params, to_email: data.customer_email
+    });
+
+    cart = [];
+    saveCart();
+    form.style.display = 'none';
+    $('orderSuccess').style.display = 'flex';
+    $('successName').textContent    = data.customer_name;
+    $('successEmail').textContent   = data.customer_email;
+  } catch (err) {
+    console.error('EmailJS error:', err);
+    btn.disabled    = false;
+    btn.textContent = 'Place Order';
+    alert(`Something went wrong. Please email your order to ${CONFIG.orderEmail} directly.`);
   }
 }
 
@@ -387,6 +469,10 @@ function subscribe() {
 // 初始化
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
+  // 初始化 EmailJS
+  if (CONFIG.emailjs_public_key && !CONFIG.emailjs_public_key.startsWith('YOUR_')) {
+    emailjs.init({ publicKey: CONFIG.emailjs_public_key });
+  }
   renderProducts();
   updateCartUI();
 });
