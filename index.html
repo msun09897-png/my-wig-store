@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -495,9 +496,22 @@
     <div id="orderSuccess" class="order-success" style="display:none;">
       <div class="success-icon">✦</div>
       <h3>Order Received!</h3>
-      <p>Thank you, <strong id="successName"></strong>. A confirmation has been sent to <strong id="successEmail"></strong>.</p>
+      <p>Thank you, <strong id="successName"></strong>.<br>
+        A confirmation has been sent to <strong id="successEmail"></strong>.</p>
+      <p class="success-orderid">Order ID: <strong id="successOrderId"></strong></p>
       <p>We'll follow up with payment instructions within 24 hours.</p>
       <button class="btn-secondary" onclick="closeCheckout(); showPage('shop');">Continue Shopping</button>
+    </div>
+
+    <!-- 错误状态 -->
+    <div id="orderError" class="order-error" style="display:none;">
+      <div class="error-icon">!</div>
+      <h4>Something went wrong</h4>
+      <p>Your order could not be sent. Please try again, or screenshot your order and contact us at <strong>msun09897@gmail.com</strong>.</p>
+      <div class="error-actions">
+        <button class="btn-primary" onclick="$('orderError').style.display='none'; $('coSubmitBtn').click();">Try Again</button>
+        <button class="btn-secondary" onclick="closeCheckout();">Cancel</button>
+      </div>
     </div>
   </div>
 </div>
@@ -540,7 +554,6 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="products.js"></script>
 <script src="app.js"></script>
 </body>

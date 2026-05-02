@@ -1229,7 +1229,7 @@ body {
   align-items: center;
   text-align: center;
   padding: 40px 24px;
-  gap: 16px;
+  gap: 14px;
 }
 
 .success-icon {
@@ -1248,6 +1248,61 @@ body {
   color: var(--soil);
   line-height: 1.7;
   max-width: 400px;
+}
+
+.success-orderid {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  background: var(--cream);
+  padding: 8px 20px;
+  border: 1px solid var(--bone);
+}
+
+/* 错误状态 */
+.order-error {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 24px;
+  gap: 14px;
+  border: 1px solid #e8c4c4;
+  background: #fdf6f6;
+  margin-top: 16px;
+}
+
+.error-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #c0392b;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.order-error h4 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.order-error p {
+  font-size: 14px;
+  color: var(--soil);
+  line-height: 1.7;
+  max-width: 380px;
+}
+
+.error-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {

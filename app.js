@@ -258,7 +258,7 @@ function addToCart() {
       id: currentProduct.id,
       name: currentProduct.name,
       subtitle: currentProduct.subtitle,
-      image: currentProduct.image,
+      image: (currentProduct.images || [currentProduct.image])[0],
       price: currentProduct.price,
       color: currentProduct.selectedColor,
       length: currentProduct.selectedLength,
@@ -355,7 +355,7 @@ function openCheckout() {
     <div class="co-summary-title">Order Summary</div>
     ${cart.map(i => `
       <div class="co-item">
-        <img src="${(i.images || [i.image])[0]}" alt="">
+        <img src="${i.image}" alt="">
         <div class="co-item-info">
           <strong>${i.name}</strong>
           <span>${i.color} · ${i.length} · Qty ${i.qty}</span>
@@ -374,6 +374,7 @@ function openCheckout() {
   form.reset();
   form.style.display = '';
   $('orderSuccess').style.display = 'none';
+  $('orderError').style.display   = 'none';
   const btn = $('coSubmitBtn');
   btn.disabled = false;
   btn.textContent = 'Place Order';
@@ -391,51 +392,64 @@ function closeCheckout() {
 
 async function submitOrder(e) {
   e.preventDefault();
-  const form   = e.target;
-  const btn    = $('coSubmitBtn');
-  const data   = Object.fromEntries(new FormData(form));
+  const form = e.target;
+  const btn  = $('coSubmitBtn');
+  const data = Object.fromEntries(new FormData(form));
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const shipping = subtotal >= 199 ? 0 : 15;
   const total    = subtotal + shipping;
 
-  const itemLines = cart.map(i =>
-    `• ${i.name} (${i.color}, ${i.length}) × ${i.qty}  =  ${fmt(i.price * i.qty)}`
-  ).join('\n');
+  // order_id: LUM + 时间戳后6位
+  const orderId = 'LUM' + String(Date.now()).slice(-6);
 
+  // {{#orders}} 循环数据 — name 含颜色和长度
+  const orders = cart.map(i => ({
+    name:  `${i.name} (${i.color}, ${i.length})`,
+    units: i.qty,
+    price: fmt(i.price * i.qty)
+  }));
+
+  // 国家放最前面
   const shippingAddr = [
+    data.address_country,
     data.address_street,
     data.address_city,
     data.address_state,
-    data.address_zip,
-    data.address_country
+    data.address_zip
   ].filter(Boolean).join(', ');
 
   const params = {
+    order_id:         orderId,
     customer_name:    data.customer_name,
     customer_email:   data.customer_email,
-    customer_phone:   data.customer_phone  || '—',
+    customer_phone:   data.customer_phone || '—',
     shipping_address: shippingAddr,
-    order_notes:      data.order_notes     || '—',
-    order_items:      itemLines,
-    order_subtotal:   fmt(subtotal),
-    order_shipping:   shipping === 0 ? 'Free' : fmt(shipping),
-    order_total:      fmt(total),
-    store_email:      CONFIG.orderEmail,
+    order_notes:      data.order_notes    || '—',
+    orders,                                          // {{#orders}} 循环
+    cost: {
+      shipping: shipping === 0 ? 'Free' : fmt(shipping),
+      total:    fmt(total)
+    }
   };
 
   btn.disabled    = true;
   btn.textContent = 'Sending…';
+  $('orderError').style.display = 'none';
 
   try {
     // 发给店主
-    await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_order, {
-      ...params, to_email: CONFIG.orderEmail
-    });
+    await emailjs.send(
+      CONFIG.emailjs_service_id,
+      CONFIG.emailjs_template_order,
+      { ...params, to_email: CONFIG.orderEmail }
+    );
     // 发给客户
-    await emailjs.send(CONFIG.emailjs_service_id, CONFIG.emailjs_template_confirm, {
-      ...params, to_email: data.customer_email
-    });
+    await emailjs.send(
+      CONFIG.emailjs_service_id,
+      CONFIG.emailjs_template_confirm,
+      { ...params, to_email: data.customer_email }
+    );
 
     cart = [];
     saveCart();
@@ -443,11 +457,12 @@ async function submitOrder(e) {
     $('orderSuccess').style.display = 'flex';
     $('successName').textContent    = data.customer_name;
     $('successEmail').textContent   = data.customer_email;
+    $('successOrderId').textContent = orderId;
   } catch (err) {
     console.error('EmailJS error:', err);
     btn.disabled    = false;
     btn.textContent = 'Place Order';
-    alert(`Something went wrong. Please email your order to ${CONFIG.orderEmail} directly.`);
+    $('orderError').style.display = 'flex';
   }
 }
 
