@@ -66,7 +66,85 @@ function productCardHTML(p) {
 function renderProducts() {
   const featured = PRODUCTS.filter(p => p.featured);
   $('featuredGrid').innerHTML = featured.map(productCardHTML).join('');
-  $('shopGrid').innerHTML = PRODUCTS.map(productCardHTML).join('');
+  applyFilters();
+}
+
+// ============================================
+// 筛选 & 搜索
+// ============================================
+const shopFilters = { style: '', length: '', query: '' };
+
+function selectFilter(group, value, btn) {
+  shopFilters[group] = value;
+  btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const searchEl = $('shopSearch');
+  if (searchEl) {
+    shopFilters.query = searchEl.value.trim().toLowerCase();
+    const clearBtn = $('searchClear');
+    if (clearBtn) clearBtn.style.display = shopFilters.query ? 'flex' : 'none';
+  }
+  const filtered = PRODUCTS.filter(matchesFilters);
+  const grid = $('shopGrid');
+  const noRes = $('shopNoResults');
+  if (filtered.length) {
+    grid.innerHTML = filtered.map(productCardHTML).join('');
+    if (noRes) noRes.style.display = 'none';
+  } else {
+    grid.innerHTML = '';
+    if (noRes) noRes.style.display = 'flex';
+  }
+}
+
+function matchesFilters(p) {
+  const { style, length, query } = shopFilters;
+  const nameText = (p.name + ' ' + p.subtitle).toLowerCase();
+  const fullText = (nameText + ' ' + (p.description || '')).toLowerCase();
+
+  if (query && !fullText.includes(query)) return false;
+
+  if (style) {
+    const matched =
+      (style === 'straight' && nameText.includes('straight')) ||
+      (style === 'curly'    && (nameText.includes('curl') || nameText.includes('kinky'))) ||
+      (style === 'wavy'     && (nameText.includes('wave') || nameText.includes('wavy'))) ||
+      (style === 'short'    && (nameText.includes('wolf') || nameText.includes('bang') || nameText.includes('short')));
+    if (!matched) return false;
+  }
+
+  if (length) {
+    const hasLen = (p.lengths || []).some(l => {
+      const m = l.match(/(\d+)\s*inch/i) || l.match(/^(\d+)["]/);
+      if (!m) return false;
+      const n = parseInt(m[1]);
+      if (length === 'short')  return n <= 16;
+      if (length === 'medium') return n >= 18 && n <= 22;
+      if (length === 'long')   return n >= 24;
+    });
+    if (!hasLen) return false;
+  }
+
+  return true;
+}
+
+function clearSearch() {
+  $('shopSearch').value = '';
+  applyFilters();
+}
+
+function resetFilters() {
+  shopFilters.style = '';
+  shopFilters.length = '';
+  shopFilters.query = '';
+  if ($('shopSearch')) $('shopSearch').value = '';
+  document.querySelectorAll('#filterStyle .filter-btn, #filterLength .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === 'All');
+  });
+  applyFilters();
 }
 
 // ============================================
