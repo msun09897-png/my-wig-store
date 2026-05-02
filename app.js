@@ -14,10 +14,10 @@ const CONFIG = {
   // 3. 创建两个 Email Template,记下各自的 Template ID
   //    template_order   : 发给你(店主)的订单通知
   //    template_confirm : 发给客户的确认邮件
-  emailjs_public_key:      'YOUR_PUBLIC_KEY',
-  emailjs_service_id:      'YOUR_SERVICE_ID',
-  emailjs_template_order:  'YOUR_TEMPLATE_ORDER_ID',
-  emailjs_template_confirm:'YOUR_TEMPLATE_CONFIRM_ID',
+  emailjs_public_key:      '7-ZFvmpvafF6YcAyf',
+  emailjs_service_id:      'service_lumiere',
+  emailjs_template_order:  'template_order',
+  emailjs_template_confirm:'template_confirm',
 };
 
 // ============================================
