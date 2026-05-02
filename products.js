@@ -14,7 +14,7 @@ const PRODUCTS = [
     subtitle: 'Straight Clip In Hair',
     price: 224,
     oldPrice: 280,
-    image: 'https://i.postimg.cc/PrGZ7FG6/1.png',
+    images: ['https://i.postimg.cc/PrGZ7FG6/1.png'],
     description: 'Crafted from 100% virgin human hair and finished with HD Swiss lace, this piece moves, bounces, and shines like the hair you were born with. Soft to the touch, undetectable at the hairline — wear it confidently, day or night. Made to last 2+ years with proper care.',
     features: [
       '100% premium human hair',
@@ -33,7 +33,7 @@ const PRODUCTS = [
     subtitle: 'Lace Front Wig · 22"',
     price: 168,
     oldPrice: 210,
-    image: 'https://i.postimg.cc/j2JsYXfj/shou-tu.png',
+    images: ['https://i.postimg.cc/j2JsYXfj/shou-tu.png'],
     description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments — effortless, every time.',
     features: [
       '100% premium human hair',
@@ -52,7 +52,7 @@ const PRODUCTS = [
     subtitle: 'Loose Curls Lace Front · 24"',
     price: 168,
     oldPrice: 210,
-    image: 'https://i.postimg.cc/zXGPPBnX/Gemini-Generated-Image-wo9guiwo9guiwo9g.png',
+    images: ['https://i.postimg.cc/zXGPPBnX/Gemini-Generated-Image-wo9guiwo9guiwo9g.png'],
     description: 'Sleek, glossy, and impossibly smooth. This silky straight piece falls like silk and feels even better. HD lace front melts away. 100% virgin hair, ready to dye, curl, or wear just as it is.',
     features: [
       '100% premium human hair',
@@ -71,7 +71,7 @@ const PRODUCTS = [
     subtitle: 'Deep Wave',
     price: 56,
     oldPrice: 70,
-    image: 'https://i.postimg.cc/43tgN5Nh/Gemini-Generated-Image-k3qdi3k3qdi3k3qd.png',
+    images: ['https://i.postimg.cc/43tgN5Nh/Gemini-Generated-Image-k3qdi3k3qdi3k3qd.png'],
     description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments — effortless, every time.',
     features: [
       '100% premium human hair',
@@ -89,7 +89,7 @@ const PRODUCTS = [
     name: 'Vivienne',
     subtitle: 'Kinky Curly Afro · 18"',
     price: 269,
-    image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&q=85',
+    images: ['https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&q=85'],
     description: 'Voluminous, expressive, unapologetic. A celebration of natural texture, hand-tied for movement and density.',
     features: [
       '100% virgin human hair',
@@ -107,7 +107,7 @@ const PRODUCTS = [
     name: 'Ophélie',
     subtitle: 'Straight with Bangs · 18"',
     price: 239,
-    image: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800&q=85',
+    images: ['https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800&q=85'],
     description: 'Sleek straight hair with classic French bangs — the timeless, effortless look that flatters every face shape.',
     features: [
       '100% virgin human hair',
@@ -126,7 +126,7 @@ const PRODUCTS = [
     subtitle: 'Water Wave Lace Front · 26"',
     price: 379,
     tag: 'Limited',
-    image: 'https://images.unsplash.com/photo-1626954079979-ec4f7b05e032?w=800&q=85',
+    images: ['https://images.unsplash.com/photo-1626954079979-ec4f7b05e032?w=800&q=85'],
     description: 'Long, flowing water waves that catch light like silk ribbons. A statement piece for those who want to be seen.',
     features: [
       '100% virgin human hair',
@@ -144,7 +144,7 @@ const PRODUCTS = [
     name: 'Inès',
     subtitle: 'Layered Wolf Cut · 16"',
     price: 249,
-    image: 'https://images.unsplash.com/photo-1600950207944-0d63e8edbc3f?w=800&q=85',
+    images: ['https://images.unsplash.com/photo-1600950207944-0d63e8edbc3f?w=800&q=85'],
     description: 'A bold, edgy wolf cut with feathered layers. Modern, expressive, and impossible to ignore.',
     features: [
       '100% virgin human hair',

@@ -54,7 +54,7 @@ function productCardHTML(p) {
     <div class="product-card" onclick="showPage('product', '${p.id}')">
       <div class="product-image">
         ${tag}
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        <img src="${(p.images || [p.image])[0]}" alt="${p.name}" loading="lazy">
       </div>
       <p class="product-meta">${p.subtitle}</p>
       <h3 class="product-name">${p.name}</h3>
@@ -70,18 +70,33 @@ function renderProducts() {
 }
 
 // ============================================
-// 商品详情
+// 商品详情 + 轮播
 // ============================================
+let carouselIndex = 0;
+let carouselImages = [];
+let touchStartX = 0;
+
 function renderProductDetail(id) {
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
   currentProduct = { ...p, selectedColor: p.colors[0], selectedLength: p.lengths[Math.floor(p.lengths.length / 2)] };
+  carouselImages = p.images || [p.image];
+  carouselIndex = 0;
 
   const oldPrice = p.oldPrice ? `<span style="text-decoration:line-through;opacity:0.5;margin-left:12px;font-size:18px;">${fmt(p.oldPrice)}</span>` : '';
+  const multi = carouselImages.length > 1;
+
+  const slides = carouselImages.map(src => `<img src="${src}" alt="${p.name}" loading="lazy">`).join('');
+  const dots = multi ? `<div class="carousel-dots" id="carouselDots">${carouselImages.map((_, i) => `<span class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselGoTo(${i})"></span>`).join('')}</div>` : '';
+  const arrows = multi ? `
+    <button class="carousel-btn carousel-prev" onclick="carouselMove(-1)" aria-label="Previous">&#8249;</button>
+    <button class="carousel-btn carousel-next" onclick="carouselMove(1)" aria-label="Next">&#8250;</button>` : '';
 
   $('productDetail').innerHTML = `
-    <div class="detail-image">
-      <img src="${p.image}" alt="${p.name}">
+    <div class="carousel" id="carousel">
+      <div class="carousel-track" id="carouselTrack">${slides}</div>
+      ${arrows}
+      ${dots}
     </div>
     <div class="detail-info">
       <p class="breadcrumb"><a href="#" onclick="showPage('shop'); return false;">Shop</a> · ${p.subtitle}</p>
@@ -110,6 +125,30 @@ function renderProductDetail(id) {
       <button class="btn-add" onclick="addToCart()">Add to Bag — ${fmt(p.price)}</button>
     </div>
   `;
+
+  // 触摸滑动
+  const track = $('carouselTrack');
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) carouselMove(dx < 0 ? 1 : -1);
+  }, { passive: true });
+}
+
+function carouselUpdateUI() {
+  $('carouselTrack').style.transform = `translateX(-${carouselIndex * 100}%)`;
+  const dots = document.querySelectorAll('.carousel-dot');
+  dots.forEach((d, i) => d.classList.toggle('active', i === carouselIndex));
+}
+
+function carouselMove(dir) {
+  carouselIndex = (carouselIndex + dir + carouselImages.length) % carouselImages.length;
+  carouselUpdateUI();
+}
+
+function carouselGoTo(i) {
+  carouselIndex = i;
+  carouselUpdateUI();
 }
 
 function selectOption(type, value, btn) {
