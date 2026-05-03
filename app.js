@@ -405,7 +405,7 @@ async function submitOrder(e) {
 
   // {{#orders}} 循环数据 — name 含颜色和长度
   const orders = cart.map(i => ({
-    name:  `${i.name} (${i.color}, ${i.length})`,
+    name:  `${i.name} — ${i.color}, ${i.length}`,
     units: i.qty,
     price: (i.price * i.qty).toFixed(2)
   }));
@@ -429,6 +429,7 @@ async function submitOrder(e) {
     orders,                                          // {{#orders}} 循环
     cost: {
       shipping: shipping === 0 ? 'Free' : shipping.toFixed(2),
+      taxes:    '0.00',
       total:    total.toFixed(2)
     }
   };
