@@ -407,7 +407,7 @@ async function submitOrder(e) {
   const orders = cart.map(i => ({
     name:  `${i.name} (${i.color}, ${i.length})`,
     units: i.qty,
-    price: fmt(i.price * i.qty)
+    price: (i.price * i.qty).toFixed(2)
   }));
 
   // 国家放最前面
@@ -428,8 +428,8 @@ async function submitOrder(e) {
     order_notes:      data.order_notes    || '—',
     orders,                                          // {{#orders}} 循环
     cost: {
-      shipping: shipping === 0 ? 'Free' : fmt(shipping),
-      total:    fmt(total)
+      shipping: shipping === 0 ? 'Free' : shipping.toFixed(2),
+      total:    total.toFixed(2)
     }
   };
 
