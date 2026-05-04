@@ -439,6 +439,42 @@
       opacity: 0.75;
       margin-top: 3px;
     }
+
+    /* ── 供应商信息折叠区 ─────────────────────────── */
+    .gen-supplier-details {
+      border: 1px solid var(--bone);
+      margin-bottom: 14px;
+    }
+    .gen-supplier-summary {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--soil);
+      font-weight: 500;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ivory);
+      user-select: none;
+    }
+    .gen-supplier-summary::-webkit-details-marker { display: none; }
+    .gen-supplier-summary::before {
+      content: '▶';
+      font-size: 9px;
+      color: var(--rose-deep);
+      transition: transform 0.18s;
+    }
+    .gen-supplier-details[open] .gen-supplier-summary::before {
+      transform: rotate(90deg);
+    }
+    .gen-supplier-body {
+      padding: 14px;
+      border-top: 1px solid var(--bone);
+      background: var(--cream);
+    }
   </style>
 </head>
 <body>
@@ -631,18 +667,16 @@
           </div>
         </div>
         <div class="gen-field gen-field-sm">
-          <div class="gen-label">进货价占售价 %</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <input class="gen-input" id="g-cost-pct" type="number" value="30" min="1" max="80"
-              style="width:72px" oninput="livePreview()">
-            <span class="gen-hint" style="margin:0">_supplierCost</span>
-          </div>
+          <div class="gen-label">基础进货价 (¥)</div>
+          <input class="gen-input" id="g-cost-cny" type="number" min="0" placeholder="50"
+            style="width:100px" oninput="livePreview()">
+          <div class="gen-hint">最短款进货价；长度递增比例同售价</div>
         </div>
       </div>
 
       <!-- 实时价格矩阵预览 -->
       <div id="gen-matrix" class="gen-matrix-wrap" style="display:none">
-        <div class="gen-gradient-title" style="margin-top:14px;margin-bottom:6px">价格矩阵预览 <span style="font-weight:400;text-transform:none;letter-spacing:0">（✦ = 稀有色，[缺] = inStock: false）</span></div>
+        <div class="gen-gradient-title" style="margin-top:14px;margin-bottom:6px">价格矩阵预览 <span style="font-weight:400;text-transform:none;letter-spacing:0">（售价 / 进货成本，✦ = 稀有色）</span></div>
         <div class="table-wrap" style="max-height:220px">
           <table id="gen-matrix-table" style="min-width:auto">
             <thead><tr id="gen-matrix-head"></tr></thead>
@@ -651,6 +685,43 @@
         </div>
       </div>
     </div>
+
+    <!-- 供应商信息（默认折叠） -->
+    <details class="gen-supplier-details">
+      <summary class="gen-supplier-summary">供应商信息（选填，点击展开）</summary>
+      <div class="gen-supplier-body">
+        <div class="gen-row" style="margin-bottom:10px">
+          <div class="gen-field gen-field-sm">
+            <div class="gen-label">平台</div>
+            <select class="gen-input" id="g-sup-platform">
+              <option value="1688">1688</option>
+              <option value="CJ">CJ Dropshipping</option>
+              <option value="速卖通">速卖通</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+          <div class="gen-field">
+            <div class="gen-label">店铺名</div>
+            <input class="gen-input" id="g-sup-shop" placeholder="店铺名称">
+          </div>
+          <div class="gen-field">
+            <div class="gen-label">商品 URL</div>
+            <input class="gen-input" id="g-sup-url" placeholder="https://detail.1688.com/...">
+          </div>
+        </div>
+        <div class="gen-row" style="margin-bottom:0">
+          <div class="gen-field gen-field-sm">
+            <div class="gen-label">供应商微信</div>
+            <input class="gen-input" id="g-sup-wechat" placeholder="微信号">
+          </div>
+          <div class="gen-field gen-field-wide">
+            <div class="gen-label">备注</div>
+            <textarea class="gen-input gen-textarea" id="g-sup-notes" rows="2"
+              placeholder="颜色对照、发货时效、注意事项…"></textarea>
+          </div>
+        </div>
+      </div>
+    </details>
 
     <!-- 推荐 + 生成按钮 -->
     <div style="display:flex;align-items:center;gap:16px;margin-top:6px">
@@ -938,29 +1009,26 @@ function parseList(str) {
   return str.split(',').map(s => s.trim()).filter(Boolean);
 }
 
-/** 构建所有颜色×长度 variant 组合 */
-function buildVariants(colors, lengths, basePrice, lenStepPct, rareSet, rarePct, costPct) {
-  const total = colors.length * lengths.length;
-  // 伪随机标记 1-2 个缺货（按总数散开分布）
-  const oosCount = total <= 4 ? 1 : 2;
-  const oosIdx = new Set();
-  if (total > 0) {
-    oosIdx.add(Math.floor(total * 0.28));
-    if (oosCount > 1) oosIdx.add(Math.floor(total * 0.72));
-  }
-
+/** 构建所有颜色×长度 variant 组合
+ *  baseCostCNY: 最短款进货价（¥），长度递增比例与售价相同
+ *  所有 variant 默认 inStock: true
+ */
+function buildVariants(colors, lengths, basePrice, lenStepPct, rareSet, rarePct, baseCostCNY) {
   const variants = [];
-  let idx = 0;
   for (let li = 0; li < lengths.length; li++) {
-    // 复利递增：每档长度 ×(1 + step%)
-    const lenPrice = Math.round(basePrice * Math.pow(1 + lenStepPct / 100, li));
+    const factor   = Math.pow(1 + lenStepPct / 100, li);
+    const lenPrice = Math.round(basePrice * factor);
+    const lenCost  = baseCostCNY > 0 ? Math.round(baseCostCNY * factor) : null;
     for (let ci = 0; ci < colors.length; ci++) {
       const isRare = rareSet.has(colors[ci].trim().toLowerCase());
       const price  = isRare ? Math.round(lenPrice * (1 + rarePct / 100)) : lenPrice;
-      const _supplierCost = Math.round(price * costPct / 100);
-      const inStock = !oosIdx.has(idx);
-      variants.push({ color: colors[ci].trim(), length: lengths[li].trim(), price, inStock, _supplierCost });
-      idx++;
+      variants.push({
+        color: colors[ci].trim(),
+        length: lengths[li].trim(),
+        price,
+        inStock: true,
+        _supplierCost: lenCost
+      });
     }
   }
   return variants;
@@ -968,13 +1036,13 @@ function buildVariants(colors, lengths, basePrice, lenStepPct, rareSet, rarePct,
 
 /** 实时刷新价格矩阵预览 */
 function livePreview() {
-  const colors    = parseList(document.getElementById('g-colors').value);
-  const lengths   = parseList(document.getElementById('g-lengths').value);
-  const basePrice = parseFloat(document.getElementById('g-price').value) || 0;
-  const lenStep   = parseFloat(document.getElementById('g-len-step').value) || 0;
-  const rareList  = parseList(document.getElementById('g-rare').value);
-  const rarePct   = parseFloat(document.getElementById('g-rare-pct').value) || 0;
-  const costPct   = parseFloat(document.getElementById('g-cost-pct').value) || 30;
+  const colors     = parseList(document.getElementById('g-colors').value);
+  const lengths    = parseList(document.getElementById('g-lengths').value);
+  const basePrice  = parseFloat(document.getElementById('g-price').value) || 0;
+  const lenStep    = parseFloat(document.getElementById('g-len-step').value) || 0;
+  const rareList   = parseList(document.getElementById('g-rare').value);
+  const rarePct    = parseFloat(document.getElementById('g-rare-pct').value) || 0;
+  const baseCostCNY = parseFloat(document.getElementById('g-cost-cny').value) || 0;
 
   const matrixDiv = document.getElementById('gen-matrix');
   if (!colors.length || !lengths.length || !basePrice) {
@@ -983,7 +1051,7 @@ function livePreview() {
   }
 
   const rareSet = new Set(rareList.map(c => c.trim().toLowerCase()));
-  const variants = buildVariants(colors, lengths, basePrice, lenStep, rareSet, rarePct, costPct);
+  const variants = buildVariants(colors, lengths, basePrice, lenStep, rareSet, rarePct, baseCostCNY);
 
   // 表头：颜色列
   const thStyle = 'background:var(--ink);color:var(--cream);padding:7px 10px;font-size:11px;font-weight:500;white-space:nowrap;text-align:left';
@@ -998,10 +1066,15 @@ function livePreview() {
   const rows = lengths.map((len, li) => {
     const cells = colors.map((_, ci) => {
       const v = variants[li * colors.length + ci];
-      const oos = !v.inStock ? ' <span style="color:#942222;font-size:10px">[缺]</span>' : '';
-      return `<td style="padding:6px 10px;white-space:nowrap;border-bottom:1px solid var(--bone)">$${v.price}${oos}<br><span style="font-size:10px;color:var(--soil);opacity:.7">成本 $${v._supplierCost}</span></td>`;
+      const costStr = v._supplierCost !== null ? `¥${v._supplierCost}` : '—';
+      return `<td style="padding:6px 10px;white-space:nowrap;border-bottom:1px solid var(--bone)">
+        $${v.price}<br><span style="font-size:10px;color:var(--soil);opacity:.7">进货 ${costStr}</span>
+      </td>`;
     }).join('');
-    return `<tr><td style="padding:6px 10px;font-weight:500;background:var(--cream);border-bottom:1px solid var(--bone);white-space:nowrap">${len}</td>${cells}</tr>`;
+    return `<tr>
+      <td style="padding:6px 10px;font-weight:500;background:var(--cream);border-bottom:1px solid var(--bone);white-space:nowrap">${len}</td>
+      ${cells}
+    </tr>`;
   });
   document.getElementById('gen-matrix-body').innerHTML = rows.join('');
   matrixDiv.style.display = 'block';
@@ -1011,23 +1084,32 @@ function livePreview() {
 function generateCode() {
   const esc = s => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
-  const id       = document.getElementById('g-id').value.trim() || 'lum-000000';
-  const name     = document.getElementById('g-name').value.trim() || 'New Product';
-  const subtitle = document.getElementById('g-subtitle').value.trim();
-  const basePrice= parseFloat(document.getElementById('g-price').value) || 0;
-  const oldPrice = parseFloat(document.getElementById('g-oldprice').value) || 0;
-  const tag      = document.getElementById('g-tag').value.trim();
-  const imageUrl = document.getElementById('g-image').value.trim();
-  const desc     = document.getElementById('g-desc').value.trim();
-  const featLines= document.getElementById('g-features').value.split('\n').map(s => s.trim()).filter(Boolean);
-  const featured = document.getElementById('g-featured').checked;
+  // 基础信息
+  const id          = document.getElementById('g-id').value.trim() || 'lum-000000';
+  const name        = document.getElementById('g-name').value.trim() || 'New Product';
+  const subtitle    = document.getElementById('g-subtitle').value.trim();
+  const basePrice   = parseFloat(document.getElementById('g-price').value) || 0;
+  const oldPrice    = parseFloat(document.getElementById('g-oldprice').value) || 0;
+  const tag         = document.getElementById('g-tag').value.trim();
+  const imageUrl    = document.getElementById('g-image').value.trim();
+  const desc        = document.getElementById('g-desc').value.trim();
+  const featLines   = document.getElementById('g-features').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const featured    = document.getElementById('g-featured').checked;
 
-  const colors   = parseList(document.getElementById('g-colors').value);
-  const lengths  = parseList(document.getElementById('g-lengths').value);
-  const lenStep  = parseFloat(document.getElementById('g-len-step').value) || 0;
-  const rareList = parseList(document.getElementById('g-rare').value);
-  const rarePct  = parseFloat(document.getElementById('g-rare-pct').value) || 0;
-  const costPct  = parseFloat(document.getElementById('g-cost-pct').value) || 30;
+  // 颜色 & 长度 & 梯度
+  const colors      = parseList(document.getElementById('g-colors').value);
+  const lengths     = parseList(document.getElementById('g-lengths').value);
+  const lenStep     = parseFloat(document.getElementById('g-len-step').value) || 0;
+  const rareList    = parseList(document.getElementById('g-rare').value);
+  const rarePct     = parseFloat(document.getElementById('g-rare-pct').value) || 0;
+  const baseCostCNY = parseFloat(document.getElementById('g-cost-cny').value) || 0;
+
+  // 供应商信息
+  const supPlatform = document.getElementById('g-sup-platform').value;
+  const supShop     = document.getElementById('g-sup-shop').value.trim();
+  const supUrl      = document.getElementById('g-sup-url').value.trim();
+  const supWechat   = document.getElementById('g-sup-wechat').value.trim();
+  const supNotes    = document.getElementById('g-sup-notes').value.trim();
 
   if (!colors.length || !lengths.length || !basePrice) {
     alert('必填项未完成：请填写「起售价」「颜色」「长度」');
@@ -1035,22 +1117,24 @@ function generateCode() {
   }
 
   const rareSet  = new Set(rareList.map(c => c.trim().toLowerCase()));
-  const variants = buildVariants(colors, lengths, basePrice, lenStep, rareSet, rarePct, costPct);
+  const variants = buildVariants(colors, lengths, basePrice, lenStep, rareSet, rarePct, baseCostCNY);
   const minPrice = Math.min(...variants.map(v => v.price));
 
-  // 计算最长 color 字符串，用于对齐
+  // 最长 color 字符串长度，用于列对齐
   const maxColorLen = Math.max(...variants.map(v => v.color.length));
+  // 最长 length 字符串长度
+  const maxLenLen   = Math.max(...variants.map(v => v.length.length));
 
-  const L = [];  // 输出行数组
+  const L = [];
   L.push(`  {`);
   L.push(`    id: '${esc(id)}',`);
   L.push(`    name: '${esc(name)}',`);
-  if (subtitle)  L.push(`    subtitle: '${esc(subtitle)}',`);
+  if (subtitle) L.push(`    subtitle: '${esc(subtitle)}',`);
   L.push(`    price: ${minPrice},          // 起售价,用于商品卡片展示`);
-  if (oldPrice)  L.push(`    oldPrice: ${oldPrice},`);
-  if (tag)       L.push(`    tag: '${esc(tag)}',`);
+  if (oldPrice) L.push(`    oldPrice: ${oldPrice},`);
+  if (tag)      L.push(`    tag: '${esc(tag)}',`);
   L.push(`    images: ['${esc(imageUrl)}'],`);
-  if (desc)      L.push(`    description: '${esc(desc)}',`);
+  if (desc)     L.push(`    description: '${esc(desc)}',`);
   if (featLines.length) {
     L.push(`    features: [`);
     featLines.forEach(f => L.push(`      '${esc(f)}',`));
@@ -1061,24 +1145,25 @@ function generateCode() {
   let prevLen = null;
   for (const v of variants) {
     if (v.length !== prevLen) {
-      // 分段注释：找该长度第一个 price
       const secPrice = variants.find(x => x.length === v.length).price;
-      L.push(`      // ── ${v.length} · $${secPrice} ─────────────────────────────`);
+      L.push(`      // ── ${v.length} · $${secPrice} ──────────────────────────────`);
       prevLen = v.length;
     }
-    const colorPadded = `'${v.color}'`.padEnd(maxColorLen + 2);
-    const inStockStr  = v.inStock ? 'true ' : 'false';
-    L.push(`      { color: ${colorPadded}, length: '${v.length}', price: ${v.price}, inStock: ${inStockStr}, _supplierCost: ${v._supplierCost} },`);
+    // 对齐：color 字段左对齐，length 字段左对齐
+    const colorCol  = `'${v.color}',`.padEnd(maxColorLen + 3);
+    const lengthCol = `'${v.length}',`.padEnd(maxLenLen + 3);
+    const costStr   = v._supplierCost !== null ? String(v._supplierCost) : 'null';
+    L.push(`      { color: ${colorCol} length: ${lengthCol} price: ${v.price}, inStock: true, _supplierCost: ${costStr} },`);
   }
 
   L.push(`    ],`);
   L.push(`    _supplier: {`);
-  L.push(`      platform: '1688',`);
-  L.push(`      shopName: '',`);
-  L.push(`      productUrl: '',`);
-  L.push(`      contactWeChat: '',`);
-  L.push(`      costPrice: 0,`);
-  L.push(`      notes: ''`);
+  L.push(`      platform: '${esc(supPlatform)}',`);
+  L.push(`      shopName: '${esc(supShop)}',`);
+  L.push(`      productUrl: '${esc(supUrl)}',`);
+  L.push(`      contactWeChat: '${esc(supWechat)}',`);
+  L.push(`      costPrice: ${baseCostCNY || 0},`);
+  L.push(`      notes: '${esc(supNotes)}'`);
   L.push(`    },`);
   L.push(`    featured: ${featured}`);
   L.push(`  },`);
