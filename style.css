@@ -174,17 +174,17 @@ body {
 .hero-bg::after {
   content: '';
   position: absolute;
-  right: -10%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 600px;
-  height: 600px;
-  background-image: url('https://images.unsplash.com/photo-1618375569909-3c8616cf7733?w=800&q=80');
+  right: 0;
+  top: 0;
+  width: 48%;
+  height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=900&q=80');
   background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  opacity: 0.4;
-  filter: sepia(0.2);
+  background-position: center top;
+  opacity: 0.8;
+  filter: sepia(0.08) contrast(1.05);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.7) 25%, black 55%);
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.7) 25%, black 55%);
 }
 
 .hero-content {
@@ -1485,6 +1485,133 @@ body {
   color: var(--soil);
 }
 
+/* ============ About 署名 ============ */
+.about-signature {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--rose-deep);
+  margin-top: 8px;
+}
+
+/* ============ 商品详情评分 ============ */
+.detail-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detail-rating .stars {
+  color: var(--gold);
+  font-size: 19px;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.detail-rating .rating-text {
+  font-size: 13px;
+  color: var(--soil);
+  letter-spacing: 0.02em;
+}
+
+/* ============ 评价卡片区 ============ */
+.reviews {
+  padding: 100px 32px;
+  border-top: 1px solid var(--bone);
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.review-card {
+  background: var(--cream);
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 1px solid var(--bone);
+}
+
+.review-stars {
+  color: var(--gold);
+  font-size: 18px;
+  letter-spacing: 3px;
+  line-height: 1;
+}
+
+.review-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ink);
+  flex: 1;
+}
+
+.review-author {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 4px;
+  border-top: 1px solid var(--bone);
+}
+
+.review-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.review-badge {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--rose-deep);
+}
+
+/* ============ 信任徽章 ============ */
+.trust-badges {
+  background: var(--ivory);
+  padding: 72px 32px 80px;
+  border-top: 1px solid var(--bone);
+}
+
+.trust-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.trust-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.trust-badge svg {
+  color: var(--rose-deep);
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.trust-badge span {
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--soil);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
 /* ============ 响应式 ============ */
 @media (max-width: 768px) {
   .nav-links { display: none; }
@@ -1493,10 +1620,13 @@ body {
   .filter-group { gap: 8px; }
   .search-wrap { max-width: 100%; }
   .hero-content { padding: 60px 24px; }
+  .hero-bg::after { display: none; }
   .product-detail { grid-template-columns: 1fr; gap: 40px; padding: 32px 24px 80px; }
   .carousel-btn { width: 36px; height: 36px; font-size: 22px; }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
   .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 24px; }
   .container { padding: 0 20px; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .trust-badges-grid { grid-template-columns: repeat(2, 1fr); gap: 32px 24px; }
 }

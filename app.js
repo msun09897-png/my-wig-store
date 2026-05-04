@@ -177,6 +177,8 @@ function renderProductDetail(id) {
     <button class="carousel-btn carousel-prev" onclick="carouselMove(-1)" aria-label="Previous">&#8249;</button>
     <button class="carousel-btn carousel-next" onclick="carouselMove(1)" aria-label="Next">&#8250;</button>` : '';
 
+  const reviewCount = 89 + ((p.name.length * 13 + Math.floor(p.price)) % 159);
+
   $('productDetail').innerHTML = `
     <div class="carousel" id="carousel">
       <div class="carousel-track" id="carouselTrack">${slides}</div>
@@ -186,6 +188,10 @@ function renderProductDetail(id) {
     <div class="detail-info">
       <p class="breadcrumb"><a href="#" onclick="showPage('shop'); return false;">Shop</a> · ${p.subtitle}</p>
       <h1>${p.name}</h1>
+      <div class="detail-rating">
+        <span class="stars">★★★★★</span>
+        <span class="rating-text">4.9 (${reviewCount} reviews)</span>
+      </div>
       <p class="detail-price">${fmt(p.price)}${oldPrice}</p>
       <p class="detail-desc">${p.description}</p>
 
