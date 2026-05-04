@@ -355,6 +355,90 @@
       border-top: 1px solid var(--bone);
       margin: 14px 0;
     }
+
+    /* ════════════════════════════════════════════
+       区D — 新商品代码生成器
+    ════════════════════════════════════════════ */
+    .area-d {
+      margin-top: 28px;
+      background: var(--cream);
+      border: 1px solid var(--bone);
+      padding: 20px;
+    }
+
+    .gen-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .gen-field { flex: 1; min-width: 160px; }
+    .gen-field-sm { flex: 0 0 auto; min-width: 130px; }
+    .gen-field-wide { flex: 1 1 300px; }
+
+    .gen-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .gen-input {
+      width: 100%;
+      padding: 9px 11px;
+      background: var(--ivory);
+      border: 1px solid var(--bone);
+      font-family: var(--sans);
+      font-size: 12.5px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .gen-input:focus { border-color: var(--rose-deep); }
+    .gen-input::placeholder { color: rgba(61,47,36,0.38); }
+    .gen-textarea { resize: vertical; }
+
+    .gen-gradient-box {
+      background: var(--ivory);
+      border: 1px solid var(--bone);
+      border-left: 3px solid var(--rose);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .gen-gradient-title {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .gen-matrix-wrap { margin-top: 14px; }
+
+    .gen-pre {
+      background: var(--bone);
+      border: 1px solid rgba(61,47,36,0.15);
+      padding: 16px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--ink);
+      white-space: pre;
+      overflow-x: auto;
+      max-height: 520px;
+    }
+
+    .gen-hint {
+      font-size: 11px;
+      color: var(--soil);
+      opacity: 0.75;
+      margin-top: 3px;
+    }
   </style>
 </head>
 <body>
@@ -438,6 +522,157 @@
     </div>
 
   </div>
+
+  <!-- ══════════════════════════════════════════
+       区D — 新商品代码生成器
+  ═══════════════════════════════════════════ -->
+  <div class="area-d">
+    <div class="section-title">
+      <span class="zone-label">区 D</span>新商品代码生成器
+      <span class="legend">填好后点"生成代码"，复制粘贴进 products.js 的 PRODUCTS 数组末尾</span>
+    </div>
+
+    <!-- 基础信息 Row 1 -->
+    <div class="gen-row">
+      <div class="gen-field gen-field-sm">
+        <div class="gen-label">商品 ID</div>
+        <div style="display:flex;gap:6px">
+          <input class="gen-input" id="g-id" placeholder="lum-xxxxxx" style="min-width:0">
+          <button class="btn-sm" onclick="genRandId()" title="随机生成六位数字 ID">随机</button>
+        </div>
+      </div>
+      <div class="gen-field">
+        <div class="gen-label">商品名称</div>
+        <input class="gen-input" id="g-name" placeholder="e.g. Deep Wave Lace Front Wig">
+      </div>
+      <div class="gen-field">
+        <div class="gen-label">副标题</div>
+        <input class="gen-input" id="g-subtitle" placeholder="e.g. Water Wave · 22&quot;">
+      </div>
+    </div>
+
+    <!-- 基础信息 Row 2 -->
+    <div class="gen-row">
+      <div class="gen-field gen-field-sm">
+        <div class="gen-label">起售价 ($)</div>
+        <input class="gen-input" id="g-price" type="number" min="1" placeholder="168" oninput="livePreview()">
+        <div class="gen-hint">variants 最低价，也用于商品卡</div>
+      </div>
+      <div class="gen-field gen-field-sm">
+        <div class="gen-label">原价 ($, 可选)</div>
+        <input class="gen-input" id="g-oldprice" type="number" min="0" placeholder="210">
+      </div>
+      <div class="gen-field gen-field-sm">
+        <div class="gen-label">Tag 标签 (可选)</div>
+        <input class="gen-input" id="g-tag" placeholder="Limited / New / Hot">
+      </div>
+      <div class="gen-field">
+        <div class="gen-label">图片 URL</div>
+        <input class="gen-input" id="g-image" placeholder="https://i.postimg.cc/...">
+      </div>
+    </div>
+
+    <!-- 描述 & 特性 -->
+    <div class="gen-row">
+      <div class="gen-field gen-field-wide">
+        <div class="gen-label">描述</div>
+        <textarea class="gen-input gen-textarea" id="g-desc" rows="3" placeholder="商品描述文案…"></textarea>
+      </div>
+      <div class="gen-field gen-field-wide">
+        <div class="gen-label">特性卖点（每行一条）</div>
+        <textarea class="gen-input gen-textarea" id="g-features" rows="3"
+          placeholder="100% premium human hair&#10;HD lace front, pre-plucked&#10;180% density · medium cap"></textarea>
+      </div>
+    </div>
+
+    <!-- 颜色 & 长度 -->
+    <div class="gen-row">
+      <div class="gen-field">
+        <div class="gen-label">颜色（逗号分隔）</div>
+        <input class="gen-input" id="g-colors"
+          placeholder="Natural Black, Dark Brown, Honey Brown"
+          oninput="livePreview()">
+        <div class="gen-hint">每个颜色 = 一列；普通色与稀有色都填在这里</div>
+      </div>
+      <div class="gen-field">
+        <div class="gen-label">长度（逗号分隔）</div>
+        <input class="gen-input" id="g-lengths"
+          placeholder="14inch/35cm, 16inch/40cm, 18inch/45cm"
+          oninput="livePreview()">
+        <div class="gen-hint">从短到长填写；每加一档自动按梯度涨价</div>
+      </div>
+    </div>
+
+    <!-- SKU 价格梯度 -->
+    <div class="gen-gradient-box">
+      <div class="gen-gradient-title">SKU 价格梯度</div>
+      <div class="gen-row" style="margin-bottom:0">
+        <div class="gen-field gen-field-sm">
+          <div class="gen-label">长度递增 %</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input class="gen-input" id="g-len-step" type="number" value="5" min="0" max="50"
+              style="width:72px" oninput="livePreview()">
+            <span class="gen-hint" style="margin:0">每档长度涨幅</span>
+          </div>
+        </div>
+        <div class="gen-field">
+          <div class="gen-label">稀有颜色（名称需与上方一致，逗号分隔）</div>
+          <input class="gen-input" id="g-rare"
+            placeholder="Honey Brown, Burgundy Highlights"
+            oninput="livePreview()">
+          <div class="gen-hint">这些颜色在每个长度的价格上额外加价</div>
+        </div>
+        <div class="gen-field gen-field-sm">
+          <div class="gen-label">稀有色加价 %</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input class="gen-input" id="g-rare-pct" type="number" value="5" min="0" max="50"
+              style="width:72px" oninput="livePreview()">
+            <span class="gen-hint" style="margin:0">稀有色涨幅</span>
+          </div>
+        </div>
+        <div class="gen-field gen-field-sm">
+          <div class="gen-label">进货价占售价 %</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input class="gen-input" id="g-cost-pct" type="number" value="30" min="1" max="80"
+              style="width:72px" oninput="livePreview()">
+            <span class="gen-hint" style="margin:0">_supplierCost</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 实时价格矩阵预览 -->
+      <div id="gen-matrix" class="gen-matrix-wrap" style="display:none">
+        <div class="gen-gradient-title" style="margin-top:14px;margin-bottom:6px">价格矩阵预览 <span style="font-weight:400;text-transform:none;letter-spacing:0">（✦ = 稀有色，[缺] = inStock: false）</span></div>
+        <div class="table-wrap" style="max-height:220px">
+          <table id="gen-matrix-table" style="min-width:auto">
+            <thead><tr id="gen-matrix-head"></tr></thead>
+            <tbody id="gen-matrix-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 推荐 + 生成按钮 -->
+    <div style="display:flex;align-items:center;gap:16px;margin-top:6px">
+      <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;cursor:pointer;color:var(--soil)">
+        <input type="checkbox" id="g-featured"> 设为首页推荐 (featured: true)
+      </label>
+      <button class="btn-sm" onclick="generateCode()" style="padding:11px 28px;font-size:12px">
+        ▶&nbsp; 生成完整代码
+      </button>
+    </div>
+
+    <!-- 输出区 -->
+    <div id="gen-output" style="display:none;margin-top:18px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span class="template-label" style="margin:0">生成结果 — 复制后粘贴到 products.js 中 PRODUCTS 数组末尾（最后一个 } 后面加逗号）</span>
+        <button class="btn-sm" onclick="copyGenCode()">复制代码</button>
+        <span id="gen-copy-done" class="copy-done">✓ 已复制</span>
+      </div>
+      <pre id="gen-code-block" class="gen-pre"></pre>
+    </div>
+  </div>
+
 </div><!-- /admin-main -->
 
 <script src="products.js"></script>
@@ -688,6 +923,183 @@ function renderAnalysis() {
       ${makeItems(bottom3, 'low')}
     </div>
   `;
+}
+
+// ─────────────────────────────────────────────────────────
+// 区D — 新商品代码生成器
+// ─────────────────────────────────────────────────────────
+
+function genRandId() {
+  const num = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('g-id').value = 'lum-' + num;
+}
+
+function parseList(str) {
+  return str.split(',').map(s => s.trim()).filter(Boolean);
+}
+
+/** 构建所有颜色×长度 variant 组合 */
+function buildVariants(colors, lengths, basePrice, lenStepPct, rareSet, rarePct, costPct) {
+  const total = colors.length * lengths.length;
+  // 伪随机标记 1-2 个缺货（按总数散开分布）
+  const oosCount = total <= 4 ? 1 : 2;
+  const oosIdx = new Set();
+  if (total > 0) {
+    oosIdx.add(Math.floor(total * 0.28));
+    if (oosCount > 1) oosIdx.add(Math.floor(total * 0.72));
+  }
+
+  const variants = [];
+  let idx = 0;
+  for (let li = 0; li < lengths.length; li++) {
+    // 复利递增：每档长度 ×(1 + step%)
+    const lenPrice = Math.round(basePrice * Math.pow(1 + lenStepPct / 100, li));
+    for (let ci = 0; ci < colors.length; ci++) {
+      const isRare = rareSet.has(colors[ci].trim().toLowerCase());
+      const price  = isRare ? Math.round(lenPrice * (1 + rarePct / 100)) : lenPrice;
+      const _supplierCost = Math.round(price * costPct / 100);
+      const inStock = !oosIdx.has(idx);
+      variants.push({ color: colors[ci].trim(), length: lengths[li].trim(), price, inStock, _supplierCost });
+      idx++;
+    }
+  }
+  return variants;
+}
+
+/** 实时刷新价格矩阵预览 */
+function livePreview() {
+  const colors    = parseList(document.getElementById('g-colors').value);
+  const lengths   = parseList(document.getElementById('g-lengths').value);
+  const basePrice = parseFloat(document.getElementById('g-price').value) || 0;
+  const lenStep   = parseFloat(document.getElementById('g-len-step').value) || 0;
+  const rareList  = parseList(document.getElementById('g-rare').value);
+  const rarePct   = parseFloat(document.getElementById('g-rare-pct').value) || 0;
+  const costPct   = parseFloat(document.getElementById('g-cost-pct').value) || 30;
+
+  const matrixDiv = document.getElementById('gen-matrix');
+  if (!colors.length || !lengths.length || !basePrice) {
+    matrixDiv.style.display = 'none';
+    return;
+  }
+
+  const rareSet = new Set(rareList.map(c => c.trim().toLowerCase()));
+  const variants = buildVariants(colors, lengths, basePrice, lenStep, rareSet, rarePct, costPct);
+
+  // 表头：颜色列
+  const thStyle = 'background:var(--ink);color:var(--cream);padding:7px 10px;font-size:11px;font-weight:500;white-space:nowrap;text-align:left';
+  document.getElementById('gen-matrix-head').innerHTML =
+    `<th style="${thStyle}">长度 \\ 颜色</th>` +
+    colors.map(c => {
+      const star = rareSet.has(c.trim().toLowerCase()) ? ' ✦' : '';
+      return `<th style="${thStyle}">${c}${star}</th>`;
+    }).join('');
+
+  // 行：每个长度一行
+  const rows = lengths.map((len, li) => {
+    const cells = colors.map((_, ci) => {
+      const v = variants[li * colors.length + ci];
+      const oos = !v.inStock ? ' <span style="color:#942222;font-size:10px">[缺]</span>' : '';
+      return `<td style="padding:6px 10px;white-space:nowrap;border-bottom:1px solid var(--bone)">$${v.price}${oos}<br><span style="font-size:10px;color:var(--soil);opacity:.7">成本 $${v._supplierCost}</span></td>`;
+    }).join('');
+    return `<tr><td style="padding:6px 10px;font-weight:500;background:var(--cream);border-bottom:1px solid var(--bone);white-space:nowrap">${len}</td>${cells}</tr>`;
+  });
+  document.getElementById('gen-matrix-body').innerHTML = rows.join('');
+  matrixDiv.style.display = 'block';
+}
+
+/** 生成完整 JS 对象代码 */
+function generateCode() {
+  const esc = s => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+
+  const id       = document.getElementById('g-id').value.trim() || 'lum-000000';
+  const name     = document.getElementById('g-name').value.trim() || 'New Product';
+  const subtitle = document.getElementById('g-subtitle').value.trim();
+  const basePrice= parseFloat(document.getElementById('g-price').value) || 0;
+  const oldPrice = parseFloat(document.getElementById('g-oldprice').value) || 0;
+  const tag      = document.getElementById('g-tag').value.trim();
+  const imageUrl = document.getElementById('g-image').value.trim();
+  const desc     = document.getElementById('g-desc').value.trim();
+  const featLines= document.getElementById('g-features').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const featured = document.getElementById('g-featured').checked;
+
+  const colors   = parseList(document.getElementById('g-colors').value);
+  const lengths  = parseList(document.getElementById('g-lengths').value);
+  const lenStep  = parseFloat(document.getElementById('g-len-step').value) || 0;
+  const rareList = parseList(document.getElementById('g-rare').value);
+  const rarePct  = parseFloat(document.getElementById('g-rare-pct').value) || 0;
+  const costPct  = parseFloat(document.getElementById('g-cost-pct').value) || 30;
+
+  if (!colors.length || !lengths.length || !basePrice) {
+    alert('必填项未完成：请填写「起售价」「颜色」「长度」');
+    return;
+  }
+
+  const rareSet  = new Set(rareList.map(c => c.trim().toLowerCase()));
+  const variants = buildVariants(colors, lengths, basePrice, lenStep, rareSet, rarePct, costPct);
+  const minPrice = Math.min(...variants.map(v => v.price));
+
+  // 计算最长 color 字符串，用于对齐
+  const maxColorLen = Math.max(...variants.map(v => v.color.length));
+
+  const L = [];  // 输出行数组
+  L.push(`  {`);
+  L.push(`    id: '${esc(id)}',`);
+  L.push(`    name: '${esc(name)}',`);
+  if (subtitle)  L.push(`    subtitle: '${esc(subtitle)}',`);
+  L.push(`    price: ${minPrice},          // 起售价,用于商品卡片展示`);
+  if (oldPrice)  L.push(`    oldPrice: ${oldPrice},`);
+  if (tag)       L.push(`    tag: '${esc(tag)}',`);
+  L.push(`    images: ['${esc(imageUrl)}'],`);
+  if (desc)      L.push(`    description: '${esc(desc)}',`);
+  if (featLines.length) {
+    L.push(`    features: [`);
+    featLines.forEach(f => L.push(`      '${esc(f)}',`));
+    L.push(`    ],`);
+  }
+  L.push(`    variants: [`);
+
+  let prevLen = null;
+  for (const v of variants) {
+    if (v.length !== prevLen) {
+      // 分段注释：找该长度第一个 price
+      const secPrice = variants.find(x => x.length === v.length).price;
+      L.push(`      // ── ${v.length} · $${secPrice} ─────────────────────────────`);
+      prevLen = v.length;
+    }
+    const colorPadded = `'${v.color}'`.padEnd(maxColorLen + 2);
+    const inStockStr  = v.inStock ? 'true ' : 'false';
+    L.push(`      { color: ${colorPadded}, length: '${v.length}', price: ${v.price}, inStock: ${inStockStr}, _supplierCost: ${v._supplierCost} },`);
+  }
+
+  L.push(`    ],`);
+  L.push(`    _supplier: {`);
+  L.push(`      platform: '1688',`);
+  L.push(`      shopName: '',`);
+  L.push(`      productUrl: '',`);
+  L.push(`      contactWeChat: '',`);
+  L.push(`      costPrice: 0,`);
+  L.push(`      notes: ''`);
+  L.push(`    },`);
+  L.push(`    featured: ${featured}`);
+  L.push(`  },`);
+
+  const code = L.join('\n');
+  window._genCode = code;
+
+  document.getElementById('gen-code-block').textContent = code;
+  const out = document.getElementById('gen-output');
+  out.style.display = 'block';
+  out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyGenCode() {
+  if (!window._genCode) return;
+  navigator.clipboard.writeText(window._genCode).then(() => {
+    const el = document.getElementById('gen-copy-done');
+    if (!el) return;
+    el.style.display = 'inline';
+    setTimeout(() => { el.style.display = 'none'; }, 2200);
+  });
 }
 
 // ─────────────────────────────────────────────────────────
