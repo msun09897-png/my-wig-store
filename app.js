@@ -164,20 +164,93 @@ let touchStartX = 0;
 function renderProductDetail(id) {
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
-  currentProduct = { ...p, selectedColor: p.colors[0], selectedLength: p.lengths[Math.floor(p.lengths.length / 2)] };
-  carouselImages = p.images || [p.image];
+
+  // ── Carousel images: product images + any unique variant images ──
+  const baseImages = p.images || [p.image];
+  const variantImgs = p.variants
+    ? [...new Set(p.variants.filter(v => v.image).map(v => v.image))]
+    : [];
+  carouselImages = [...new Set([...baseImages, ...variantImgs])];
   carouselIndex = 0;
 
-  const oldPrice = p.oldPrice ? `<span style="text-decoration:line-through;opacity:0.5;margin-left:12px;font-size:18px;">${fmt(p.oldPrice)}</span>` : '';
-  const multi = carouselImages.length > 1;
+  // ── Init currentProduct ──────────────────────────────────────────
+  if (p.variants) {
+    const def = p.variants.find(v => v.inStock) || p.variants[0];
+    currentProduct = { ...p, selectedColor: def.color, selectedLength: def.length };
+  } else {
+    currentProduct = {
+      ...p,
+      selectedColor:  p.colors[0],
+      selectedLength: p.lengths[Math.floor(p.lengths.length / 2)],
+    };
+  }
 
+  // ── Carousel HTML ────────────────────────────────────────────────
+  const multi  = carouselImages.length > 1;
   const slides = carouselImages.map(src => `<img src="${src}" alt="${p.name}" loading="lazy">`).join('');
-  const dots = multi ? `<div class="carousel-dots" id="carouselDots">${carouselImages.map((_, i) => `<span class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselGoTo(${i})"></span>`).join('')}</div>` : '';
+  const dots   = multi
+    ? `<div class="carousel-dots" id="carouselDots">${carouselImages.map((_, i) => `<span class="carousel-dot${i === 0 ? ' active' : ''}" onclick="carouselGoTo(${i})"></span>`).join('')}</div>`
+    : '';
   const arrows = multi ? `
     <button class="carousel-btn carousel-prev" onclick="carouselMove(-1)" aria-label="Previous">&#8249;</button>
-    <button class="carousel-btn carousel-next" onclick="carouselMove(1)" aria-label="Next">&#8250;</button>` : '';
+    <button class="carousel-btn carousel-next" onclick="carouselMove(1)"  aria-label="Next">&#8250;</button>` : '';
 
   const reviewCount = 89 + ((p.name.length * 13 + Math.floor(p.price)) % 159);
+
+  // ── Option buttons ───────────────────────────────────────────────
+  let colorHTML = '', lengthHTML = '';
+
+  if (p.variants) {
+    const colors  = [...new Set(p.variants.map(v => v.color))];
+    const lengths = [...new Set(p.variants.map(v => v.length))];
+    const def     = p.variants.find(v => v.inStock) || p.variants[0];
+
+    colorHTML = `
+      <div class="detail-options">
+        <label>Color</label>
+        <div class="option-group" id="colorOptions">
+          ${colors.map(c => `<button class="option-btn${c === def.color ? ' active' : ''}" data-value="${c}" onclick="selectOption('color','${c}',this)">${c}</button>`).join('')}
+        </div>
+      </div>`;
+    lengthHTML = `
+      <div class="detail-options">
+        <label>Length</label>
+        <div class="option-group" id="lengthOptions">
+          ${lengths.map(l => `<button class="option-btn${l === def.length ? ' active' : ''}" data-value="${l}" onclick="selectOption('length','${l}',this)">${l}</button>`).join('')}
+        </div>
+      </div>`;
+  } else {
+    const defLenIdx = Math.floor(p.lengths.length / 2);
+    colorHTML = `
+      <div class="detail-options">
+        <label>Color</label>
+        <div class="option-group" id="colorOptions">
+          ${p.colors.map((c, i) => `<button class="option-btn${i === 0 ? ' active' : ''}" data-value="${c}" onclick="selectOption('color','${c}',this)">${c}</button>`).join('')}
+        </div>
+      </div>`;
+    lengthHTML = `
+      <div class="detail-options">
+        <label>Length</label>
+        <div class="option-group" id="lengthOptions">
+          ${p.lengths.map((l, i) => `<button class="option-btn${i === defLenIdx ? ' active' : ''}" data-value="${l}" onclick="selectOption('length','${l}',this)">${l}</button>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  // ── Initial price & Add-to-Bag state ────────────────────────────
+  const oldPriceHTML = p.oldPrice
+    ? `<span class="detail-price-old">${fmt(p.oldPrice)}</span>` : '';
+  let initPrice, initDisabled, initBtnLabel;
+  if (p.variants) {
+    const def  = p.variants.find(v => v.inStock) || p.variants[0];
+    initPrice  = def.price;
+    initDisabled = !def.inStock;
+    initBtnLabel = def.inStock ? `Add to Bag — ${fmt(def.price)}` : 'Out of Stock';
+  } else {
+    initPrice    = p.price;
+    initDisabled = false;
+    initBtnLabel = `Add to Bag — ${fmt(p.price)}`;
+  }
 
   $('productDetail').innerHTML = `
     <div class="carousel" id="carousel">
@@ -192,35 +265,21 @@ function renderProductDetail(id) {
         <span class="stars">★★★★★</span>
         <span class="rating-text">4.9 (${reviewCount} reviews)</span>
       </div>
-      <p class="detail-price">${fmt(p.price)}${oldPrice}</p>
+      <p class="detail-price" id="detailPrice">${fmt(initPrice)}${oldPriceHTML}</p>
       <p class="detail-desc">${p.description}</p>
-
-      <div class="detail-options">
-        <label>Color</label>
-        <div class="option-group" id="colorOptions">
-          ${p.colors.map((c, i) => `<button class="option-btn ${i === 0 ? 'active' : ''}" onclick="selectOption('color', '${c}', this)">${c}</button>`).join('')}
-        </div>
-      </div>
-
-      <div class="detail-options">
-        <label>Length</label>
-        <div class="option-group" id="lengthOptions">
-          ${p.lengths.map((l, i) => `<button class="option-btn ${i === Math.floor(p.lengths.length / 2) ? 'active' : ''}" onclick="selectOption('length', '${l}', this)">${l}</button>`).join('')}
-        </div>
-      </div>
-
+      ${colorHTML}
+      ${lengthHTML}
       <ul class="detail-features">
         ${p.features.map(f => `<li>${f}</li>`).join('')}
       </ul>
-
-      <button class="btn-add" onclick="addToCart()">Add to Bag — ${fmt(p.price)}</button>
+      <button class="btn-add" id="addToBagBtn" onclick="addToCart()"${initDisabled ? ' disabled' : ''}>${initBtnLabel}</button>
     </div>
   `;
 
-  // 触摸滑动
+  // ── Touch swipe ──────────────────────────────────────────────────
   const track = $('carouselTrack');
   track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend', e => {
+  track.addEventListener('touchend',   e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 40) carouselMove(dx < 0 ? 1 : -1);
   }, { passive: true });
@@ -242,11 +301,63 @@ function carouselGoTo(i) {
   carouselUpdateUI();
 }
 
+// ============================================
+// Variant helpers
+// ============================================
+function findVariant(color, length) {
+  return (currentProduct?.variants || []).find(v => v.color === color && v.length === length) ?? null;
+}
+
+function updateVariantUI() {
+  const v        = findVariant(currentProduct.selectedColor, currentProduct.selectedLength);
+  const price    = v ? v.price : currentProduct.price;
+  const inStock  = v ? v.inStock : true;
+  const oldHTML  = currentProduct.oldPrice
+    ? `<span class="detail-price-old">${fmt(currentProduct.oldPrice)}</span>` : '';
+
+  // Price display
+  const priceEl = $('detailPrice');
+  if (priceEl) priceEl.innerHTML = fmt(price) + oldHTML;
+
+  // Add to Bag button
+  const btn = $('addToBagBtn');
+  if (btn) {
+    btn.disabled    = !inStock;
+    btn.textContent = inStock ? `Add to Bag — ${fmt(price)}` : 'Out of Stock';
+  }
+
+  // If this variant has its own image, jump to it in the carousel
+  if (v && v.image) {
+    const idx = carouselImages.indexOf(v.image);
+    if (idx >= 0) carouselGoTo(idx);
+  }
+}
+
 function selectOption(type, value, btn) {
-  if (type === 'color') currentProduct.selectedColor = value;
+  if (type === 'color') {
+    currentProduct.selectedColor = value;
+    // For variant products: if the current length doesn't exist under the new colour,
+    // fall back to the first inStock length for that colour.
+    if (currentProduct.variants) {
+      const forColor = currentProduct.variants.filter(v => v.color === value);
+      const stillValid = forColor.some(v => v.length === currentProduct.selectedLength);
+      if (!stillValid) {
+        const fallback = forColor.find(v => v.inStock) || forColor[0];
+        if (fallback) {
+          currentProduct.selectedLength = fallback.length;
+          document.querySelectorAll('#lengthOptions .option-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.value === fallback.length);
+          });
+        }
+      }
+    }
+  }
   if (type === 'length') currentProduct.selectedLength = value;
+
   btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+
+  if (currentProduct.variants) updateVariantUI();
 }
 
 // ============================================
@@ -254,20 +365,29 @@ function selectOption(type, value, btn) {
 // ============================================
 function addToCart() {
   if (!currentProduct) return;
-  const key = currentProduct.id + '-' + currentProduct.selectedColor + '-' + currentProduct.selectedLength;
+  const btn = $('addToBagBtn');
+  if (btn && btn.disabled) return; // blocked for out-of-stock
+
+  const v     = currentProduct.variants
+    ? findVariant(currentProduct.selectedColor, currentProduct.selectedLength)
+    : null;
+  const price = v ? v.price : currentProduct.price;
+  const image = (v && v.image) || (currentProduct.images || [currentProduct.image])[0];
+
+  const key      = currentProduct.id + '-' + currentProduct.selectedColor + '-' + currentProduct.selectedLength;
   const existing = cart.find(i => i.key === key);
   if (existing) {
     existing.qty += 1;
   } else {
     cart.push({
       key,
-      id: currentProduct.id,
-      name: currentProduct.name,
+      id:       currentProduct.id,
+      name:     currentProduct.name,
       subtitle: currentProduct.subtitle,
-      image: (currentProduct.images || [currentProduct.image])[0],
-      price: currentProduct.price,
-      color: currentProduct.selectedColor,
-      length: currentProduct.selectedLength,
+      image,
+      price,
+      color:    currentProduct.selectedColor,
+      length:   currentProduct.selectedLength,
       qty: 1
     });
   }

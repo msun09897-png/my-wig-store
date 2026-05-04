@@ -727,6 +727,26 @@ body {
 
 .btn-add:hover { background: var(--rose-deep); }
 
+.btn-add:disabled {
+  background: var(--bone);
+  color: var(--soil);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.btn-add:disabled:hover {
+  background: var(--bone);
+  transform: none;
+}
+
+.detail-price-old {
+  font-family: var(--serif);
+  font-size: 18px;
+  text-decoration: line-through;
+  opacity: 0.45;
+  margin-left: 12px;
+}
+
 /* ============ 客户评价 ============ */
 .testimonial {
   background: var(--cream);
