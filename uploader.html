@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<!--
+  ⚠️ 这是内部后台。products.js 中的供应商信息在 GitHub 公开仓库源代码里技术上可见。
+  如需真正隐私保护，需迁移到带数据库的后端。
+-->
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUMIÈRE — 内部后台</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:     #f5f0e8;
+      --ivory:     #faf6ef;
+      --bone:      #ede5d6;
+      --ink:       #1a1612;
+      --soil:      #3d2f24;
+      --rose:      #b08968;
+      --rose-deep: #8a6a4f;
+      --gold:      #c9a961;
+      --serif:     'Cormorant Garamond', serif;
+      --sans:      'Outfit', sans-serif;
+      --row-red:   rgba(200, 55, 55, 0.09);
+      --row-green: rgba(50, 150, 75, 0.10);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--ivory);
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Warning banner ────────────────────────── */
+    .admin-warning {
+      background: #fff8e1;
+      border-bottom: 1px solid #f5c842;
+      padding: 9px 24px;
+      font-size: 12px;
+      color: #5a4300;
+      line-height: 1.6;
+    }
+
+    /* ── Admin header ──────────────────────────── */
+    .admin-header {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .admin-header .logo-serif {
+      font-family: var(--serif);
+      font-size: 20px;
+      letter-spacing: 0.3em;
+    }
+    .admin-header .badge {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      background: var(--rose-deep);
+      color: #fff;
+      padding: 3px 10px;
+    }
+    .admin-header .sub {
+      font-size: 11px;
+      color: rgba(245,240,232,0.5);
+      margin-left: auto;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Main wrapper ──────────────────────────── */
+    .admin-main {
+      padding: 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* ── Section title ─────────────────────────── */
+    .section-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--bone);
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .section-title .zone-label {
+      font-family: var(--sans);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      font-weight: 500;
+    }
+    .section-title .legend {
+      font-family: var(--sans);
+      font-size: 11px;
+      color: var(--soil);
+      font-weight: 400;
+      margin-left: auto;
+      opacity: 0.8;
+    }
+
+    /* ════════════════════════════════════════════
+       区A — 商品 & 成本总览
+    ════════════════════════════════════════════ */
+    .area-a { margin-bottom: 28px; }
+
+    .table-wrap {
+      border: 1px solid var(--bone);
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+      font-size: 12.5px;
+    }
+
+    thead th {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 9px 12px;
+      text-align: left;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    thead th:first-child { position: sticky; left: 0; z-index: 3; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--bone);
+      transition: filter 0.12s;
+    }
+    tbody tr.row-green { background: var(--row-green); }
+    tbody tr.row-red   { background: var(--row-red); }
+    tbody tr:not(.row-green):not(.row-red) { background: var(--ivory); }
+    tbody tr:hover { filter: brightness(0.955); }
+
+    td {
+      padding: 6px 12px;
+      color: var(--soil);
+      white-space: nowrap;
+    }
+    td.td-id   { font-family: monospace; font-size: 11px; color: var(--rose-deep); }
+    td.td-name { font-weight: 500; color: var(--ink); max-width: 200px; white-space: normal; }
+    td.td-price { font-family: var(--serif); font-size: 14px; color: var(--ink); }
+
+    .margin-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 2px;
+    }
+    .margin-tag.high { background: rgba(50,150,75,0.14);  color: #236632; }
+    .margin-tag.mid  { background: rgba(180,130,40,0.12); color: #7a5c1e; }
+    .margin-tag.low  { background: rgba(200,55,55,0.13);  color: #942222; }
+    .margin-tag.none { background: var(--bone); color: var(--soil); }
+
+    .oos-badge {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #942222;
+      margin-left: 5px;
+    }
+
+    /* ════════════════════════════════════════════
+       区B + C — 两列
+    ════════════════════════════════════════════ */
+    .area-bc {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 920px) { .area-bc { grid-template-columns: 1fr; } }
+
+    .area-b, .area-c {
+      background: var(--cream);
+      border: 1px solid var(--bone);
+      padding: 20px;
+    }
+
+    /* ── 区B ──────────────────────────────────── */
+    .fulfil-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .fulfil-input {
+      flex: 1;
+      padding: 10px 12px;
+      background: var(--ivory);
+      border: 1px solid var(--bone);
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .fulfil-input:focus  { border-color: var(--rose-deep); }
+    .fulfil-input::placeholder { color: rgba(61,47,36,0.38); }
+
+    .btn-sm {
+      padding: 10px 16px;
+      background: var(--ink);
+      color: var(--ivory);
+      border: none;
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .btn-sm:hover { background: var(--rose-deep); }
+
+    .fulfil-empty {
+      text-align: center;
+      padding: 28px 0;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--soil);
+      opacity: 0.7;
+    }
+
+    .product-card {
+      background: var(--ivory);
+      border: 1px solid var(--bone);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .product-card h3 {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .info-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 5px;
+      font-size: 12.5px;
+    }
+    .info-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      font-weight: 500;
+      min-width: 72px;
+      padding-top: 1px;
+      flex-shrink: 0;
+    }
+    .info-val { color: var(--soil); }
+
+    .template-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--soil);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .copy-preview {
+      background: var(--bone);
+      border: 1px solid rgba(61,47,36,0.15);
+      padding: 12px 14px;
+      font-size: 12.5px;
+      line-height: 1.9;
+      color: var(--ink);
+      white-space: pre-wrap;
+      font-family: var(--sans);
+      margin-bottom: 10px;
+    }
+    .copy-done {
+      font-size: 11px;
+      color: #236632;
+      margin-left: 10px;
+      display: none;
+    }
+
+    /* ── 区C ──────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .stat-card {
+      background: var(--ivory);
+      border: 1px solid var(--bone);
+      padding: 11px 13px;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--soil);
+      margin-bottom: 3px;
+    }
+    .stat-value {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--rose-deep);
+    }
+
+    .top-section h4 {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--soil);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .top-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--bone);
+      gap: 10px;
+    }
+    .top-item:last-child { border-bottom: none; }
+    .top-item-name { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+    .top-item-id   { font-size: 11px; color: var(--soil); font-family: monospace; }
+    .top-item-pct  { font-weight: 600; font-size: 13px; white-space: nowrap; }
+    .top-item-pct.high { color: #236632; }
+    .top-item-pct.low  { color: #942222; }
+
+    .c-divider {
+      border: none;
+      border-top: 1px solid var(--bone);
+      margin: 14px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Warning ──────────────────────────────────── -->
+<div class="admin-warning">
+  ⚠️ 这是内部后台。products.js 中的供应商信息在 GitHub 公开仓库源代码里技术上可见。如需真正隐私保护，需迁移到带数据库的后端。
+</div>
+
+<!-- ── Header ───────────────────────────────────── -->
+<div class="admin-header">
+  <span class="logo-serif">LUMIÈRE</span>
+  <span class="badge">Admin</span>
+  <span class="sub">内部使用 · 请勿分享链接</span>
+</div>
+
+<!-- ── Main ─────────────────────────────────────── -->
+<div class="admin-main">
+
+  <!-- ══════════════════════════════════════════
+       区A — 商品 & 成本总览
+  ═══════════════════════════════════════════ -->
+  <div class="area-a">
+    <div class="section-title">
+      <span class="zone-label">区 A</span>
+      商品 &amp; 成本总览
+      <span class="legend">
+        <span style="display:inline-block;width:10px;height:10px;background:var(--row-green);margin-right:4px;vertical-align:middle;"></span>利润率 ≥ 200%
+        &nbsp;&nbsp;
+        <span style="display:inline-block;width:10px;height:10px;background:var(--row-red);margin-right:4px;vertical-align:middle;"></span>利润率 &lt; 100%
+      </span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>商品 ID</th>
+            <th>商品名</th>
+            <th>颜色</th>
+            <th>长度 / 规格</th>
+            <th>售价</th>
+            <th>进货价</th>
+            <th>利润</th>
+            <th>利润率</th>
+            <th>库存</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       区B + 区C
+  ═══════════════════════════════════════════ -->
+  <div class="area-bc">
+
+    <!-- 区B — 订单履行助手 -->
+    <div class="area-b">
+      <div class="section-title">
+        <span class="zone-label">区 B</span>订单履行助手
+      </div>
+      <div class="fulfil-row">
+        <input class="fulfil-input" id="fulfilInput"
+          placeholder="粘贴商品 ID (lum-xxx) 或订单号 (LUMxxxxxx)…"
+          oninput="runFulfil()">
+        <button class="btn-sm" onclick="clearFulfil()">清除</button>
+      </div>
+      <div id="fulfilResult">
+        <p class="fulfil-empty">输入商品 ID 或订单号，自动显示供应商信息</p>
+      </div>
+    </div>
+
+    <!-- 区C — 利润分析 -->
+    <div class="area-c">
+      <div class="section-title">
+        <span class="zone-label">区 C</span>利润分析
+      </div>
+      <div class="stats-grid" id="statsGrid"></div>
+      <div id="topLists"></div>
+    </div>
+
+  </div>
+</div><!-- /admin-main -->
+
+<script src="products.js"></script>
+<script>
+// ─────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────
+const fmtUSD = n => '$' + Number(n).toFixed(2);
+const fmtPct = n => n.toFixed(1) + '%';
+const mean   = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+function marginClass(m) {
+  if (m === null) return 'none';
+  if (m >= 200)   return 'high';
+  if (m < 100)    return 'low';
+  return 'mid';
+}
+
+// ─────────────────────────────────────────────────────────
+// Flatten all products → SKU rows
+// ─────────────────────────────────────────────────────────
+function getAllRows() {
+  const rows = [];
+  for (const p of PRODUCTS) {
+    if (p.variants && p.variants.length) {
+      for (const v of p.variants) {
+        const cost   = typeof v._supplierCost === 'number' ? v._supplierCost : null;
+        const profit = cost !== null ? v.price - cost : null;
+        const margin = cost !== null && cost > 0 ? (profit / cost) * 100 : null;
+        rows.push({ p, v, price: v.price, cost, profit, margin,
+                    color: v.color, length: v.length, inStock: v.inStock });
+      }
+    } else {
+      // Legacy product — no per-SKU cost data
+      rows.push({ p, v: null, price: p.price, cost: null, profit: null, margin: null,
+                  color: (p.colors || []).slice(0, 2).join(', ') + (p.colors && p.colors.length > 2 ? '…' : ''),
+                  length: (p.lengths || []).slice(0, 2).join(', ') + (p.lengths && p.lengths.length > 2 ? '…' : ''),
+                  inStock: true });
+    }
+  }
+  return rows;
+}
+
+// ─────────────────────────────────────────────────────────
+// 区A — 渲染表格
+// ─────────────────────────────────────────────────────────
+function renderTable() {
+  const rows = getAllRows();
+  document.getElementById('tableBody').innerHTML = rows.map(r => {
+    const mc      = marginClass(r.margin);
+    const trClass = mc === 'high' ? 'row-green' : mc === 'low' ? 'row-red' : '';
+    const marginCell = r.margin !== null
+      ? `<span class="margin-tag ${mc}">${fmtPct(r.margin)}</span>`
+      : `<span class="margin-tag none">—</span>`;
+    const profitCell = r.profit !== null
+      ? `<span style="color:${r.profit >= 0 ? '#236632' : '#942222'};font-weight:500">${fmtUSD(r.profit)}</span>`
+      : '—';
+    const costCell   = r.cost !== null ? fmtUSD(r.cost) : '—';
+    const stockCell  = r.inStock === false
+      ? '<span style="color:#942222;font-weight:500">缺货</span>'
+      : '<span style="color:#236632">有货</span>';
+    return `<tr class="${trClass}">
+      <td class="td-id">${r.p.id}</td>
+      <td class="td-name">${r.p.name}</td>
+      <td>${r.color || '—'}</td>
+      <td>${r.length || '—'}</td>
+      <td class="td-price">${fmtUSD(r.price)}</td>
+      <td>${costCell}</td>
+      <td>${profitCell}</td>
+      <td>${marginCell}</td>
+      <td>${stockCell}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+// 区B — 订单履行助手
+// ─────────────────────────────────────────────────────────
+function runFulfil() {
+  const raw = document.getElementById('fulfilInput').value.trim();
+  const el  = document.getElementById('fulfilResult');
+
+  if (!raw) {
+    el.innerHTML = '<p class="fulfil-empty">输入商品 ID 或订单号，自动显示供应商信息</p>';
+    return;
+  }
+
+  const lower = raw.toLowerCase();
+  let match   = null;
+
+  // 精确匹配商品ID (lum-xxx)
+  if (lower.startsWith('lum-')) {
+    match = PRODUCTS.find(p => p.id.toLowerCase() === lower);
+  }
+  // 订单号 LUMxxxxxx：取末6位作为模糊暗示，再按名称/ID子串兜底
+  if (!match) {
+    match = PRODUCTS.find(p =>
+      p.id.toLowerCase().includes(lower) ||
+      p.name.toLowerCase().includes(lower)
+    );
+  }
+
+  if (!match) {
+    el.innerHTML = `<p class="fulfil-empty">未找到匹配商品<br>
+      <span style="font-size:12px;font-style:normal">精确匹配请输入商品 ID，如 <code>lum-196224</code></span></p>`;
+    return;
+  }
+
+  // 供应商进货价汇总
+  let costSummary = '—';
+  if (match.variants && match.variants.length) {
+    const uniqueCosts = [...new Set(match.variants.map(v => v._supplierCost).filter(c => c != null))];
+    costSummary = uniqueCosts.length
+      ? uniqueCosts.map(fmtUSD).join(' / ') + (uniqueCosts.length > 1 ? '（按长度变动）' : '')
+      : '—';
+  }
+
+  const copyText =
+    `您好，需要代发一件：\n` +
+    `商品：${match.name}\n` +
+    `规格：[等会儿你接到客户订单时填]\n` +
+    `收货地址：[等会儿你接到客户订单时填]\n` +
+    `谢谢！`;
+
+  window._copyText = copyText;
+
+  el.innerHTML = `
+    <div class="product-card">
+      <h3>${match.name}</h3>
+      <div class="info-row">
+        <span class="info-label">商品 ID</span>
+        <span class="info-val" style="font-family:monospace">${match.id}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">副标题</span>
+        <span class="info-val">${match.subtitle}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">售价</span>
+        <span class="info-val">${match.variants ? '起 ' : ''}${fmtUSD(match.price)}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">进货价</span>
+        <span class="info-val">${costSummary}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">SKU 数量</span>
+        <span class="info-val">${match.variants ? match.variants.length + ' 个' : '旧格式（无 variants）'}</span>
+      </div>
+    </div>
+    <p class="template-label">代发模板预览</p>
+    <div class="copy-preview">${copyText}</div>
+    <button class="btn-sm" onclick="doCopy()">复制供应商信息</button>
+    <span class="copy-done" id="copyDone">✓ 已复制</span>
+  `;
+}
+
+function doCopy() {
+  if (!window._copyText) return;
+  navigator.clipboard.writeText(window._copyText).then(() => {
+    const el = document.getElementById('copyDone');
+    if (!el) return;
+    el.style.display = 'inline';
+    setTimeout(() => { el.style.display = 'none'; }, 2200);
+  });
+}
+
+function clearFulfil() {
+  document.getElementById('fulfilInput').value = '';
+  runFulfil();
+}
+
+// ─────────────────────────────────────────────────────────
+// 区C — 利润分析
+// ─────────────────────────────────────────────────────────
+function renderAnalysis() {
+  const allRows = getAllRows();
+  const costed  = allRows.filter(r => r.cost !== null && r.margin !== null);
+
+  const totalProducts  = PRODUCTS.length;
+  const costedSkuCount = costed.length;
+  const avgSell        = mean(costed.map(r => r.price));
+  const avgCost        = mean(costed.map(r => r.cost));
+  const avgProfit      = avgSell - avgCost;
+  const avgMargin      = mean(costed.map(r => r.margin));
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">商品总数</div>
+      <div class="stat-value">${totalProducts}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">有成本 SKU</div>
+      <div class="stat-value">${costedSkuCount}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">平均利润率</div>
+      <div class="stat-value" style="color:${avgMargin >= 100 ? 'var(--rose-deep)' : '#942222'}">${fmtPct(avgMargin)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">平均售价</div>
+      <div class="stat-value">${fmtUSD(avgSell)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">平均进货价</div>
+      <div class="stat-value">${fmtUSD(avgCost)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">平均利润</div>
+      <div class="stat-value">${fmtUSD(avgProfit)}</div>
+    </div>
+  `;
+
+  // Group by product → average margin per product
+  const byProduct = {};
+  for (const r of costed) {
+    if (!byProduct[r.p.id]) byProduct[r.p.id] = { p: r.p, margins: [] };
+    byProduct[r.p.id].margins.push(r.margin);
+  }
+  const summaries = Object.values(byProduct)
+    .map(x => ({ p: x.p, avg: mean(x.margins) }))
+    .sort((a, b) => b.avg - a.avg);
+
+  const top3    = summaries.slice(0, 3);
+  const bottom3 = [...summaries].sort((a, b) => a.avg - b.avg).slice(0, 3);
+
+  const makeItems = (list, cls) => list.map(x => `
+    <div class="top-item">
+      <div>
+        <div class="top-item-name">${x.p.name}</div>
+        <div class="top-item-id">${x.p.id}</div>
+      </div>
+      <div class="top-item-pct ${cls}">${fmtPct(x.avg)}</div>
+    </div>`).join('');
+
+  const noData = summaries.length === 0
+    ? '<p style="font-size:12px;color:var(--soil);padding:12px 0;font-style:italic">暂无含成本数据的商品</p>'
+    : '';
+
+  document.getElementById('topLists').innerHTML = noData || `
+    <div class="top-section">
+      <h4>最赚钱 Top ${Math.min(3, top3.length)}</h4>
+      ${makeItems(top3, 'high')}
+    </div>
+    <hr class="c-divider">
+    <div class="top-section">
+      <h4>利润率最低 Top ${Math.min(3, bottom3.length)} — 考虑优化或下架</h4>
+      ${makeItems(bottom3, 'low')}
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────────────────────
+renderTable();
+renderAnalysis();
+</script>
+</body>
+</html>
