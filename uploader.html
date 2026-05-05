@@ -603,8 +603,10 @@
         <input class="gen-input" id="g-tag" placeholder="Limited / New / Hot">
       </div>
       <div class="gen-field">
-        <div class="gen-label">图片 URL</div>
-        <input class="gen-input" id="g-image" placeholder="https://i.postimg.cc/...">
+        <div class="gen-label">商品图片（一行一个 URL，第一张为主图）</div>
+        <textarea class="gen-input gen-textarea" id="g-images" rows="4"
+          placeholder="https://i.postimg.cc/xxxxx&#10;https://i.postimg.cc/yyyyy&#10;https://i.postimg.cc/zzzzz"></textarea>
+        <div class="gen-hint">建议 4-8 张：正面 / 侧面 / 后面 / 上身效果 / 细节</div>
       </div>
     </div>
 
@@ -685,6 +687,16 @@
         </div>
       </div>
     </div>
+
+    <!-- 各 SKU 单独图片（默认折叠，可选） -->
+    <details class="gen-supplier-details">
+      <summary class="gen-supplier-summary">📷 各 SKU 单独图片（可选，点击展开）</summary>
+      <div class="gen-supplier-body">
+        <div class="gen-hint" style="margin-bottom:10px">如果某个颜色图片差异很大，可为该颜色指定专属图组。每行一个 URL，空行分隔不同颜色块。</div>
+        <textarea class="gen-input gen-textarea" id="g-variant-images" rows="8"
+          placeholder="Natural Black:&#10;https://...&#10;https://...&#10;&#10;Honey Brown:&#10;https://...&#10;https://..."></textarea>
+      </div>
+    </details>
 
     <!-- 供应商信息（默认折叠） -->
     <details class="gen-supplier-details">
@@ -1000,6 +1012,19 @@ function renderAnalysis() {
 // 区D — 新商品代码生成器
 // ─────────────────────────────────────────────────────────
 
+function parseVariantImages(text) {
+  if (!text || !text.trim()) return {};
+  const result = {};
+  text.split(/\n\s*\n/).forEach(block => {
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (!lines.length) return;
+    const colorName = lines[0].replace(/:$/, '').trim();
+    const urls = lines.slice(1).filter(l => l.startsWith('http'));
+    if (colorName && urls.length > 0) result[colorName] = urls;
+  });
+  return result;
+}
+
 function genRandId() {
   const num = String(Math.floor(100000 + Math.random() * 900000));
   document.getElementById('g-id').value = 'lum-' + num;
@@ -1091,7 +1116,8 @@ function generateCode() {
   const basePrice   = parseFloat(document.getElementById('g-price').value) || 0;
   const oldPrice    = parseFloat(document.getElementById('g-oldprice').value) || 0;
   const tag         = document.getElementById('g-tag').value.trim();
-  const imageUrl    = document.getElementById('g-image').value.trim();
+  const imageUrls   = document.getElementById('g-images').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const varImgText  = document.getElementById('g-variant-images').value;
   const desc        = document.getElementById('g-desc').value.trim();
   const featLines   = document.getElementById('g-features').value.split('\n').map(s => s.trim()).filter(Boolean);
   const featured    = document.getElementById('g-featured').checked;
@@ -1118,6 +1144,10 @@ function generateCode() {
 
   const rareSet  = new Set(rareList.map(c => c.trim().toLowerCase()));
   const variants = buildVariants(colors, lengths, basePrice, lenStep, rareSet, rarePct, baseCostCNY);
+  const varImgMap = parseVariantImages(varImgText);
+  variants.forEach(v => {
+    if (varImgMap[v.color] && varImgMap[v.color].length > 0) v._images = varImgMap[v.color];
+  });
   const minPrice = Math.min(...variants.map(v => v.price));
 
   // 最长 color 字符串长度，用于列对齐
@@ -1133,7 +1163,15 @@ function generateCode() {
   L.push(`    price: ${minPrice},          // 起售价,用于商品卡片展示`);
   if (oldPrice) L.push(`    oldPrice: ${oldPrice},`);
   if (tag)      L.push(`    tag: '${esc(tag)}',`);
-  L.push(`    images: ['${esc(imageUrl)}'],`);
+  if (imageUrls.length === 1) {
+    L.push(`    images: ['${esc(imageUrls[0])}'],`);
+  } else if (imageUrls.length > 1) {
+    L.push(`    images: [`);
+    imageUrls.forEach(u => L.push(`      '${esc(u)}',`));
+    L.push(`    ],`);
+  } else {
+    L.push(`    images: [],`);
+  }
   if (desc)     L.push(`    description: '${esc(desc)}',`);
   if (featLines.length) {
     L.push(`    features: [`);
@@ -1153,7 +1191,12 @@ function generateCode() {
     const colorCol  = `'${v.color}',`.padEnd(maxColorLen + 3);
     const lengthCol = `'${v.length}',`.padEnd(maxLenLen + 3);
     const costStr   = v._supplierCost !== null ? String(v._supplierCost) : 'null';
-    L.push(`      { color: ${colorCol} length: ${lengthCol} price: ${v.price}, inStock: true, _supplierCost: ${costStr} },`);
+    if (v._images) {
+      L.push(`      { color: ${colorCol} length: ${lengthCol} price: ${v.price}, inStock: true, _supplierCost: ${costStr},`);
+      L.push(`        images: [${v._images.map(u => `'${esc(u)}'`).join(', ')}] },`);
+    } else {
+      L.push(`      { color: ${colorCol} length: ${lengthCol} price: ${v.price}, inStock: true, _supplierCost: ${costStr} },`);
+    }
   }
 
   L.push(`    ],`);

@@ -1650,3 +1650,171 @@ body {
   .reviews-grid { grid-template-columns: 1fr; }
   .trust-badges-grid { grid-template-columns: repeat(2, 1fr); gap: 32px 24px; }
 }
+
+/* =========================================================================
+   PRODUCT GALLERY  (详情页画廊)
+   ========================================================================= */
+
+.gallery {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.gallery__thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.gallery__thumb {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #e5e0d8;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #f7f3ec;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  padding: 0;
+}
+
+.gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery__thumb:hover { border-color: #b8a888; }
+
+.gallery__thumb.is-active { border: 1.5px solid #2a2620; }
+
+.gallery--single .gallery__thumbs { display: none; }
+
+.gallery__main {
+  flex: 1;
+  position: relative;
+  background: #f7f3ec;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: zoom-in;
+  aspect-ratio: 1 / 1;
+}
+
+.gallery__main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s ease;
+}
+
+.gallery__main.is-fading img { opacity: 0; }
+
+/* ── Lightbox ─────────────────────────────────── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 18, 14, 0.92);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  cursor: zoom-out;
+  animation: lightbox-in 0.2s ease;
+}
+
+.lightbox[hidden] { display: none !important; }
+
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.lightbox__img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  display: block;
+  cursor: default;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lightbox__close,
+.lightbox__prev,
+.lightbox__next {
+  position: absolute;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  font-family: inherit;
+}
+
+.lightbox__close:hover,
+.lightbox__prev:hover,
+.lightbox__next:hover { background: rgba(255,255,255,0.25); }
+
+.lightbox__close { top: 24px; right: 24px; }
+.lightbox__prev  { left: 24px;  top: 50%; transform: translateY(-50%); }
+.lightbox__next  { right: 24px; top: 50%; transform: translateY(-50%); }
+
+.lightbox--single .lightbox__prev,
+.lightbox--single .lightbox__next { display: none; }
+
+.lightbox__counter {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.7);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+.lightbox--single .lightbox__counter { display: none; }
+
+/* ── Mobile ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .gallery { flex-direction: column; gap: 12px; }
+
+  .gallery__thumbs {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .gallery__thumbs::-webkit-scrollbar { display: none; }
+
+  .gallery__thumb { width: 64px; height: 64px; flex-shrink: 0; }
+
+  .gallery__main { order: -1; }
+
+  .lightbox { padding: 16px; }
+
+  .lightbox__close,
+  .lightbox__prev,
+  .lightbox__next { width: 40px; height: 40px; }
+
+  .lightbox__close { top: 16px; right: 16px; }
+  .lightbox__prev  { left: 12px; }
+  .lightbox__next  { right: 12px; }
+}
