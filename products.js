@@ -390,7 +390,7 @@ const PRODUCTS = [
     _supplier: {
       platform: '1688',
       shopName: 'EVO HAIR',
-      productUrl: '',
+      productUrl: 'https://detail.1688.com/offer/754334184717.html?_t=1777968601468&spm=a2615.7691456/2506.co_1_0_wangpu_score_0_0_0_0_0_0_0000_0.0',
       contactWeChat: '',
       costPrice: 70,
       notes: '现货 / 支持跨境贴标 / 官方仓退货 / 一件代发价¥69.9起'
