@@ -348,7 +348,10 @@ const PRODUCTS = [
     name: 'Céleste',
     subtitle: 'HD Lace Front Body Wave · 22"',
     price: 189,          // 起售价(12inch),用于商品卡片展示
-    images: ['https://i.postimg.cc/NFgt9kQ7/57921aa0-f7d6-48e7-9a39-aba1c8064075.png'],
+    images: [
+      'https://i.postimg.cc/NFgt9kQ7/57921aa0-f7d6-48e7-9a39-aba1c8064075.png',
+      'https://i.postimg.cc/44F2h1fB/O1CN01Un-K3Ty2Ec-QW4do-Fz-K-2215619748765-0-cib.jpg'
+    ],
     description: 'Deep, luscious curls that bounce and flow with every movement. Crafted on ultra-thin HD lace that melts into your hairline — undetectable, effortless, undeniable. Choose your density, own your look.',
     features: [
       '100% premium virgin human hair',
