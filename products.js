@@ -346,53 +346,54 @@ const PRODUCTS = [
   {
     id: 'lum-009',
     name: 'Céleste',
-    subtitle: 'HD Lace Front Body Wave · 22"',
-    price: 189,          // 起售价(12inch),用于商品卡片展示
+    subtitle: 'Deep Curly Bulk Hair · 100% Virgin Human Hair',
+    price: 39,           // 起售价(50g 12inch),用于商品卡片展示
     images: [
       'https://i.postimg.cc/NFgt9kQ7/57921aa0-f7d6-48e7-9a39-aba1c8064075.png',
       'https://i.postimg.cc/44F2h1fB/O1CN01Un-K3Ty2Ec-QW4do-Fz-K-2215619748765-0-cib.jpg'
     ],
-    description: 'Deep, luscious curls that bounce and flow with every movement. Crafted on ultra-thin HD lace that melts into your hairline — undetectable, effortless, undeniable. Choose your density, own your look.',
+    description: 'Premium 100% virgin human hair in deep curly texture — unprocessed, tangle-free, and dyeable. Perfect for box braids, faux locs, knotless styles, or seamless bulk extensions. Bouncy, long-lasting curls that hold their pattern wash after wash.',
     features: [
-      '100% premium virgin human hair',
-      'HD lace front, pre-plucked hairline',
-      'Natural baby hairs styled',
-      '180% density · medium cap',
-      'Two densities: 50g & 100g · 12–26 inch'
+      '100% virgin human hair · unprocessed',
+      'Deep curly texture · natural bounce',
+      'Suitable for box braids · faux locs · knotless',
+      'Heat-friendly · dyeable · bleach-friendly',
+      'Tangle-free · minimal shedding',
+      'Two weight options: 50g & 100g per bundle'
     ],
     variants: [
-      // ── 12inch/30cm · $189 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '12inch/30cm', price: 189, inStock: true, _supplierCost: 120 },
-      { color: '1B# Deep Curly (100g)', length: '12inch/30cm', price: 189, inStock: true, _supplierCost: 120 },
-      // ── 14inch/35cm · $200 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '14inch/35cm', price: 200, inStock: true, _supplierCost: 127 },
-      { color: '1B# Deep Curly (100g)', length: '14inch/35cm', price: 200, inStock: true, _supplierCost: 127 },
-      // ── 16inch/40cm · $212 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '16inch/40cm', price: 212, inStock: true, _supplierCost: 135 },
-      { color: '1B# Deep Curly (100g)', length: '16inch/40cm', price: 212, inStock: true, _supplierCost: 135 },
-      // ── 18inch/45cm · $225 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '18inch/45cm', price: 225, inStock: true, _supplierCost: 143 },
-      { color: '1B# Deep Curly (100g)', length: '18inch/45cm', price: 225, inStock: true, _supplierCost: 143 },
-      // ── 20inch/50cm · $239 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '20inch/50cm', price: 239, inStock: true, _supplierCost: 151 },
-      { color: '1B# Deep Curly (100g)', length: '20inch/50cm', price: 239, inStock: true, _supplierCost: 151 },
-      // ── 22inch/55cm · $253 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '22inch/55cm', price: 253, inStock: true, _supplierCost: 161 },
-      { color: '1B# Deep Curly (100g)', length: '22inch/55cm', price: 253, inStock: true, _supplierCost: 161 },
-      // ── 24inch/60cm · $268 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '24inch/60cm', price: 268, inStock: true, _supplierCost: 170 },
-      { color: '1B# Deep Curly (100g)', length: '24inch/60cm', price: 268, inStock: true, _supplierCost: 170 },
-      // ── 26inch/65cm · $284 ──────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '26inch/65cm', price: 284, inStock: true, _supplierCost: 180 },
-      { color: '1B# Deep Curly (100g)', length: '26inch/65cm', price: 284, inStock: true, _supplierCost: 180 },
+      // ── 12inch/30cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '12inch/30cm', price: 39,  inStock: true, _supplierCost: 70  },
+      { color: '1B# Deep Curly (100g)', length: '12inch/30cm', price: 69,  inStock: true, _supplierCost: 130 },
+      // ── 14inch/35cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '14inch/35cm', price: 45,  inStock: true, _supplierCost: 89  },
+      { color: '1B# Deep Curly (100g)', length: '14inch/35cm', price: 79,  inStock: true, _supplierCost: 168 },
+      // ── 16inch/40cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '16inch/40cm', price: 49,  inStock: true, _supplierCost: 99  },
+      { color: '1B# Deep Curly (100g)', length: '16inch/40cm', price: 89,  inStock: true, _supplierCost: 188 },
+      // ── 18inch/45cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '18inch/45cm', price: 55,  inStock: true, _supplierCost: 108 },
+      { color: '1B# Deep Curly (100g)', length: '18inch/45cm', price: 99,  inStock: true, _supplierCost: 205 },
+      // ── 20inch/50cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '20inch/50cm', price: 65,  inStock: true, _supplierCost: 137 },
+      { color: '1B# Deep Curly (100g)', length: '20inch/50cm', price: 115, inStock: true, _supplierCost: 260 },
+      // ── 22inch/55cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '22inch/55cm', price: 75,  inStock: true, _supplierCost: 166 },
+      { color: '1B# Deep Curly (100g)', length: '22inch/55cm', price: 135, inStock: true, _supplierCost: 315 },
+      // ── 24inch/60cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '24inch/60cm', price: 79,  inStock: true, _supplierCost: 175 },
+      { color: '1B# Deep Curly (100g)', length: '24inch/60cm', price: 145, inStock: true, _supplierCost: 333 },
+      // ── 26inch/65cm ──────────────────────────────────────
+      { color: '1B# Deep Curly (50g)',  length: '26inch/65cm', price: 89,  inStock: true, _supplierCost: 194 },
+      { color: '1B# Deep Curly (100g)', length: '26inch/65cm', price: 159, inStock: true, _supplierCost: 370 },
     ],
     _supplier: {
       platform: '1688',
-      shopName: '',
+      shopName: 'EVO HAIR',
       productUrl: '',
       contactWeChat: '',
-      costPrice: 120,
-      notes: ''
+      costPrice: 70,
+      notes: '现货 / 支持跨境贴标 / 官方仓退货 / 一件代发价¥69.9起'
     },
     featured: false
   }
