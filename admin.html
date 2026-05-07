@@ -935,7 +935,7 @@ function renderOverview() {
   const meta = document.getElementById('overviewMeta');
   tbody.innerHTML = '';
 
-  if (!Array.isArray(window.PRODUCTS) || window.PRODUCTS.length === 0) {
+  if (!Array.isArray(PRODUCTS) || PRODUCTS.length === 0) {
     tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">No products found in products.js</div></td></tr>';
     meta.textContent = '';
     return;
@@ -1274,7 +1274,7 @@ function init() {
   // 设置汇率初值
   fxRateInput.value = getFxRate();
 
-  if (!Array.isArray(window.PRODUCTS)) {
+  if (!Array.isArray(PRODUCTS)) {
     document.querySelector('.app-header').insertAdjacentHTML('afterend',
       '<div style="padding:20px; background:#fdf3f1; color:#b85c4d; border-radius:4px; margin-bottom:20px;">⚠️ products.js 未加载或 PRODUCTS 数组为空。请确保 admin.html 与 products.js 在同一目录。</div>'
     );
