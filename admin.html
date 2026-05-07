@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>LUMIÈRE · 内部后台</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* =========================================================================
+   BASE  - 延续主站米色调 + Cormorant/Outfit 字体,但布局更密集(后台风)
+   ========================================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f7f3ec;
+  color: #2a2620;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================================
+   LOGIN GATE
+   ========================================================================= */
+.login-gate {
+  position: fixed;
+  inset: 0;
+  background: #f7f3ec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.login-card {
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  border-radius: 8px;
+  padding: 48px 40px;
+  width: 360px;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.login-card h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+  letter-spacing: 0.08em;
+}
+
+.login-card .login-sub {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d8d2c8;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  background: #faf8f3;
+  margin-bottom: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.login-card input:focus { border-color: #2a2620; }
+
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  background: #2a2620;
+  color: #f7f3ec;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-card button:hover { background: #1a1612; }
+
+.login-error {
+  color: #b85c4d;
+  font-size: 12px;
+  margin-top: 12px;
+  min-height: 16px;
+}
+
+/* =========================================================================
+   MAIN LAYOUT
+   ========================================================================= */
+.app {
+  display: none;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 32px 80px;
+}
+
+.app.is-active { display: block; }
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e0d8;
+}
+
+.app-header h1 {
+  font-size: 24px;
+  letter-spacing: 0.06em;
+}
+
+.app-header .subtitle {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-left: 16px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.fx-rate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #555;
+}
+
+.fx-rate input {
+  width: 64px;
+  padding: 6px 8px;
+  border: 1px solid #d8d2c8;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  background: #fff;
+  text-align: center;
+  outline: none;
+}
+
+.fx-rate input:focus { border-color: #2a2620; }
+
+.btn-link {
+  background: none;
+  border: 1px solid #d8d2c8;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-link:hover { background: #fff; border-color: #2a2620; color: #2a2620; }
+
+/* =========================================================================
+   PRIVACY WARNING BANNER
+   ========================================================================= */
+.privacy-warning {
+  background: #fef9e7;
+  border: 1px solid #f0e0a0;
+  border-left: 4px solid #d4a82e;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.privacy-warning .warning-text {
+  font-size: 12px;
+  color: #6a5a1a;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.privacy-warning .warning-text strong {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.privacy-warning .dismiss-btn {
+  background: transparent;
+  border: 1px solid #c0a850;
+  color: #6a5a1a;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.privacy-warning .dismiss-btn:hover { background: #d4a82e; color: #fff; border-color: #d4a82e; }
+
+.privacy-warning[hidden] { display: none; }
+
+/* =========================================================================
+   SECTION
+   ========================================================================= */
+.section {
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e0d8;
+  background: #faf6ef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header h2 {
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  color: #2a2620;
+}
+
+.section-header .section-meta {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+
+.section-body { padding: 20px; }
+
+/* =========================================================================
+   TABLE - 区 A 供应商总览
+   ========================================================================= */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.data-table thead th {
+  background: #faf6ef;
+  color: #555;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e0d8;
+}
+
+.data-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f0ebe1;
+  vertical-align: middle;
+}
+
+.data-table tbody tr.product-row { cursor: pointer; transition: background 0.15s; }
+.data-table tbody tr.product-row:hover { background: #faf8f3; }
+
+.data-table tbody tr.product-row.profit-low { background: #fdf3f1; }
+.data-table tbody tr.product-row.profit-low:hover { background: #fae9e5; }
+.data-table tbody tr.product-row.profit-high { background: #f0f8f0; }
+.data-table tbody tr.product-row.profit-high:hover { background: #e6f3e6; }
+
+.expand-icon {
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+  color: #888;
+  font-size: 10px;
+  transition: transform 0.2s;
+  margin-right: 6px;
+}
+
+tr.is-expanded .expand-icon { transform: rotate(90deg); }
+
+.product-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-id {
+  font-family: 'Outfit', monospace;
+  font-size: 10px;
+  color: #aaa;
+  letter-spacing: 0.05em;
+}
+
+.profit-percent {
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+}
+
+.profit-percent.low { color: #b85c4d; }
+.profit-percent.high { color: #4a7c4a; }
+.profit-percent.medium { color: #555; }
+
+.action-btn {
+  background: transparent;
+  border: 1px solid #d8d2c8;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  color: #555;
+  margin-right: 4px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  background: #2a2620;
+  color: #f7f3ec;
+  border-color: #2a2620;
+}
+
+.action-btn.copied { background: #4a7c4a; color: #fff; border-color: #4a7c4a; }
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: transparent !important;
+  color: #888 !important;
+  border-color: #d8d2c8 !important;
+}
+
+/* SKU 子表格 */
+.sku-detail-row { background: #faf8f3; }
+.sku-detail-row td { padding: 0 !important; border-bottom: 1px solid #e5e0d8 !important; }
+
+.sku-detail-row[hidden] { display: none; }
+
+.sku-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.sku-table thead th {
+  background: #f0ebe1;
+  font-weight: 500;
+  color: #555;
+  text-align: left;
+  padding: 6px 12px;
+  border-bottom: 1px solid #e5e0d8;
+  font-size: 10px;
+}
+
+.sku-table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid #f0ebe1;
+}
+
+.sku-table tr:last-child td { border-bottom: none; }
+
+.sku-table .stock-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.sku-table .stock-badge.in { background: #e6f3e6; color: #4a7c4a; }
+.sku-table .stock-badge.out { background: #fdf3f1; color: #b85c4d; }
+
+.empty-cell { color: #bbb; font-style: italic; font-size: 11px; }
+
+/* =========================================================================
+   FULFILLMENT - 区 B 订单履行
+   ========================================================================= */
+.fulfillment-form {
+  display: grid;
+  grid-template-columns: 200px 200px 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: end;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-group label {
+  font-size: 11px;
+  color: #555;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.field-group select,
+.field-group input {
+  padding: 8px 12px;
+  border: 1px solid #d8d2c8;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  background: #fff;
+  outline: none;
+}
+
+.field-group select:focus,
+.field-group input:focus { border-color: #2a2620; }
+
+.fulfillment-result {
+  display: none;
+  background: #faf8f3;
+  border: 1px solid #e5e0d8;
+  border-radius: 4px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.fulfillment-result.is-active { display: block; }
+
+.fulfillment-result h3 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+
+.supplier-info-grid {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 8px 16px;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.supplier-info-grid dt {
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 10px;
+  padding-top: 2px;
+}
+
+.supplier-info-grid dd { color: #2a2620; }
+
+.supplier-info-grid dd a { color: #6a5a3a; text-decoration: underline; word-break: break-all; }
+.supplier-info-grid dd a:hover { color: #2a2620; }
+
+.message-template {
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  border-radius: 4px;
+  padding: 14px;
+  font-family: 'Microsoft YaHei', 'Outfit', sans-serif;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #333;
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+}
+
+.copy-msg-btn {
+  background: #2a2620;
+  color: #f7f3ec;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.copy-msg-btn:hover { background: #1a1612; }
+.copy-msg-btn.copied { background: #4a7c4a; }
+
+/* =========================================================================
+   ANALYTICS - 区 C 利润分析
+   ========================================================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #faf8f3;
+  border: 1px solid #e5e0d8;
+  border-radius: 4px;
+  padding: 16px 18px;
+}
+
+.stat-card .stat-label {
+  font-size: 10px;
+  color: #888;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.stat-card .stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: #2a2620;
+  line-height: 1.1;
+}
+
+.stat-card .stat-sub {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.top-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .top-lists { grid-template-columns: 1fr; }
+  .fulfillment-form { grid-template-columns: 1fr; }
+}
+
+.top-list h3 {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e0d8;
+}
+
+.top-list h3.up { color: #4a7c4a; }
+.top-list h3.down { color: #b85c4d; }
+
+.top-list ol { list-style: none; }
+
+.top-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 4px;
+  border-bottom: 1px solid #f0ebe1;
+  font-size: 12px;
+}
+
+.top-list li:last-child { border-bottom: none; }
+
+.top-list li .rank {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: #aaa;
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.top-list li .name { flex: 1; padding: 0 8px; color: #2a2620; }
+
+.top-list li .name small { color: #888; font-size: 10px; }
+
+.top-list li .pct { font-weight: 600; font-size: 13px; }
+.top-list li .pct.up { color: #4a7c4a; }
+.top-list li .pct.down { color: #b85c4d; }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  font-size: 12px;
+}
+
+/* Footer */
+.app-footer {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e0d8;
+  text-align: center;
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+</style>
+</head>
+<body>
+
+<!-- ========================================================================
+     LOGIN GATE
+     ======================================================================== -->
+<div class="login-gate" id="loginGate">
+  <div class="login-card">
+    <h1>LUMIÈRE</h1>
+    <div class="login-sub">Internal Admin</div>
+    <form id="loginForm" autocomplete="off">
+      <input type="password" id="loginInput" placeholder="Enter password" autofocus />
+      <button type="submit">Enter</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ========================================================================
+     MAIN APP
+     ======================================================================== -->
+<div class="app" id="app">
+
+  <header class="app-header">
+    <div style="display:flex; align-items:baseline;">
+      <h1>LUMIÈRE</h1>
+      <span class="subtitle">Internal Admin</span>
+    </div>
+    <div class="header-actions">
+      <div class="fx-rate">
+        <span>USD/CNY:</span>
+        <input type="number" id="fxRateInput" step="0.01" min="6" max="8" />
+      </div>
+      <button class="btn-link" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <!-- 隐私警告 -->
+  <div class="privacy-warning" id="privacyWarning">
+    <div class="warning-text">
+      <strong>⚠️ Internal Tool · Privacy Notice</strong>
+      products.js 中的 _supplier 供应商信息存在公开 GitHub 仓库源代码里,技术上对任何人都可见。
+      如需真正的隐私保护,需要把这部分数据迁移到带数据库的后端(例如 Cloudflare Workers + D1)。
+      目前的"密码"只防止偶然访问,不是真正的安全机制。
+    </div>
+    <button class="dismiss-btn" id="dismissWarning">Got it · Hide</button>
+  </div>
+
+  <!-- ====================================================================
+       区 A · 供应商总览
+       ==================================================================== -->
+  <section class="section">
+    <div class="section-header">
+      <h2>A · Supplier Overview</h2>
+      <span class="section-meta" id="overviewMeta"></span>
+    </div>
+    <div class="section-body">
+      <table class="data-table" id="overviewTable">
+        <thead>
+          <tr>
+            <th style="width:24%;">商品</th>
+            <th style="width:12%;">起价 (¥进货)</th>
+            <th style="width:12%;">起价 ($售价)</th>
+            <th style="width:12%;">利润 ($)</th>
+            <th style="width:12%;">利润率</th>
+            <th style="width:10%;">平台</th>
+            <th style="width:10%;">店铺</th>
+            <th style="width:8%;"></th>
+          </tr>
+        </thead>
+        <tbody id="overviewBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       区 B · 订单履行助手
+       ==================================================================== -->
+  <section class="section">
+    <div class="section-header">
+      <h2>B · Order Fulfillment Helper</h2>
+    </div>
+    <div class="section-body">
+      <div class="fulfillment-form">
+        <div class="field-group">
+          <label>Product</label>
+          <select id="fulfillProduct">
+            <option value="">Select a product...</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>SKU (Color · Length)</label>
+          <select id="fulfillVariant" disabled>
+            <option value="">Select product first</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Customer Address (paste from order email)</label>
+          <input type="text" id="fulfillAddress" placeholder="123 Main St, City, State 12345, USA" />
+        </div>
+      </div>
+
+      <div class="fulfillment-result" id="fulfillResult">
+        <h3>Supplier Info</h3>
+        <dl class="supplier-info-grid" id="fulfillSupplierInfo"></dl>
+
+        <h3 style="margin-top:8px;">Message to Send</h3>
+        <div class="message-template" id="fulfillMessage"></div>
+        <button class="copy-msg-btn" id="fulfillCopyBtn">Copy Message</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       区 C · 利润分析
+       ==================================================================== -->
+  <section class="section">
+    <div class="section-header">
+      <h2>C · Profit Analytics</h2>
+      <span class="section-meta">Based on current FX rate · per-SKU level</span>
+    </div>
+    <div class="section-body">
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="top-lists">
+        <div class="top-list">
+          <h3 class="up">Top 3 · Highest Margin SKUs</h3>
+          <ol id="topHighList"></ol>
+        </div>
+        <div class="top-list">
+          <h3 class="down">Bottom 3 · Lowest Margin SKUs (need optimization)</h3>
+          <ol id="topLowList"></ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="app-footer">
+    LUMIÈRE Internal Admin · This page does not appear in main navigation.
+  </footer>
+
+</div>
+
+<!-- ========================================================================
+     SCRIPTS
+     ======================================================================== -->
+<script src="products.js"></script>
+<script>
+/* =========================================================================
+   ADMIN LOGIC
+   ========================================================================= */
+
+const ADMIN_PASSWORD = 'lumiere2026';
+const SESSION_KEY = 'lumiereAdminAuth';
+const FX_KEY = 'lumiereAdminFxRate';
+const WARN_KEY = 'lumiereAdminWarnDismissed';
+const DEFAULT_FX = 7.20;
+
+/* =========================================================================
+   LOGIN
+   ========================================================================= */
+const loginGate  = document.getElementById('loginGate');
+const loginForm  = document.getElementById('loginForm');
+const loginInput = document.getElementById('loginInput');
+const loginError = document.getElementById('loginError');
+const app        = document.getElementById('app');
+const logoutBtn  = document.getElementById('logoutBtn');
+
+function unlock() {
+  loginGate.style.display = 'none';
+  app.classList.add('is-active');
+  init();
+}
+
+function tryAuth(password) {
+  if (password === ADMIN_PASSWORD) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    unlock();
+    return true;
+  }
+  return false;
+}
+
+if (sessionStorage.getItem(SESSION_KEY) === '1') {
+  unlock();
+}
+
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const ok = tryAuth(loginInput.value);
+  if (!ok) {
+    loginError.textContent = 'Wrong password';
+    loginInput.value = '';
+    loginInput.focus();
+  }
+});
+
+logoutBtn.addEventListener('click', () => {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+});
+
+/* =========================================================================
+   FX RATE
+   ========================================================================= */
+const fxRateInput = document.getElementById('fxRateInput');
+
+function getFxRate() {
+  const stored = parseFloat(sessionStorage.getItem(FX_KEY));
+  if (!isNaN(stored) && stored > 0) return stored;
+  return DEFAULT_FX;
+}
+
+function setFxRate(rate) {
+  sessionStorage.setItem(FX_KEY, String(rate));
+}
+
+fxRateInput.addEventListener('input', () => {
+  const v = parseFloat(fxRateInput.value);
+  if (!isNaN(v) && v >= 6 && v <= 8) {
+    setFxRate(v);
+    refreshAll();
+  }
+});
+
+/* =========================================================================
+   PRIVACY WARNING
+   ========================================================================= */
+const privacyWarning = document.getElementById('privacyWarning');
+const dismissWarning = document.getElementById('dismissWarning');
+
+if (sessionStorage.getItem(WARN_KEY) === '1') {
+  privacyWarning.hidden = true;
+}
+
+dismissWarning.addEventListener('click', () => {
+  privacyWarning.hidden = true;
+  sessionStorage.setItem(WARN_KEY, '1');
+});
+
+/* =========================================================================
+   HELPERS - Variant 价格分析
+   ========================================================================= */
+
+/**
+ * 获取一个商品的所有 variants(兼容老格式)
+ */
+function getVariants(product) {
+  if (Array.isArray(product.variants) && product.variants.length > 0) {
+    return product.variants;
+  }
+  // 老格式没有 variants,返回单"虚拟" variant
+  return [{
+    color: (product.colors && product.colors[0]) || '-',
+    length: (product.lengths && product.lengths[0]) || '-',
+    price: product.price || 0,
+    inStock: true,
+    _supplierCost: null,  // 老商品没记录成本
+  }];
+}
+
+/**
+ * 获取一个商品的"起价 variant"(最便宜且有库存的)
+ */
+function getStarterVariant(product) {
+  const variants = getVariants(product);
+  const inStock = variants.filter(v => v.inStock !== false);
+  const pool = inStock.length > 0 ? inStock : variants;
+  return pool.reduce((min, v) => (v.price < min.price ? v : min), pool[0]);
+}
+
+/**
+ * 计算单个 variant 的利润信息
+ */
+function calcVariantProfit(variant, fx) {
+  const priceUSD = Number(variant.price) || 0;
+  const costCNY = Number(variant._supplierCost) || 0;
+  const priceCNY = priceUSD * fx;
+  const profitCNY = priceCNY - costCNY;
+  const profitUSD = profitCNY / fx;
+  // 利润率 = 利润 / 进货价 × 100% (避免除零)
+  const margin = costCNY > 0 ? (profitCNY / costCNY) * 100 : null;
+  return { priceUSD, costCNY, priceCNY, profitCNY, profitUSD, margin };
+}
+
+/**
+ * 染色判定(<50% 红 / >100% 绿)
+ */
+function marginClass(margin) {
+  if (margin === null || margin === undefined) return 'medium';
+  if (margin < 50) return 'low';
+  if (margin > 100) return 'high';
+  return 'medium';
+}
+
+function fmtNum(v, decimals = 2) {
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  return Number(v).toFixed(decimals);
+}
+
+function fmtPct(v) {
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  return Math.round(v) + '%';
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+/* =========================================================================
+   区 A - SUPPLIER OVERVIEW
+   ========================================================================= */
+function renderOverview() {
+  const fx = getFxRate();
+  const tbody = document.getElementById('overviewBody');
+  const meta = document.getElementById('overviewMeta');
+  tbody.innerHTML = '';
+
+  if (!Array.isArray(window.PRODUCTS) || window.PRODUCTS.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">No products found in products.js</div></td></tr>';
+    meta.textContent = '';
+    return;
+  }
+
+  meta.textContent = `${PRODUCTS.length} products · ${PRODUCTS.reduce((s, p) => s + getVariants(p).length, 0)} SKUs`;
+
+  PRODUCTS.forEach((product, pIdx) => {
+    const starter = getStarterVariant(product);
+    const profit = calcVariantProfit(starter, fx);
+    const cls = marginClass(profit.margin);
+    const supplier = product._supplier || {};
+
+    const rowClass = cls === 'low' ? 'profit-low' : (cls === 'high' ? 'profit-high' : '');
+
+    const productUrl = '#/product/' + product.id;  // 主站锚点(根据你 SPA 路由格式调整)
+
+    // 主行
+    const mainRow = document.createElement('tr');
+    mainRow.className = 'product-row ' + rowClass;
+    mainRow.dataset.productIdx = pIdx;
+    mainRow.innerHTML = `
+      <td>
+        <div class="product-name-cell">
+          <span class="expand-icon">▶</span>
+          <div>
+            <div>${escapeHtml(product.name)}</div>
+            <div class="product-id">${escapeHtml(product.id)} · ${getVariants(product).length} SKU${getVariants(product).length > 1 ? 's' : ''}</div>
+          </div>
+        </div>
+      </td>
+      <td>${profit.costCNY > 0 ? '¥' + fmtNum(profit.costCNY, 0) : '<span class="empty-cell">—</span>'}</td>
+      <td>$${fmtNum(profit.priceUSD, 0)}</td>
+      <td>${profit.costCNY > 0 ? '$' + fmtNum(profit.profitUSD, 1) : '<span class="empty-cell">—</span>'}</td>
+      <td><span class="profit-percent ${cls}">${fmtPct(profit.margin)}</span></td>
+      <td>${escapeHtml(supplier.platform || '—')}</td>
+      <td>${escapeHtml(supplier.shopName || '—')}</td>
+      <td onclick="event.stopPropagation();">
+        <button class="action-btn" data-action="view-product" data-pidx="${pIdx}">View</button>
+        <button class="action-btn" data-action="open-supplier" data-pidx="${pIdx}" ${!supplier.productUrl ? 'disabled' : ''}>1688</button>
+        <button class="action-btn" data-action="copy-wechat" data-pidx="${pIdx}" ${!supplier.contactWeChat ? 'disabled' : ''}>WeChat</button>
+      </td>
+    `;
+    tbody.appendChild(mainRow);
+
+    // 详情行(SKU 表)
+    const detailRow = document.createElement('tr');
+    detailRow.className = 'sku-detail-row';
+    detailRow.hidden = true;
+    detailRow.innerHTML = `
+      <td colspan="8">
+        ${renderSkuTable(product, fx)}
+      </td>
+    `;
+    tbody.appendChild(detailRow);
+
+    // 主行点击 → 展开/收起
+    mainRow.addEventListener('click', () => {
+      const isOpen = !detailRow.hidden;
+      detailRow.hidden = isOpen;
+      mainRow.classList.toggle('is-expanded', !isOpen);
+    });
+  });
+
+  // 操作按钮事件代理
+  tbody.querySelectorAll('.action-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const action = btn.dataset.action;
+      const pIdx = Number(btn.dataset.pidx);
+      const product = PRODUCTS[pIdx];
+      const supplier = product._supplier || {};
+
+      if (action === 'view-product') {
+        window.open('index.html#/product/' + product.id, '_blank');
+      } else if (action === 'open-supplier') {
+        if (supplier.productUrl) {
+          window.open(supplier.productUrl, '_blank', 'noopener,noreferrer');
+        }
+      } else if (action === 'copy-wechat') {
+        if (supplier.contactWeChat) {
+          navigator.clipboard.writeText(supplier.contactWeChat).then(() => {
+            btn.textContent = '✓ Copied';
+            btn.classList.add('copied');
+            setTimeout(() => {
+              btn.textContent = 'WeChat';
+              btn.classList.remove('copied');
+            }, 1500);
+          });
+        }
+      }
+    });
+  });
+}
+
+function renderSkuTable(product, fx) {
+  const variants = getVariants(product);
+  if (variants.length === 0) return '<div class="empty-state">No variants</div>';
+
+  const rows = variants.map((v) => {
+    const p = calcVariantProfit(v, fx);
+    const cls = marginClass(p.margin);
+    return `
+      <tr>
+        <td>${escapeHtml(v.color)}</td>
+        <td>${escapeHtml(v.length)}</td>
+        <td>${p.costCNY > 0 ? '¥' + fmtNum(p.costCNY, 0) : '<span class="empty-cell">—</span>'}</td>
+        <td>$${fmtNum(p.priceUSD, 0)}</td>
+        <td>${p.costCNY > 0 ? '$' + fmtNum(p.profitUSD, 1) : '<span class="empty-cell">—</span>'}</td>
+        <td><span class="profit-percent ${cls}">${fmtPct(p.margin)}</span></td>
+        <td><span class="stock-badge ${v.inStock !== false ? 'in' : 'out'}">${v.inStock !== false ? 'In stock' : 'Out'}</span></td>
+      </tr>
+    `;
+  }).join('');
+
+  return `
+    <table class="sku-table">
+      <thead>
+        <tr>
+          <th>Color</th>
+          <th>Length</th>
+          <th>Cost (¥)</th>
+          <th>Price ($)</th>
+          <th>Profit ($)</th>
+          <th>Margin</th>
+          <th>Stock</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+/* =========================================================================
+   区 B - FULFILLMENT HELPER
+   ========================================================================= */
+const fulfillProductSel = document.getElementById('fulfillProduct');
+const fulfillVariantSel = document.getElementById('fulfillVariant');
+const fulfillAddressInp = document.getElementById('fulfillAddress');
+const fulfillResult     = document.getElementById('fulfillResult');
+const fulfillSupplierEl = document.getElementById('fulfillSupplierInfo');
+const fulfillMessageEl  = document.getElementById('fulfillMessage');
+const fulfillCopyBtn    = document.getElementById('fulfillCopyBtn');
+
+function initFulfillment() {
+  // 填商品下拉
+  fulfillProductSel.innerHTML = '<option value="">Select a product...</option>' +
+    PRODUCTS.map((p, i) => `<option value="${i}">${escapeHtml(p.name)} · ${escapeHtml(p.id)}</option>`).join('');
+
+  fulfillProductSel.addEventListener('change', () => {
+    const pIdx = fulfillProductSel.value;
+    if (pIdx === '') {
+      fulfillVariantSel.disabled = true;
+      fulfillVariantSel.innerHTML = '<option value="">Select product first</option>';
+      hideFulfillResult();
+      return;
+    }
+    const product = PRODUCTS[Number(pIdx)];
+    const variants = getVariants(product);
+    fulfillVariantSel.disabled = false;
+    fulfillVariantSel.innerHTML = '<option value="">Select SKU...</option>' +
+      variants.map((v, i) => `<option value="${i}">${escapeHtml(v.color)} · ${escapeHtml(v.length)}${v.inStock === false ? ' (Out)' : ''}</option>`).join('');
+    hideFulfillResult();
+  });
+
+  fulfillVariantSel.addEventListener('change', () => {
+    showFulfillResult();
+  });
+
+  fulfillAddressInp.addEventListener('input', () => {
+    if (fulfillResult.classList.contains('is-active')) {
+      showFulfillResult();
+    }
+  });
+
+  fulfillCopyBtn.addEventListener('click', () => {
+    const text = fulfillMessageEl.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      fulfillCopyBtn.textContent = '✓ Copied to Clipboard';
+      fulfillCopyBtn.classList.add('copied');
+      setTimeout(() => {
+        fulfillCopyBtn.textContent = 'Copy Message';
+        fulfillCopyBtn.classList.remove('copied');
+      }, 1500);
+    });
+  });
+}
+
+function hideFulfillResult() {
+  fulfillResult.classList.remove('is-active');
+}
+
+function showFulfillResult() {
+  const pIdx = fulfillProductSel.value;
+  const vIdx = fulfillVariantSel.value;
+  if (pIdx === '' || vIdx === '') {
+    hideFulfillResult();
+    return;
+  }
+  const product = PRODUCTS[Number(pIdx)];
+  const variant = getVariants(product)[Number(vIdx)];
+  const supplier = product._supplier || {};
+  const address  = fulfillAddressInp.value.trim() || '[等会儿你接到客户订单时填]';
+
+  // 渲染供应商信息
+  fulfillSupplierEl.innerHTML = `
+    <dt>商品</dt>      <dd>${escapeHtml(product.name)} (${escapeHtml(product.id)})</dd>
+    <dt>规格</dt>      <dd>${escapeHtml(variant.color)} · ${escapeHtml(variant.length)}</dd>
+    <dt>进货价</dt>    <dd>${variant._supplierCost ? '¥' + variant._supplierCost : '—'}</dd>
+    <dt>库存</dt>      <dd>${variant.inStock !== false ? '✓ In stock' : '✗ Out of stock'}</dd>
+    <dt>平台</dt>      <dd>${escapeHtml(supplier.platform) || '—'}</dd>
+    <dt>店铺</dt>      <dd>${escapeHtml(supplier.shopName) || '—'}</dd>
+    <dt>商品 URL</dt>  <dd>${supplier.productUrl ? `<a href="${escapeHtml(supplier.productUrl)}" target="_blank" rel="noopener">${escapeHtml(supplier.productUrl)}</a>` : '—'}</dd>
+    <dt>微信</dt>      <dd>${escapeHtml(supplier.contactWeChat) || '—'}</dd>
+    <dt>备注</dt>      <dd>${escapeHtml(supplier.notes) || '—'}</dd>
+  `;
+
+  // 渲染中文话术
+  const message =
+`您好,需要代发一件:
+
+商品:${product.name}(${product.id})
+规格:${variant.color} · ${variant.length}
+收货地址:${address}
+
+请尽快安排发货,使用白牌包装(不要贴 1688 标签和发票)。
+谢谢!`;
+
+  fulfillMessageEl.textContent = message;
+  fulfillResult.classList.add('is-active');
+}
+
+/* =========================================================================
+   区 C - PROFIT ANALYTICS
+   ========================================================================= */
+function renderAnalytics() {
+  const fx = getFxRate();
+  const allSkus = [];
+
+  PRODUCTS.forEach((product) => {
+    getVariants(product).forEach((v) => {
+      const p = calcVariantProfit(v, fx);
+      if (p.costCNY > 0) {  // 只统计有进货价的 SKU
+        allSkus.push({
+          productName: product.name,
+          productId: product.id,
+          color: v.color,
+          length: v.length,
+          ...p,
+        });
+      }
+    });
+  });
+
+  const skuCount = PRODUCTS.reduce((s, p) => s + getVariants(p).length, 0);
+  const trackedCount = allSkus.length;
+
+  // ----- Stats -----
+  let avgPriceUSD = 0, avgCostCNY = 0, avgMargin = 0, totalPotentialProfit = 0;
+  if (allSkus.length > 0) {
+    avgPriceUSD = allSkus.reduce((s, x) => s + x.priceUSD, 0) / allSkus.length;
+    avgCostCNY  = allSkus.reduce((s, x) => s + x.costCNY, 0) / allSkus.length;
+    // 加权平均利润率(按总成本加权)
+    const totalCost = allSkus.reduce((s, x) => s + x.costCNY, 0);
+    const totalProfit = allSkus.reduce((s, x) => s + x.profitCNY, 0);
+    avgMargin = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+    totalPotentialProfit = allSkus.reduce((s, x) => s + x.profitUSD, 0);
+  }
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total Products</div>
+      <div class="stat-value">${PRODUCTS.length}</div>
+      <div class="stat-sub">${skuCount} SKUs total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg. Price</div>
+      <div class="stat-value">$${fmtNum(avgPriceUSD, 0)}</div>
+      <div class="stat-sub">across all SKUs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg. Cost</div>
+      <div class="stat-value">¥${fmtNum(avgCostCNY, 0)}</div>
+      <div class="stat-sub">${trackedCount} of ${skuCount} SKUs tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Weighted Margin</div>
+      <div class="stat-value">${fmtPct(avgMargin)}</div>
+      <div class="stat-sub">profit / cost (weighted by cost)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Potential Profit</div>
+      <div class="stat-value">$${fmtNum(totalPotentialProfit, 0)}</div>
+      <div class="stat-sub">if 1 of each SKU sold</div>
+    </div>
+  `;
+
+  // ----- Top 3 Highest -----
+  const sortedHigh = allSkus.slice().sort((a, b) => b.margin - a.margin).slice(0, 3);
+  const sortedLow  = allSkus.slice().sort((a, b) => a.margin - b.margin).slice(0, 3);
+
+  document.getElementById('topHighList').innerHTML = sortedHigh.length === 0
+    ? '<li><div class="empty-state">No SKUs with cost data</div></li>'
+    : sortedHigh.map((s, i) => `
+        <li>
+          <span class="rank">${i + 1}</span>
+          <span class="name">${escapeHtml(s.productName)} <small>· ${escapeHtml(s.color)} · ${escapeHtml(s.length)}</small></span>
+          <span class="pct up">${fmtPct(s.margin)}</span>
+        </li>
+      `).join('');
+
+  document.getElementById('topLowList').innerHTML = sortedLow.length === 0
+    ? '<li><div class="empty-state">No SKUs with cost data</div></li>'
+    : sortedLow.map((s, i) => `
+        <li>
+          <span class="rank">${i + 1}</span>
+          <span class="name">${escapeHtml(s.productName)} <small>· ${escapeHtml(s.color)} · ${escapeHtml(s.length)}</small></span>
+          <span class="pct down">${fmtPct(s.margin)}</span>
+        </li>
+      `).join('');
+}
+
+/* =========================================================================
+   INIT
+   ========================================================================= */
+function refreshAll() {
+  renderOverview();
+  renderAnalytics();
+  // 区 B 不需要重渲染,因为它不展示价格只展示供应商信息
+  if (fulfillResult.classList.contains('is-active')) {
+    showFulfillResult();
+  }
+}
+
+function init() {
+  // 设置汇率初值
+  fxRateInput.value = getFxRate();
+
+  if (!Array.isArray(window.PRODUCTS)) {
+    document.querySelector('.app-header').insertAdjacentHTML('afterend',
+      '<div style="padding:20px; background:#fdf3f1; color:#b85c4d; border-radius:4px; margin-bottom:20px;">⚠️ products.js 未加载或 PRODUCTS 数组为空。请确保 admin.html 与 products.js 在同一目录。</div>'
+    );
+    return;
+  }
+
+  initFulfillment();
+  refreshAll();
+}
+</script>
+
+</body>
+</html>
