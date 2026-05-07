@@ -797,10 +797,6 @@ function tryAuth(password) {
   return false;
 }
 
-if (sessionStorage.getItem(SESSION_KEY) === '1') {
-  unlock();
-}
-
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const ok = tryAuth(loginInput.value);
@@ -1283,6 +1279,11 @@ function init() {
 
   initFulfillment();
   refreshAll();
+}
+
+// 自动登录恢复(必须放在所有 const 声明之后)
+if (sessionStorage.getItem(SESSION_KEY) === '1') {
+  unlock();
 }
 </script>
 
