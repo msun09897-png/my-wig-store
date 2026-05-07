@@ -342,59 +342,5 @@ const PRODUCTS = [
       notes: ''
     },
     featured: false
-  },
-  {
-    id: 'lum-009',
-    name: 'Céleste',
-    subtitle: 'Deep Curly Bulk Hair · 100% Virgin Human Hair',
-    price: 39,           // 起售价(50g 12inch),用于商品卡片展示
-    images: [
-      'https://i.postimg.cc/NFgt9kQ7/57921aa0-f7d6-48e7-9a39-aba1c8064075.png',
-      'https://i.postimg.cc/44F2h1fB/O1CN01Un-K3Ty2Ec-QW4do-Fz-K-2215619748765-0-cib.jpg'
-    ],
-    description: 'Premium 100% virgin human hair in deep curly texture — unprocessed, tangle-free, and dyeable. Perfect for box braids, faux locs, knotless styles, or seamless bulk extensions. Bouncy, long-lasting curls that hold their pattern wash after wash.',
-    features: [
-      '100% virgin human hair · unprocessed',
-      'Deep curly texture · natural bounce',
-      'Suitable for box braids · faux locs · knotless',
-      'Heat-friendly · dyeable · bleach-friendly',
-      'Tangle-free · minimal shedding',
-      'Two weight options: 50g & 100g per bundle'
-    ],
-    variants: [
-      // ── 12inch/30cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '12inch/30cm', price: 39,  inStock: true, _supplierCost: 70  },
-      { color: '1B# Deep Curly (100g)', length: '12inch/30cm', price: 69,  inStock: true, _supplierCost: 130 },
-      // ── 14inch/35cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '14inch/35cm', price: 45,  inStock: true, _supplierCost: 89  },
-      { color: '1B# Deep Curly (100g)', length: '14inch/35cm', price: 79,  inStock: true, _supplierCost: 168 },
-      // ── 16inch/40cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '16inch/40cm', price: 49,  inStock: true, _supplierCost: 99  },
-      { color: '1B# Deep Curly (100g)', length: '16inch/40cm', price: 89,  inStock: true, _supplierCost: 188 },
-      // ── 18inch/45cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '18inch/45cm', price: 55,  inStock: true, _supplierCost: 108 },
-      { color: '1B# Deep Curly (100g)', length: '18inch/45cm', price: 99,  inStock: true, _supplierCost: 205 },
-      // ── 20inch/50cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '20inch/50cm', price: 65,  inStock: true, _supplierCost: 137 },
-      { color: '1B# Deep Curly (100g)', length: '20inch/50cm', price: 115, inStock: true, _supplierCost: 260 },
-      // ── 22inch/55cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '22inch/55cm', price: 75,  inStock: true, _supplierCost: 166 },
-      { color: '1B# Deep Curly (100g)', length: '22inch/55cm', price: 135, inStock: true, _supplierCost: 315 },
-      // ── 24inch/60cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '24inch/60cm', price: 79,  inStock: true, _supplierCost: 175 },
-      { color: '1B# Deep Curly (100g)', length: '24inch/60cm', price: 145, inStock: true, _supplierCost: 333 },
-      // ── 26inch/65cm ──────────────────────────────────────
-      { color: '1B# Deep Curly (50g)',  length: '26inch/65cm', price: 89,  inStock: true, _supplierCost: 194 },
-      { color: '1B# Deep Curly (100g)', length: '26inch/65cm', price: 159, inStock: true, _supplierCost: 370 },
-    ],
-    _supplier: {
-      platform: '1688',
-      shopName: 'EVO HAIR',
-      productUrl: 'https://detail.1688.com/offer/754334184717.html?_t=1777968601468&spm=a2615.7691456/2506.co_1_0_wangpu_score_0_0_0_0_0_0_0000_0.0',
-      contactWeChat: '',
-      costPrice: 70,
-      notes: '现货 / 支持跨境贴标 / 官方仓退货 / 一件代发价¥69.9起'
-    },
-    featured: false
   }
 ];
