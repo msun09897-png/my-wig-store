@@ -1169,36 +1169,41 @@ function showFulfillResult() {
    ========================================================================= */
 function renderAnalytics() {
   const fx = getFxRate();
-  const allSkus = [];
+  const allSkus = [];        // 所有 SKU(用于 Avg. Price)
+  const trackedSkus = [];    // 只有有 cost 数据的(用于其他统计)
 
   PRODUCTS.forEach((product) => {
     getVariants(product).forEach((v) => {
       const p = calcVariantProfit(v, fx);
-      if (p.costCNY > 0) {  // 只统计有进货价的 SKU
-        allSkus.push({
-          productName: product.name,
-          productId: product.id,
-          color: v.color,
-          length: v.length,
-          ...p,
-        });
+      const skuData = {
+        productName: product.name,
+        productId: product.id,
+        color: v.color,
+        length: v.length,
+        ...p,
+      };
+      allSkus.push(skuData);
+      if (p.costCNY > 0) {
+        trackedSkus.push(skuData);
       }
     });
   });
 
   const skuCount = PRODUCTS.reduce((s, p) => s + getVariants(p).length, 0);
-  const trackedCount = allSkus.length;
+  const trackedCount = trackedSkus.length;
 
   // ----- Stats -----
   let avgPriceUSD = 0, avgCostCNY = 0, avgMargin = 0, totalPotentialProfit = 0;
   if (allSkus.length > 0) {
     avgPriceUSD = allSkus.reduce((s, x) => s + x.priceUSD, 0) / allSkus.length;
-    avgCostCNY  = allSkus.reduce((s, x) => s + x.costCNY, 0) / allSkus.length;
+  }
+  if (trackedSkus.length > 0) {
+    avgCostCNY = trackedSkus.reduce((s, x) => s + x.costCNY, 0) / trackedSkus.length;
     // 加权平均利润率(按总成本加权)
-    const totalCost = allSkus.reduce((s, x) => s + x.costCNY, 0);
-    const totalProfit = allSkus.reduce((s, x) => s + x.profitCNY, 0);
+    const totalCost = trackedSkus.reduce((s, x) => s + x.costCNY, 0);
+    const totalProfit = trackedSkus.reduce((s, x) => s + x.profitCNY, 0);
     avgMargin = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
-    totalPotentialProfit = allSkus.reduce((s, x) => s + x.profitUSD, 0);
+    totalPotentialProfit = trackedSkus.reduce((s, x) => s + x.profitUSD, 0);
   }
 
   document.getElementById('statsGrid').innerHTML = `
@@ -1230,8 +1235,8 @@ function renderAnalytics() {
   `;
 
   // ----- Top 3 Highest -----
-  const sortedHigh = allSkus.slice().sort((a, b) => b.margin - a.margin).slice(0, 3);
-  const sortedLow  = allSkus.slice().sort((a, b) => a.margin - b.margin).slice(0, 3);
+  const sortedHigh = trackedSkus.slice().sort((a, b) => b.margin - a.margin).slice(0, 3);
+  const sortedLow  = trackedSkus.slice().sort((a, b) => a.margin - b.margin).slice(0, 3);
 
   document.getElementById('topHighList').innerHTML = sortedHigh.length === 0
     ? '<li><div class="empty-state">No SKUs with cost data</div></li>'
