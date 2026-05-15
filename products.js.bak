@@ -1,10 +1,10 @@
 // ============================================
-// 商品数据 �?你只需要修改这个文�?
+// 商品数据 �?你只需要修改这个文�?
 // ============================================
-// 加新商品:复制下面任何一�?{} 大括号区�?粘贴在末�?改内容�?
-// 改图�?�?image 后面的链接换成你的图�?可以�?imgur.com 等免费图床上传后获取链接)�?
-// 改价�?�?price 数字(美金,数字就行,不要�?$)�?
-// 商品下架:删掉对应的整�?{} 区块�?
+// 加新商品:复制下面任何一�?{} 大括号区�?粘贴在末�?改内容�?
+// 改图�?�?image 后面的链接换成你的图�?可以�?imgur.com 等免费图床上传后获取链接)�?
+// 改价�?�?price 数字(美金,数字就行,不要�?$)�?
+// 商品下架:删掉对应的整�?{} 区块�?
 // ============================================
 
 const PRODUCTS = [
@@ -12,16 +12,16 @@ const PRODUCTS = [
     id: 'lum-196224',
     name: 'Human Hair Wig Female',
     subtitle: 'Straight Clip In Hair',
-    price: 224,       // 起售�?最短款),用于商品卡片展示
+    price: 224,       // 起售�?最短款),用于商品卡片展示
     oldPrice: 280,
     images: ['https://i.postimg.cc/PrGZ7FG6/1.png'],
-    description: 'Crafted from 100% virgin human hair and finished with HD Swiss lace, this piece moves, bounces, and shines like the hair you were born with. Soft to the touch, undetectable at the hairline �?wear it confidently, day or night. Made to last 2+ years with proper care.',
+    description: 'Crafted from 100% virgin human hair and finished with HD Swiss lace, this piece moves, bounces, and shines like the hair you were born with. Soft to the touch, undetectable at the hairline �?wear it confidently, day or night. Made to last 2+ years with proper care.',
     features: [
       '100% premium human hair',
       'HD lace front, pre-plucked',
       'Natural hairline, baby hairs styled',
       '180% density · medium cap',
-      'Length: 16�?6 inch'
+      'Length: 16�?6 inch'
     ],
     variants: [
       // ── 16 inch · $224 ──────────────────────────
@@ -81,16 +81,16 @@ const PRODUCTS = [
     id: 'lum-737816',
     name: 'Wig Long Curly Hair',
     subtitle: 'Lace Front Wig · 22"',
-    price: 168,       // 起售�?14inch),用于商品卡片展示
+    price: 168,       // 起售�?14inch),用于商品卡片展示
     oldPrice: 210,
     images: ['https://i.postimg.cc/j2JsYXfj/shou-tu.png'],
-    description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments �?effortless, every time.',
+    description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments �?effortless, every time.',
     features: [
       '100% premium human hair',
       'HD lace front, pre-plucked',
       'Natural hairline, baby hairs styled',
       '180% density · medium cap',
-      'Length: 14�?4 inch'
+      'Length: 14�?4 inch'
     ],
     variants: [
       { color: '1B# Natural Black', length: '14inch/35cm', price: 168, inStock: true, _supplierCost: null  },
@@ -114,7 +114,7 @@ const PRODUCTS = [
     id: 'lum-880773',
     name: 'Hair Extensions Wig Full',
     subtitle: 'Loose Curls Lace Front · 24"',
-    price: 168,       // 起售�?12inch),用于商品卡片展示
+    price: 168,       // 起售�?12inch),用于商品卡片展示
     oldPrice: 210,
     images: ['https://i.postimg.cc/zXGPPBnX/Gemini-Generated-Image-wo9guiwo9guiwo9g.png'],
     description: 'Sleek, glossy, and impossibly smooth. This silky straight piece falls like silk and feels even better. HD lace front melts away. 100% virgin hair, ready to dye, curl, or wear just as it is.',
@@ -123,7 +123,7 @@ const PRODUCTS = [
       'HD lace front, pre-plucked',
       'Natural hairline, baby hairs styled',
       '180% density · medium cap',
-      'Length: 12�?6 inch'
+      'Length: 12�?6 inch'
     ],
     variants: [
       { color: 'Natural Color', length: '12inch/30cm', price: 168, inStock: true, _supplierCost: null  },
@@ -149,10 +149,10 @@ const PRODUCTS = [
     id: 'lum-386669',
     name: 'Deep Wave Real Hair',
     subtitle: 'Deep Wave',
-    price: 56,           // 起售�?#1B 50g 12inch),用于商品卡片展示
+    price: 56,           // 起售�?#1B 50g 12inch),用于商品卡片展示
     oldPrice: 70,
     images: ['https://i.postimg.cc/43tgN5Nh/Gemini-Generated-Image-k3qdi3k3qdi3k3qd.png'],
-    description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments �?effortless, every time.',
+    description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments �?effortless, every time.',
     features: [
       '100% premium human hair',
       'HD lace front, pre-plucked',
@@ -176,10 +176,10 @@ const PRODUCTS = [
       // ── #27 Honey Blonde · 100g ─────────────────────────────
       { color: '#27 Honey Blonde / 100g',  length: '12inch/30cm', price: 88,  inStock: true,  _supplierCost: null },
       { color: '#27 Honey Blonde / 100g',  length: '18inch/45cm', price: 104, inStock: true,  _supplierCost: null },
-      // ── #613 Blonde · 100g (特殊�?�?10%) ─────────────────
+      // ── #613 Blonde · 100g (特殊�?�?10%) ─────────────────
       { color: '#613 Blonde / 100g',       length: '12inch/30cm', price: 93,  inStock: true,  _supplierCost: null },
       { color: '#613 Blonde / 100g',       length: '18inch/45cm', price: 113, inStock: false, _supplierCost: null },
-      // ── Pink / Blue 特殊�?· 100g ───────────────────────────
+      // ── Pink / Blue 特殊�?· 100g ───────────────────────────
       { color: '#Pink Fantasy / 100g',     length: '14inch/35cm', price: 96,  inStock: true,  _supplierCost: null },
       { color: '#Blue Ocean / 100g',       length: '14inch/35cm', price: 96,  inStock: true,  _supplierCost: null },
     ],
@@ -197,7 +197,7 @@ const PRODUCTS = [
     id: 'lum-005',
     name: 'Vivienne',
     subtitle: 'Kinky Curly Afro · 18"',
-    price: 269,          // 起售�?14inch Natural Black),用于商品卡片展示
+    price: 269,          // 起售�?14inch Natural Black),用于商品卡片展示
     images: ['https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&q=85'],
     description: 'Voluminous, expressive, unapologetic. A celebration of natural texture, hand-tied for movement and density.',
     features: [
@@ -205,7 +205,7 @@ const PRODUCTS = [
       'HD lace front (4×4 closure available)',
       'Pre-plucked hairline',
       '200% density · medium-large cap',
-      'Length: 14�?0 inches'
+      'Length: 14�?0 inches'
     ],
     variants: [
       // ── Natural Black ────────────────────────────────────────
@@ -233,15 +233,15 @@ const PRODUCTS = [
     id: 'lum-006',
     name: 'Ophélie',
     subtitle: 'Straight with Bangs · 18"',
-    price: 239,          // 起售�?16inch Natural Black),用于商品卡片展示
+    price: 239,          // 起售�?16inch Natural Black),用于商品卡片展示
     images: ['https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800&q=85'],
-    description: 'Sleek straight hair with classic French bangs �?the timeless, effortless look that flatters every face shape.',
+    description: 'Sleek straight hair with classic French bangs �?the timeless, effortless look that flatters every face shape.',
     features: [
       '100% virgin human hair',
       'Wear & go construction',
       'Pre-cut bangs, no styling needed',
       '180% density · medium cap',
-      'Length: 16�?0 inches'
+      'Length: 16�?0 inches'
     ],
     variants: [
       // ── Natural Black ────────────────────────────────────────
@@ -271,7 +271,7 @@ const PRODUCTS = [
     id: 'lum-007',
     name: 'Margaux',
     subtitle: 'Water Wave Lace Front · 26"',
-    price: 379,          // 起售�?22inch Natural Black),用于商品卡片展示
+    price: 379,          // 起售�?22inch Natural Black),用于商品卡片展示
     tag: 'Limited',
     images: ['https://images.unsplash.com/photo-1626954079979-ec4f7b05e032?w=800&q=85'],
     description: 'Long, flowing water waves that catch light like silk ribbons. A statement piece for those who want to be seen.',
@@ -280,7 +280,7 @@ const PRODUCTS = [
       'HD Swiss lace front (13×6)',
       'Pre-plucked, baby hairs styled',
       '180% density · medium cap',
-      'Length: 22�?8 inches'
+      'Length: 22�?8 inches'
     ],
     variants: [
       // ── Natural Black ────────────────────────────────────────
@@ -313,7 +313,7 @@ const PRODUCTS = [
     id: 'lum-008',
     name: 'Inès',
     subtitle: 'Layered Wolf Cut · 16"',
-    price: 249,          // 起售�?14inch Natural Black),用于商品卡片展示
+    price: 249,          // 起售�?14inch Natural Black),用于商品卡片展示
     images: ['https://images.unsplash.com/photo-1600950207944-0d63e8edbc3f?w=800&q=85'],
     description: 'A bold, edgy wolf cut with feathered layers. Modern, expressive, and impossible to ignore.',
     features: [
@@ -321,7 +321,7 @@ const PRODUCTS = [
       'HD lace front (13×4)',
       'Pre-cut layers, ready to wear',
       '180% density · medium cap',
-      'Length: 14�?8 inches'
+      'Length: 14�?8 inches'
     ],
     variants: [
       // ── Natural Black ────────────────────────────────────────
@@ -342,60 +342,5 @@ const PRODUCTS = [
       notes: ''
     },
     featured: false
-  },
-  {
-    id: "lum-009",
-    name: "The Signature Straight",
-    subtitle: "13x6 HD Lace Wig | 100% Virgin Human Hair",
-    price: 289,
-    oldPrice: 399,
-    images: [
-      "images/lum-009/main_01.png",
-      "images/lum-009/main_02.png",
-      "images/lum-009/main_03.png",
-      "images/lum-009/main_04.png",
-      "images/lum-009/main_05.png",
-      "images/lum-009/detail_01.png",
-      "images/lum-009/detail_02.png",
-      "images/lum-009/detail_03.png",
-      "images/lum-009/detail_04.png",
-      "images/lum-009/lifestyle_01.png",
-      "images/lum-009/lifestyle_02.png",
-      "images/lum-009/lifestyle_03.png",
-    ],
-    description: "A wig that disappears. Single-donor virgin hair, hand-tied into transparent 13x6 HD Swiss lace that melts into any skin tone. Wear it parted deep, pulled back, or swept to one side. The hairline holds up under every styling whim.",
-    features: [
-      "13x6 HD transparent lace - undetectable on every skin tone",
-      "100% virgin human hair, single-donor sourcing",
-      "Pre-plucked hairline with soft baby hairs",
-      "Heat-safe up to 350F - can be styled, toned, and colored",
-      "Available in 150% (standard) and 180% (full) density",
-      "Adjustable cap with combs and elastic strap",
-    ],
-    variants: [
-      { length: "16\"", density: "150%", price: 289, oldPrice: 399, inStock: true, _supplierCost: 340.0 },
-      { length: "16\"", density: "180%", price: 319, oldPrice: 449, inStock: true, _supplierCost: null },
-      { length: "18\"", density: "150%", price: 319, oldPrice: 449, inStock: true, _supplierCost: 385.0 },
-      { length: "18\"", density: "180%", price: 349, oldPrice: 489, inStock: true, _supplierCost: null },
-      { length: "20\"", density: "150%", price: 349, oldPrice: 489, inStock: true, _supplierCost: 435.0 },
-      { length: "20\"", density: "180%", price: 379, oldPrice: 529, inStock: true, _supplierCost: null },
-      { length: "22\"", density: "150%", price: 389, oldPrice: 539, inStock: true, _supplierCost: 495.0 },
-      { length: "22\"", density: "180%", price: 419, oldPrice: 589, inStock: true, _supplierCost: null },
-      { length: "24\"", density: "150%", price: 449, oldPrice: 629, inStock: true, _supplierCost: 595.0 },
-      { length: "24\"", density: "180%", price: 479, oldPrice: 669, inStock: true, _supplierCost: null },
-      { length: "26\"", density: "150%", price: 539, oldPrice: 749, inStock: true, _supplierCost: 745.0 },
-      { length: "26\"", density: "180%", price: 569, oldPrice: 799, inStock: true, _supplierCost: null },
-      { length: "28\"", density: "150%", price: 649, oldPrice: 909, inStock: true, _supplierCost: 920.0 },
-      { length: "28\"", density: "180%", price: 679, oldPrice: 949, inStock: true, _supplierCost: null },
-      { length: "30\"", density: "150%", price: 729, oldPrice: 1019, inStock: true, _supplierCost: 1045.0 },
-      { length: "30\"", density: "180%", price: 759, oldPrice: 1059, inStock: true, _supplierCost: null },
-    ],
-    _supplier: {
-      source: "1688/LINQI",
-      productId: "939003504184",
-      url: "https://detail.1688.com/offer/939003504184.html",
-      shippingFromCN: 10,
-      shippingToUS: 110,
-    },
   }
 ];

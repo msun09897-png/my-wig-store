@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(python3:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(cmd:*)",
+      "Bash(powershell.exe -Command \"schtasks /query /tn 'AStockIntradayBark' /xml\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(powershell:*)",
+      "Bash(schtasks /query /tn \"ETFRotation_Morning\" /v /fo LIST)",
+      "Bash(schtasks /query /tn \"ETFRotation_Evening\" /v /fo LIST)",
+      "Bash(schtasks /query /tn \"ETFRotation_MonthEnd\" /v /fo LIST)",
+      "Bash(cat)",
+      "Bash(py -3 /tmp/test_alt.py)",
+      "Bash(py -3 /tmp/test_sina.py)",
+      "Bash(py -3 /tmp/test_sina2.py)",
+      "Bash(py -3 /tmp/test_stock_hist.py)",
+      "Bash(py -3 /tmp/test_calendar.py)"
+    ]
+  }
+}
