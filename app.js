@@ -59,15 +59,22 @@ function showPage(name, productId) {
 function productCardHTML(p) {
   const tag = p.tag ? `<span class="product-tag">${p.tag}</span>` : '';
   const oldPrice = p.oldPrice ? `<span class="old">${fmt(p.oldPrice)}</span>` : '';
+  const imgs = p.images || (p.image ? [p.image] : []);
+  const secondaryImg = imgs.length > 1
+    ? `<img class="product-image-secondary" src="${imgs[1]}" alt="${p.name}" loading="lazy">`
+    : '';
   return `
     <div class="product-card" onclick="showPage('product', '${p.id}')">
       <div class="product-image">
         ${tag}
-        <img src="${(p.images || [p.image])[0]}" alt="${p.name}" loading="lazy">
+        <img class="product-image-primary" src="${imgs[0] || ''}" alt="${p.name}" loading="lazy">
+        ${secondaryImg}
       </div>
-      <p class="product-meta">${p.subtitle}</p>
-      <h3 class="product-name">${p.name}</h3>
-      <p class="product-price">${fmt(p.price)}${oldPrice}</p>
+      <div class="product-info">
+        <p class="product-meta">${p.subtitle}</p>
+        <h3 class="product-name">${p.name}</h3>
+        <p class="product-price">${fmt(p.price)}${oldPrice}</p>
+      </div>
     </div>
   `;
 }
@@ -237,8 +244,12 @@ function renderProductDetail(id) {
     initBtnLabel = `Add to Bag — ${fmt(p.price)}`;
   }
 
+  const stackedImgs = (p.images || []).map(src =>
+    `<div class="stacked-image"><img src="${src}" alt="${p.name}" loading="lazy"></div>`
+  ).join('');
+
   $('productDetail').innerHTML = `
-    <div class="product-detail-image" id="gallery-container"></div>
+    <div class="product-detail-images">${stackedImgs}</div>
     <div class="detail-info">
       <p class="breadcrumb"><a href="#" onclick="showPage('shop'); return false;">Shop</a> · ${p.subtitle}</p>
       <h1>${p.name}</h1>
@@ -257,9 +268,17 @@ function renderProductDetail(id) {
     </div>
   `;
 
-  // ── Gallery init ─────────────────────────────────────────────────
-  const _defVariant = p.variants ? (p.variants.find(v => v.inStock) || p.variants[0]) : null;
-  ProductGallery.init(ProductGallery.extractImages(p, _defVariant), $('gallery-container'));
+  // ── Detail gallery (full-width section below) ────────────────────
+  const detailGalleryEl = $('product-detail-gallery');
+  if (detailGalleryEl) {
+    if (p.detailImages && p.detailImages.length > 0) {
+      detailGalleryEl.innerHTML = p.detailImages.map(src =>
+        `<img src="${src}" alt="${p.name}" loading="lazy">`
+      ).join('');
+    } else {
+      detailGalleryEl.innerHTML = '';
+    }
+  }
 }
 
 function carouselUpdateUI() {
@@ -303,8 +322,6 @@ function updateVariantUI() {
     btn.textContent = inStock ? `Add to Bag — ${fmt(price)}` : 'Out of Stock';
   }
 
-  // Update gallery when variant image changes
-  ProductGallery.update(ProductGallery.extractImages(currentProduct, v));
 }
 
 function selectOption(type, value, btn) {
@@ -594,160 +611,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =========================================================================
-   PRODUCT GALLERY MODULE
-   API: ProductGallery.init(images, container)
-        ProductGallery.update(images)
-        ProductGallery.destroy()
-        ProductGallery.extractImages(product, variant)
+   PRODUCT GALLERY STUB
+   Gallery replaced by stacked images in renderProductDetail.
+   destroy() clears the full-width detail section on page navigation.
    ========================================================================= */
 const ProductGallery = (function () {
-  let state = {
-    images: [], currentIndex: 0, container: null,
-    mainImgEl: null, thumbsEl: null,
-    lightboxEl: null, lightboxImgEl: null, keyHandler: null,
-  };
-
-  function extractImages(product, variant) {
-    if (variant) {
-      if (Array.isArray(variant.images) && variant.images.length > 0) return variant.images.slice();
-      if (typeof variant.image === 'string' && variant.image) return [variant.image];
-    }
-    if (Array.isArray(product.images) && product.images.length > 0) return product.images.slice();
-    if (typeof product.image === 'string' && product.image) return [product.image];
-    return [];
-  }
-
-  function init(images, container) {
-    if (!container) return;
-    state.container = container;
-    state.images = (Array.isArray(images) && images.length > 0) ? images.slice() : [];
-    state.currentIndex = 0;
-    render();
-    bindEvents();
-  }
-
-  function update(images) {
-    if (!state.container) return;
-    const next = (Array.isArray(images) && images.length > 0) ? images.slice() : state.images;
-    if (JSON.stringify(next) === JSON.stringify(state.images)) return;
-    state.images = next;
-    state.currentIndex = 0;
-    render();
-    bindEvents();
-  }
-
   function destroy() {
-    if (state.keyHandler) {
-      document.removeEventListener('keydown', state.keyHandler);
-      state.keyHandler = null;
-    }
-    closeLightbox();
-    if (state.container) state.container.innerHTML = '';
-    state.container = null;
-    state.images = [];
-    state.currentIndex = 0;
+    const g = document.getElementById('product-detail-gallery');
+    if (g) g.innerHTML = '';
   }
-
-  function render() {
-    if (!state.container) return;
-    const isSingle = state.images.length <= 1;
-    const cls = isSingle ? 'gallery gallery--single' : 'gallery';
-    state.container.innerHTML = `
-      <div class="${cls}">
-        <div class="gallery__thumbs">
-          ${state.images.map((src, i) => `
-            <button type="button" class="gallery__thumb${i === state.currentIndex ? ' is-active' : ''}"
-                    data-index="${i}" aria-label="View image ${i + 1}">
-              <img src="${src}" alt="Thumbnail ${i + 1}" loading="lazy" />
-            </button>`).join('')}
-        </div>
-        <div class="gallery__main" data-action="zoom">
-          <img src="${state.images[state.currentIndex] || ''}" alt="Product image" />
-        </div>
-      </div>`;
-    state.thumbsEl  = state.container.querySelector('.gallery__thumbs');
-    state.mainImgEl = state.container.querySelector('.gallery__main img');
-  }
-
-  function bindEvents() {
-    if (!state.container) return;
-    state.container.querySelectorAll('.gallery__thumb').forEach(thumb => {
-      thumb.addEventListener('click', () => switchTo(Number(thumb.getAttribute('data-index'))));
-    });
-    const mainEl = state.container.querySelector('.gallery__main');
-    if (mainEl) mainEl.addEventListener('click', () => openLightbox(state.currentIndex));
-  }
-
-  function switchTo(idx) {
-    if (idx < 0 || idx >= state.images.length || idx === state.currentIndex) return;
-    const mainContainer = state.container.querySelector('.gallery__main');
-    if (!mainContainer || !state.mainImgEl) return;
-    mainContainer.classList.add('is-fading');
-    setTimeout(() => {
-      state.currentIndex = idx;
-      state.mainImgEl.src = state.images[idx];
-      mainContainer.classList.remove('is-fading');
-      state.container.querySelectorAll('.gallery__thumb').forEach((t, i) => {
-        t.classList.toggle('is-active', i === idx);
-      });
-    }, 150);
-  }
-
-  function openLightbox(idx) {
-    closeLightbox();
-    const isSingle = state.images.length <= 1;
-    const lb = document.createElement('div');
-    lb.className = isSingle ? 'lightbox lightbox--single' : 'lightbox';
-    lb.innerHTML = `
-      <button type="button" class="lightbox__close" aria-label="Close">✕</button>
-      <button type="button" class="lightbox__prev"  aria-label="Previous">‹</button>
-      <img class="lightbox__img" src="${state.images[idx]}" alt="Product image" />
-      <button type="button" class="lightbox__next"  aria-label="Next">›</button>
-      <div class="lightbox__counter">${idx + 1} / ${state.images.length}</div>`;
-    document.body.appendChild(lb);
-    document.body.style.overflow = 'hidden';
-    state.lightboxEl   = lb;
-    state.lightboxImgEl = lb.querySelector('.lightbox__img');
-    let lbIdx = idx;
-
-    const goTo = (n) => {
-      if (n < 0) n = state.images.length - 1;
-      if (n >= state.images.length) n = 0;
-      lbIdx = n;
-      state.lightboxImgEl.src = state.images[n];
-      const counter = lb.querySelector('.lightbox__counter');
-      if (counter) counter.textContent = `${n + 1} / ${state.images.length}`;
-      switchTo(n);
-    };
-
-    lb.querySelector('.lightbox__close').addEventListener('click', closeLightbox);
-    lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
-    state.lightboxImgEl.addEventListener('click', e => e.stopPropagation());
-    lb.querySelector('.lightbox__prev').addEventListener('click', e => { e.stopPropagation(); goTo(lbIdx - 1); });
-    lb.querySelector('.lightbox__next').addEventListener('click', e => { e.stopPropagation(); goTo(lbIdx + 1); });
-
-    state.keyHandler = e => {
-      if (e.key === 'Escape')      closeLightbox();
-      else if (e.key === 'ArrowLeft')  goTo(lbIdx - 1);
-      else if (e.key === 'ArrowRight') goTo(lbIdx + 1);
-    };
-    document.addEventListener('keydown', state.keyHandler);
-  }
-
-  function closeLightbox() {
-    if (state.lightboxEl) {
-      state.lightboxEl.remove();
-      state.lightboxEl = null;
-      state.lightboxImgEl = null;
-      document.body.style.overflow = '';
-    }
-    if (state.keyHandler) {
-      document.removeEventListener('keydown', state.keyHandler);
-      state.keyHandler = null;
-    }
-  }
-
-  return { init, update, destroy, extractImages };
+  function init() {}
+  function update() {}
+  return { init, update, destroy };
 })();
 
 window.ProductGallery = ProductGallery;
