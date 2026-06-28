@@ -9,339 +9,108 @@
 
 const PRODUCTS = [
   {
-    id: 'lum-196224',
-    name: 'Human Hair Wig Female',
-    subtitle: 'Straight Clip In Hair',
-    price: 224,       // 起售�?最短款),用于商品卡片展示
-    oldPrice: 280,
-    images: ['https://i.postimg.cc/PrGZ7FG6/1.png'],
-    description: 'Crafted from 100% virgin human hair and finished with HD Swiss lace, this piece moves, bounces, and shines like the hair you were born with. Soft to the touch, undetectable at the hairline �?wear it confidently, day or night. Made to last 2+ years with proper care.',
+    id: "lum-011",
+    name: "The Cascade Wave",
+    subtitle: "13x6 HD Lace Wig | 100% Virgin Human Hair · Deep Wave",
+    price: 309,
+    oldPrice: 429,
+    images: [
+      'images/lum-011/main_01.png',
+      'images/lum-011/main_02.png',
+      'images/lum-011/main_03.png',
+      'images/lum-011/main_04.png',
+      'images/lum-011/main_05.png',
+    ],
+    detailImages: [
+      'images/lum-011/detail_01.png',
+      'images/lum-011/detail_02.png',
+      'images/lum-011/detail_03.png',
+      'images/lum-011/detail_04.png',
+      'images/lum-011/lifestyle_01.png',
+      'images/lum-011/lifestyle_02.png',
+      'images/lum-011/lifestyle_03.png',
+    ],
+    description: "Waves that move like water. Single-donor virgin hair in a deep, uniform wave pattern, hand-tied into transparent 13x6 HD Swiss lace that vanishes at the hairline. Full-bodied, bouncy, and luminous — from a quiet morning to a room full of eyes.",
     features: [
-      '100% premium human hair',
-      'HD lace front, pre-plucked',
-      'Natural hairline, baby hairs styled',
-      '180% density · medium cap',
-      'Length: 16�?6 inch'
+      "13x6 HD transparent lace - undetectable on every skin tone",
+      "100% virgin human hair, single-donor sourcing",
+      "Deep wave pattern - full, bouncy, well-defined",
+      "Pre-plucked hairline with soft baby hairs",
+      "Heat-safe up to 350F - restyle, tone, or color as you like",
+      "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      // ── 16 inch · $224 ──────────────────────────
-      { color: '#613 Bleach Blonde', length: '16inch/40cm', price: 224, inStock: true, _supplierCost: null },
-      { color: '#3 Dark Auburn',   length: '16inch/40cm', price: 224, inStock: true, _supplierCost: null },
-      { color: '#4 Medium Brown',   length: '16inch/40cm', price: 224, inStock: true, _supplierCost: null },
-      { color: '#7 Light Brown',   length: '16inch/40cm', price: 224, inStock: true, _supplierCost: null },
-      { color: '#8 Chestnut Brown',   length: '16inch/40cm', price: 224, inStock: true, _supplierCost: null },
-      { color: '#12 Light Golden Brown',  length: '16inch/40cm', price: 224, inStock: true, _supplierCost: null },
-      // ── 18 inch · $237 (+6%) ────────────────────
-      { color: '#613 Bleach Blonde', length: '18inch/45cm', price: 237, inStock: true, _supplierCost: null },
-      { color: '#3 Dark Auburn',   length: '18inch/45cm', price: 237, inStock: true, _supplierCost: null },
-      { color: '#4 Medium Brown',   length: '18inch/45cm', price: 237, inStock: true, _supplierCost: null },
-      { color: '#7 Light Brown',   length: '18inch/45cm', price: 237, inStock: true, _supplierCost: null },
-      { color: '#8 Chestnut Brown',   length: '18inch/45cm', price: 237, inStock: true, _supplierCost: null },
-      { color: '#12 Light Golden Brown',  length: '18inch/45cm', price: 237, inStock: true, _supplierCost: null },
-      // ── 20 inch · $254 (+7%) ────────────────────
-      { color: '#613 Bleach Blonde', length: '20inch/50cm', price: 254, inStock: true, _supplierCost: null },
-      { color: '#3 Dark Auburn',   length: '20inch/50cm', price: 254, inStock: true, _supplierCost: null },
-      { color: '#4 Medium Brown',   length: '20inch/50cm', price: 254, inStock: true, _supplierCost: null },
-      { color: '#7 Light Brown',   length: '20inch/50cm', price: 254, inStock: true, _supplierCost: null },
-      { color: '#8 Chestnut Brown',   length: '20inch/50cm', price: 254, inStock: true, _supplierCost: null },
-      { color: '#12 Light Golden Brown',  length: '20inch/50cm', price: 254, inStock: true, _supplierCost: null },
-      // ── 22 inch · $272 (+7%) ────────────────────
-      { color: '#613 Bleach Blonde', length: '22inch/55cm', price: 272, inStock: true, _supplierCost: null },
-      { color: '#3 Dark Auburn',   length: '22inch/55cm', price: 272, inStock: true, _supplierCost: null },
-      { color: '#4 Medium Brown',   length: '22inch/55cm', price: 272, inStock: true, _supplierCost: null },
-      { color: '#7 Light Brown',   length: '22inch/55cm', price: 272, inStock: true, _supplierCost: null },
-      { color: '#8 Chestnut Brown',   length: '22inch/55cm', price: 272, inStock: true, _supplierCost: null },
-      { color: '#12 Light Golden Brown',  length: '22inch/55cm', price: 272, inStock: true, _supplierCost: null },
-      // ── 24 inch · $291 (+7%) ────────────────────
-      { color: '#613 Bleach Blonde', length: '24inch/60cm', price: 291, inStock: true, _supplierCost: null },
-      { color: '#3 Dark Auburn',   length: '24inch/60cm', price: 291, inStock: true, _supplierCost: null },
-      { color: '#4 Medium Brown',   length: '24inch/60cm', price: 291, inStock: true, _supplierCost: null },
-      { color: '#7 Light Brown',   length: '24inch/60cm', price: 291, inStock: true, _supplierCost: null },
-      { color: '#8 Chestnut Brown',   length: '24inch/60cm', price: 291, inStock: true, _supplierCost: null },
-      { color: '#12 Light Golden Brown',  length: '24inch/60cm', price: 291, inStock: true, _supplierCost: null },
-      // ── 26 inch · $311 (+7%) ────────────────────
-      { color: '#613 Bleach Blonde', length: '26inch/65cm', price: 311, inStock: true, _supplierCost: null },
-      { color: '#3 Dark Auburn',   length: '26inch/65cm', price: 311, inStock: true, _supplierCost: null },
-      { color: '#4 Medium Brown',   length: '26inch/65cm', price: 311, inStock: true, _supplierCost: null },
-      { color: '#7 Light Brown',   length: '26inch/65cm', price: 311, inStock: true, _supplierCost: null },
-      { color: '#8 Chestnut Brown',   length: '26inch/65cm', price: 311, inStock: true, _supplierCost: null },
-      { color: '#12 Light Golden Brown',  length: '26inch/65cm', price: 311, inStock: true, _supplierCost: null },
+      { color: 'Natural Black', length: '16inch/40cm', price: 309, oldPrice: 429,  inStock: true, _supplierCost: 385 },
+      { color: 'Natural Black', length: '18inch/45cm', price: 339, oldPrice: 469,  inStock: true, _supplierCost: 425 },
+      { color: 'Natural Black', length: '20inch/50cm', price: 379, oldPrice: 529,  inStock: true, _supplierCost: 485 },
+      { color: 'Natural Black', length: '22inch/55cm', price: 429, oldPrice: 599,  inStock: true, _supplierCost: 565 },
+      { color: 'Natural Black', length: '24inch/60cm', price: 499, oldPrice: 699,  inStock: true, _supplierCost: 685 },
+      { color: 'Natural Black', length: '26inch/65cm', price: 579, oldPrice: 809,  inStock: true, _supplierCost: 795 },
+      { color: 'Natural Black', length: '28inch/70cm', price: 679, oldPrice: 949,  inStock: true, _supplierCost: 970 },
+      { color: 'Natural Black', length: '30inch/75cm', price: 769, oldPrice: 1079, inStock: true, _supplierCost: 1105 },
     ],
     _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
+      source: "1688/LINQI",
+      productId: "937885958891",
+      url: "https://detail.1688.com/offer/937885958891.html",
+      shippingFromCN: 10,
+      shippingToUS: 110,
     },
-    featured: true
+    featured: true,
   },
   {
-    id: 'lum-737816',
-    name: 'Wig Long Curly Hair',
-    subtitle: 'Lace Front Wig · 22"',
-    price: 168,       // 起售�?14inch),用于商品卡片展示
-    oldPrice: 210,
-    images: ['https://i.postimg.cc/j2JsYXfj/shou-tu.png'],
-    description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments �?effortless, every time.',
+    id: "lum-010",
+    name: "The Platinum Bob",
+    subtitle: "13x4 HD Lace Bob | 100% Virgin Human Hair · #613",
+    price: 199,
+    oldPrice: 279,
+    images: [
+      'images/lum-010/main_01.png',
+      'images/lum-010/main_02.png',
+      'images/lum-010/main_03.png',
+      'images/lum-010/main_04.png',
+      'images/lum-010/main_05.png',
+    ],
+    detailImages: [
+      'images/lum-010/detail_01.png',
+      'images/lum-010/detail_02.png',
+      'images/lum-010/detail_03.png',
+      'images/lum-010/detail_04.png',
+      'images/lum-010/lifestyle_01.png',
+      'images/lum-010/lifestyle_02.png',
+      'images/lum-010/lifestyle_03.png',
+    ],
+    description: "A sharp, luminous bob in pure platinum #613. Bone-straight virgin human hair hand-tied into transparent 13x4 HD lace that vanishes at the hairline. Bleached, toned, and ready to wear — the kind of blonde that turns a room.",
     features: [
-      '100% premium human hair',
-      'HD lace front, pre-plucked',
-      'Natural hairline, baby hairs styled',
-      '180% density · medium cap',
-      'Length: 14�?4 inch'
+      "13x4 HD transparent lace - invisible hairline on every skin tone",
+      "100% virgin human hair, pre-bleached #613 platinum blonde",
+      "Sleek bone-straight bob, chin-to-shoulder length",
+      "Heat-safe up to 350F - restyle, tone, or curl as you like",
+      "Available in 150% (standard) and 180% (full) density",
+      "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: '1B# Natural Black', length: '14inch/35cm', price: 168, inStock: true, _supplierCost: null  },
-      { color: '1B# Natural Black', length: '16inch/40cm', price: 178, inStock: true, _supplierCost: null  },
-      { color: '1B# Natural Black', length: '18inch/45cm', price: 190, inStock: true, _supplierCost: null  },
-      { color: '1B# Natural Black', length: '20inch/50cm', price: 203, inStock: true, _supplierCost: null  },
-      { color: '1B# Natural Black', length: '22inch/55cm', price: 217, inStock: true, _supplierCost: null  },
-      { color: '1B# Natural Black', length: '24inch/60cm', price: 232, inStock: true, _supplierCost: null },
+      // ── 8 inch · 齐下巴 Bob ──
+      { color: '#613 Platinum · 150% Density', length: '8inch/20cm',  price: 199, oldPrice: 279, inStock: true, _supplierCost: 210 },
+      { color: '#613 Platinum · 180% Density', length: '8inch/20cm',  price: 229, oldPrice: 319, inStock: true, _supplierCost: 230 },
+      // ── 10 inch ──
+      { color: '#613 Platinum · 150% Density', length: '10inch/25cm', price: 229, oldPrice: 319, inStock: true, _supplierCost: 250 },
+      { color: '#613 Platinum · 180% Density', length: '10inch/25cm', price: 259, oldPrice: 359, inStock: true, _supplierCost: 280 },
+      // ── 12 inch ──
+      { color: '#613 Platinum · 150% Density', length: '12inch/30cm', price: 259, oldPrice: 359, inStock: true, _supplierCost: 300 },
+      { color: '#613 Platinum · 180% Density', length: '12inch/30cm', price: 289, oldPrice: 399, inStock: true, _supplierCost: 330 },
+      // ── 14 inch · 齐肩 Bob ──
+      { color: '#613 Platinum · 150% Density', length: '14inch/35cm', price: 289, oldPrice: 399, inStock: true, _supplierCost: 350 },
+      { color: '#613 Platinum · 180% Density', length: '14inch/35cm', price: 319, oldPrice: 449, inStock: true, _supplierCost: 370 },
     ],
     _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
+      source: "1688/LINQI",
+      productId: "938478082037",
+      url: "https://detail.1688.com/offer/938478082037.html",
+      shippingFromCN: 10,
+      shippingToUS: 110,
     },
-    featured: true
-  },
-  {
-    id: 'lum-880773',
-    name: 'Hair Extensions Wig Full',
-    subtitle: 'Loose Curls Lace Front · 24"',
-    price: 168,       // 起售�?12inch),用于商品卡片展示
-    oldPrice: 210,
-    images: ['https://i.postimg.cc/zXGPPBnX/Gemini-Generated-Image-wo9guiwo9guiwo9g.png'],
-    description: 'Sleek, glossy, and impossibly smooth. This silky straight piece falls like silk and feels even better. HD lace front melts away. 100% virgin hair, ready to dye, curl, or wear just as it is.',
-    features: [
-      '100% premium human hair',
-      'HD lace front, pre-plucked',
-      'Natural hairline, baby hairs styled',
-      '180% density · medium cap',
-      'Length: 12�?6 inch'
-    ],
-    variants: [
-      { color: 'Natural Color', length: '12inch/30cm', price: 168, inStock: true, _supplierCost: null  },
-      { color: 'Natural Color', length: '14inch/35cm', price: 178, inStock: true, _supplierCost: null  },
-      { color: 'Natural Color', length: '16inch/40cm', price: 189, inStock: true, _supplierCost: null  },
-      { color: 'Natural Color', length: '18inch/45cm', price: 200, inStock: true, _supplierCost: null  },
-      { color: 'Natural Color', length: '20inch/50cm', price: 212, inStock: true, _supplierCost: null  },
-      { color: 'Natural Color', length: '22inch/55cm', price: 225, inStock: true, _supplierCost: null },
-      { color: 'Natural Color', length: '24inch/60cm', price: 239, inStock: true, _supplierCost: null },
-      { color: 'Natural Color', length: '26inch/65cm', price: 253, inStock: true, _supplierCost: null },
-    ],
-    _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
-    },
-    featured: true
-  },
-  {
-    id: 'lum-386669',
-    name: 'Deep Wave Real Hair',
-    subtitle: 'Deep Wave',
-    price: 56,           // 起售�?#1B 50g 12inch),用于商品卡片展示
-    oldPrice: 70,
-    images: ['https://i.postimg.cc/43tgN5Nh/Gemini-Generated-Image-k3qdi3k3qdi3k3qd.png'],
-    description: 'Soft, romantic body waves that catch every light. Hand-tied on HD Swiss lace for an invisible hairline, this wig holds its shape wash after wash. From beach days to boardroom moments �?effortless, every time.',
-    features: [
-      '100% premium human hair',
-      'HD lace front, pre-plucked',
-      'Natural hairline, baby hairs styled',
-      '180% density · medium cap',
-      'Length: 20inch/50cm'
-    ],
-    variants: [
-      // ── #1B Natural Black · 50g (轻量入门) ──────────────────
-      { color: '#1B Natural Black / 50g',  length: '12inch/30cm', price: 56,  inStock: true,  _supplierCost: null },
-      { color: '#1B Natural Black / 50g',  length: '16inch/40cm', price: 64,  inStock: true,  _supplierCost: null },
-      { color: '#1B Natural Black / 50g',  length: '20inch/50cm', price: 74,  inStock: true,  _supplierCost: null },
-      // ── #1B Natural Black · 100g ────────────────────────────
-      { color: '#1B Natural Black / 100g', length: '12inch/30cm', price: 85,  inStock: true,  _supplierCost: null },
-      { color: '#1B Natural Black / 100g', length: '16inch/40cm', price: 97,  inStock: true,  _supplierCost: null },
-      { color: '#1B Natural Black / 100g', length: '20inch/50cm', price: 111, inStock: true,  _supplierCost: null },
-      { color: '#1B Natural Black / 100g', length: '24inch/60cm', price: 128, inStock: false, _supplierCost: null },
-      // ── #4 Dark Brown · 100g ────────────────────────────────
-      { color: '#4 Dark Brown / 100g',     length: '12inch/30cm', price: 88,  inStock: true,  _supplierCost: null },
-      { color: '#4 Dark Brown / 100g',     length: '18inch/45cm', price: 107, inStock: true,  _supplierCost: null },
-      // ── #27 Honey Blonde · 100g ─────────────────────────────
-      { color: '#27 Honey Blonde / 100g',  length: '12inch/30cm', price: 88,  inStock: true,  _supplierCost: null },
-      { color: '#27 Honey Blonde / 100g',  length: '18inch/45cm', price: 104, inStock: true,  _supplierCost: null },
-      // ── #613 Blonde · 100g (特殊�?�?10%) ─────────────────
-      { color: '#613 Blonde / 100g',       length: '12inch/30cm', price: 93,  inStock: true,  _supplierCost: null },
-      { color: '#613 Blonde / 100g',       length: '18inch/45cm', price: 113, inStock: false, _supplierCost: null },
-      // ── Pink / Blue 特殊�?· 100g ───────────────────────────
-      { color: '#Pink Fantasy / 100g',     length: '14inch/35cm', price: 96,  inStock: true,  _supplierCost: null },
-      { color: '#Blue Ocean / 100g',       length: '14inch/35cm', price: 96,  inStock: true,  _supplierCost: null },
-    ],
-    _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
-    },
-    featured: true
-  },
-  {
-    id: 'lum-005',
-    name: 'Vivienne',
-    subtitle: 'Kinky Curly Afro · 18"',
-    price: 269,          // 起售�?14inch Natural Black),用于商品卡片展示
-    images: ['https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=800&q=85'],
-    description: 'Voluminous, expressive, unapologetic. A celebration of natural texture, hand-tied for movement and density.',
-    features: [
-      '100% virgin human hair',
-      'HD lace front (4×4 closure available)',
-      'Pre-plucked hairline',
-      '200% density · medium-large cap',
-      'Length: 14�?0 inches'
-    ],
-    variants: [
-      // ── Natural Black ────────────────────────────────────────
-      { color: 'Natural Black', length: '14inch/35cm', price: 269, inStock: true,  _supplierCost: null  },
-      { color: 'Natural Black', length: '16inch/40cm', price: 285, inStock: true,  _supplierCost: null  },
-      { color: 'Natural Black', length: '18inch/45cm', price: 302, inStock: true,  _supplierCost: null  },
-      { color: 'Natural Black', length: '20inch/50cm', price: 320, inStock: false, _supplierCost: null  },
-      // ── Dark Brown (+3%) ─────────────────────────────────────
-      { color: 'Dark Brown',    length: '14inch/35cm', price: 277, inStock: true,  _supplierCost: null  },
-      { color: 'Dark Brown',    length: '16inch/40cm', price: 293, inStock: true,  _supplierCost: null  },
-      { color: 'Dark Brown',    length: '18inch/45cm', price: 311, inStock: true,  _supplierCost: null  },
-      { color: 'Dark Brown',    length: '20inch/50cm', price: 330, inStock: false, _supplierCost: null  },
-    ],
-    _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
-    },
-    featured: false
-  },
-  {
-    id: 'lum-006',
-    name: 'Ophélie',
-    subtitle: 'Straight with Bangs · 18"',
-    price: 239,          // 起售�?16inch Natural Black),用于商品卡片展示
-    images: ['https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800&q=85'],
-    description: 'Sleek straight hair with classic French bangs �?the timeless, effortless look that flatters every face shape.',
-    features: [
-      '100% virgin human hair',
-      'Wear & go construction',
-      'Pre-cut bangs, no styling needed',
-      '180% density · medium cap',
-      'Length: 16�?0 inches'
-    ],
-    variants: [
-      // ── Natural Black ────────────────────────────────────────
-      { color: 'Natural Black', length: '16inch/40cm', price: 239, inStock: true,  _supplierCost: null  },
-      { color: 'Natural Black', length: '18inch/45cm', price: 256, inStock: true,  _supplierCost: null  },
-      { color: 'Natural Black', length: '20inch/50cm', price: 274, inStock: true,  _supplierCost: null  },
-      // ── Dark Brown (+3%) ─────────────────────────────────────
-      { color: 'Dark Brown',    length: '16inch/40cm', price: 246, inStock: true,  _supplierCost: null  },
-      { color: 'Dark Brown',    length: '18inch/45cm', price: 263, inStock: false, _supplierCost: null  },
-      { color: 'Dark Brown',    length: '20inch/50cm', price: 282, inStock: true,  _supplierCost: null  },
-      // ── Light Brown (+5% from base, rarer color) ─────────────
-      { color: 'Light Brown',   length: '16inch/40cm', price: 251, inStock: true,  _supplierCost: null  },
-      { color: 'Light Brown',   length: '18inch/45cm', price: 268, inStock: true,  _supplierCost: null  },
-      { color: 'Light Brown',   length: '20inch/50cm', price: 287, inStock: false, _supplierCost: null  },
-    ],
-    _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
-    },
-    featured: false
-  },
-  {
-    id: 'lum-007',
-    name: 'Margaux',
-    subtitle: 'Water Wave Lace Front · 26"',
-    price: 379,          // 起售�?22inch Natural Black),用于商品卡片展示
-    tag: 'Limited',
-    images: ['https://images.unsplash.com/photo-1626954079979-ec4f7b05e032?w=800&q=85'],
-    description: 'Long, flowing water waves that catch light like silk ribbons. A statement piece for those who want to be seen.',
-    features: [
-      '100% virgin human hair',
-      'HD Swiss lace front (13×6)',
-      'Pre-plucked, baby hairs styled',
-      '180% density · medium cap',
-      'Length: 22�?8 inches'
-    ],
-    variants: [
-      // ── Natural Black ────────────────────────────────────────
-      { color: 'Natural Black',       length: '22inch/55cm', price: 379, inStock: true,  _supplierCost: null },
-      { color: 'Natural Black',       length: '24inch/60cm', price: 406, inStock: true,  _supplierCost: null },
-      { color: 'Natural Black',       length: '26inch/65cm', price: 434, inStock: true,  _supplierCost: null },
-      { color: 'Natural Black',       length: '28inch/70cm', price: 464, inStock: true,  _supplierCost: null },
-      // ── Dark Brown (+3%) ─────────────────────────────────────
-      { color: 'Dark Brown',          length: '22inch/55cm', price: 391, inStock: true,  _supplierCost: null },
-      { color: 'Dark Brown',          length: '24inch/60cm', price: 418, inStock: false, _supplierCost: null },
-      { color: 'Dark Brown',          length: '26inch/65cm', price: 447, inStock: true,  _supplierCost: null },
-      { color: 'Dark Brown',          length: '28inch/70cm', price: 478, inStock: true,  _supplierCost: null },
-      // ── Burgundy Highlights (+8%, limited specialty color) ───
-      { color: 'Burgundy Highlights', length: '22inch/55cm', price: 409, inStock: true,  _supplierCost: null },
-      { color: 'Burgundy Highlights', length: '24inch/60cm', price: 438, inStock: true,  _supplierCost: null },
-      { color: 'Burgundy Highlights', length: '26inch/65cm', price: 468, inStock: false, _supplierCost: null },
-      { color: 'Burgundy Highlights', length: '28inch/70cm', price: 500, inStock: true,  _supplierCost: null },
-    ],
-    _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
-    },
-    featured: true
-  },
-  {
-    id: 'lum-008',
-    name: 'Inès',
-    subtitle: 'Layered Wolf Cut · 16"',
-    price: 249,          // 起售�?14inch Natural Black),用于商品卡片展示
-    images: ['https://images.unsplash.com/photo-1600950207944-0d63e8edbc3f?w=800&q=85'],
-    description: 'A bold, edgy wolf cut with feathered layers. Modern, expressive, and impossible to ignore.',
-    features: [
-      '100% virgin human hair',
-      'HD lace front (13×4)',
-      'Pre-cut layers, ready to wear',
-      '180% density · medium cap',
-      'Length: 14�?8 inches'
-    ],
-    variants: [
-      // ── Natural Black ────────────────────────────────────────
-      { color: 'Natural Black', length: '14inch/35cm', price: 249, inStock: true,  _supplierCost: null },
-      { color: 'Natural Black', length: '16inch/40cm', price: 264, inStock: true,  _supplierCost: null },
-      { color: 'Natural Black', length: '18inch/45cm', price: 280, inStock: false, _supplierCost: null },
-      // ── Honey Brown (+4%) ────────────────────────────────────
-      { color: 'Honey Brown',   length: '14inch/35cm', price: 259, inStock: true,  _supplierCost: null },
-      { color: 'Honey Brown',   length: '16inch/40cm', price: 275, inStock: true,  _supplierCost: null },
-      { color: 'Honey Brown',   length: '18inch/45cm', price: 292, inStock: true,  _supplierCost: null },
-    ],
-    _supplier: {
-      platform: '1688',
-      shopName: '',
-      productUrl: '',
-      contactWeChat: '',
-      costPrice: 0,
-      notes: ''
-    },
-    featured: false
+    featured: true,
   },
   {
     id: "lum-009",
