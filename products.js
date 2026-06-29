@@ -176,5 +176,48 @@ const PRODUCTS = [
       shippingFromCN: 10,
       shippingToUS: 110,
     },
+  },
+  {
+    id: "lum-012",
+    name: "The Water Wave Bob",
+    subtitle: "Short Water Wave Lace Wig | 100% Human Hair",
+    price: 159,
+    oldPrice: 219,
+    images: [
+      'images/lum-012/main_01.png',
+      'images/lum-012/main_02.png',
+      'images/lum-012/main_03.png',
+      'images/lum-012/main_04.png',
+      'images/lum-012/main_05.png',
+    ],
+    detailImages: [
+      'images/lum-012/detail_01.png',
+      'images/lum-012/detail_02.png',
+      'images/lum-012/detail_03.png',
+      'images/lum-012/detail_04.png',
+      'images/lum-012/lifestyle_01.png',
+      'images/lum-012/lifestyle_02.png',
+      'images/lum-012/lifestyle_03.png',
+    ],
+    description: "Soft water-wave texture in an easy short silhouette. Lightweight, face-framing, and ready for everyday wear, this human-hair bob gives natural movement with a polished finish that still feels effortless.",
+    features: [
+      "100% human hair with soft water-wave texture",
+      "Short bob silhouette - light, easy, and face-framing",
+      "Natural black finish for everyday styling",
+      "Heat-safe up to 350F - refresh or restyle as needed",
+      "Beginner-friendly fit with natural movement",
+      "Adjustable cap with combs and elastic strap",
+    ],
+    variants: [
+      { color: 'Natural Black', length: 'Short Bob', price: 159, oldPrice: 219, inStock: true, _supplierCost: 139 },
+    ],
+    _supplier: {
+      source: "1688",
+      productId: "708045834949",
+      url: "https://detail.1688.com/offer/708045834949.html?_t=1782700943254&spm=a2615.7691456/2506.co_0_0_wangpu_score_0_0_0_0_0_0_0000_0.0",
+      shippingFromCN: 10,
+      shippingToUS: 110,
+    },
+    featured: true,
   }
 ];
