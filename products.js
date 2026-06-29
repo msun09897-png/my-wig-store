@@ -176,6 +176,7 @@ const PRODUCTS = [
       shippingFromCN: 10,
       shippingToUS: 110,
     },
+    featured: true,
   },
   {
     id: "lum-012",
