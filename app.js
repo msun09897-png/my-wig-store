@@ -96,6 +96,10 @@ const PAGE_META = {
     title: 'Our Story | LUMIÈRE',
     description: 'Learn about LUMIÈRE and our approach to carefully selected human hair wigs.'
   },
+  guide: {
+    title: 'How to Choose a Human Hair Wig | LUMIÈRE Guide',
+    description: 'Learn how to choose wig lace, density, length, texture, color, and cap construction before buying a human hair wig.'
+  },
   contact: {
     title: 'Contact LUMIÈRE',
     description: 'Contact LUMIÈRE customer care for product, shipping, and order support.'
@@ -145,6 +149,10 @@ function setMeta(name, productId) {
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', meta.description);
   document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonical);
   document.querySelector('meta[property="og:image"]')?.setAttribute('content', image);
+  document.querySelector('meta[property="og:type"]')?.setAttribute(
+    'content',
+    product ? 'product' : name === 'guide' ? 'article' : 'website'
+  );
   document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', meta.title);
   document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', meta.description);
   document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', image);
@@ -187,7 +195,29 @@ function setMeta(name, productId) {
                 itemCondition: 'https://schema.org/NewCondition'
               }
         }
-      : {
+      : name === 'guide'
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: meta.title,
+            description: meta.description,
+            image,
+            mainEntityOfPage: canonical,
+            datePublished: '2026-07-25',
+            dateModified: '2026-07-25',
+            author: {
+              '@type': 'Organization',
+              name: CONFIG.brand,
+              url: CONFIG.siteUrl
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: CONFIG.brand,
+              url: CONFIG.siteUrl
+            },
+            inLanguage: 'en'
+          }
+        : {
           '@context': 'https://schema.org',
           '@graph': [
             {

@@ -44,6 +44,7 @@
     <ul class="nav-links">
       <li><a href="/" onclick="showPage('home'); return false;">Home</a></li>
       <li><a href="/?page=shop" onclick="showPage('shop'); return false;">Shop All</a></li>
+      <li><a href="/?page=guide" onclick="showPage('guide'); return false;">Wig Guide</a></li>
       <li><a href="/?page=about" onclick="showPage('about'); return false;">Our Story</a></li>
       <li><a href="/?page=contact" onclick="showPage('contact'); return false;">Contact</a></li>
     </ul>
@@ -61,6 +62,7 @@
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <a href="/" onclick="showPage('home'); return false;">Home</a>
     <a href="/?page=shop" onclick="showPage('shop'); return false;">Shop All</a>
+    <a href="/?page=guide" onclick="showPage('guide'); return false;">Wig Guide</a>
     <a href="/?page=about" onclick="showPage('about'); return false;">Our Story</a>
     <a href="/?page=contact" onclick="showPage('contact'); return false;">Contact</a>
   </nav>
@@ -219,6 +221,58 @@
       </div>
     </div>
   </section>
+</main>
+
+<!-- 选购指南 -->
+<main id="page-guide" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Wig Buying Guide —</p>
+      <h1>How to choose a human hair wig</h1>
+      <p class="page-sub">A practical guide to lace, density, length, texture, color, and fit.</p>
+    </div>
+  </section>
+  <article class="container policy-content">
+    <p class="policy-intro">The right wig is the one that fits your routine as well as your look. Use the six decisions below to compare styles before checkout, especially if this is your first human-hair wig.</p>
+
+    <h2>1. Start with the lace construction</h2>
+    <p><strong>13x6 lace fronts</strong> offer the widest front-to-back parting area in our collection and suit shoppers who like to change their part. <strong>13x4 lace fronts</strong> still create a natural-looking front hairline with a slightly smaller parting area. <strong>5x5 closures</strong> focus the lace around the top-center section and can be a practical choice for easy, glueless wear.</p>
+    <p>For flexible parting, compare <a href="/?product=lum-009" onclick="showPage('product','lum-009'); return false;">The Signature Straight</a> and <a href="/?product=lum-011" onclick="showPage('product','lum-011'); return false;">The Cascade Wave</a>. For a closure construction, see <a href="/?product=lum-013" onclick="showPage('product','lum-013'); return false;">The Bouncy Curl Closure</a>.</p>
+
+    <h2>2. Choose a density for your preferred fullness</h2>
+    <p>Density describes how full the wig looks. Around <strong>150% density</strong> generally gives a lighter, everyday finish. <strong>180% density</strong> looks fuller through the lengths, while <strong>200% density</strong> creates a more voluminous result. Curl pattern and length also affect how full a wig appears, so compare density together with texture rather than on its own.</p>
+
+    <h2>3. Pick length with texture in mind</h2>
+    <p>Straight hair shows its full measured length. Waves and curls look shorter when worn because the pattern draws the hair upward. If you want a curly style to finish at the same visual point as a straight style, you may prefer a longer measurement. Short bobs are lighter and easy to manage; longer styles offer more styling options but usually need more detangling and storage care.</p>
+
+    <h2>4. Match texture to your routine</h2>
+    <ul>
+      <li><strong>Straight:</strong> polished, easy to brush, and versatile for sleek looks.</li>
+      <li><strong>Body wave:</strong> soft movement with a looser, styled finish.</li>
+      <li><strong>Deep or water wave:</strong> more visible texture that benefits from gentle detangling and moisture.</li>
+      <li><strong>Curly:</strong> high volume and definition; finger-detangle to help preserve the pattern.</li>
+    </ul>
+
+    <h2>5. Consider color and maintenance</h2>
+    <p>Natural black is an easy everyday option. Blonde, highlighted, and burgundy shades make a stronger statement and may require extra care to maintain tone and shine. Human hair can respond differently to heat and color processing, so always perform a strand test first, use a heat protectant, and begin with a low temperature.</p>
+
+    <h2>6. Check cap details before buying</h2>
+    <p>Review the product page for adjustable straps, combs, elastic bands, and the listed construction. A secure fit should feel stable without painful pressure. If you are unsure about lace type, color, or the best length for your goal, email customer care before checkout.</p>
+
+    <h2>Quick comparison</h2>
+    <table class="policy-table">
+      <thead><tr><th>Your priority</th><th>What to look for</th><th>Start here</th></tr></thead>
+      <tbody>
+        <tr><td>Flexible parting</td><td>13x6 lace front</td><td><a href="/?product=lum-011" onclick="showPage('product','lum-011'); return false;">Cascade Wave</a></td></tr>
+        <tr><td>Easy short style</td><td>Bob length</td><td><a href="/?product=lum-012" onclick="showPage('product','lum-012'); return false;">Water Wave Bob</a></td></tr>
+        <tr><td>Full curls</td><td>200% density, 5x5 closure</td><td><a href="/?product=lum-013" onclick="showPage('product','lum-013'); return false;">Bouncy Curl Closure</a></td></tr>
+        <tr><td>Bright blonde</td><td>#613 human hair</td><td><a href="/?product=lum-014" onclick="showPage('product','lum-014'); return false;">Champagne Body Wave</a></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Ready to compare styles?</h2>
+    <p>Browse the <a href="/?page=shop" onclick="showPage('shop'); return false;">full LUMIÈRE collection</a>, then open each product page to review available lengths, density, construction, current pricing, shipping, and secure PayPal checkout.</p>
+  </article>
 </main>
 
 <!-- 联系页 -->
@@ -509,6 +563,7 @@
     <div>
       <h4>Shop</h4>
       <a href="/?page=shop" onclick="showPage('shop'); return false;">All Styles</a>
+      <a href="/?page=guide" onclick="showPage('guide'); return false;">Wig Buying Guide</a>
       <a href="/?page=shop" onclick="showPage('shop'); return false;">Lace Front</a>
       <a href="/?page=shop" onclick="showPage('shop'); return false;">Closure Wigs</a>
     </div>
@@ -532,6 +587,6 @@
 </footer>
 
 <script src="products.js?v=20260725"></script>
-<script src="app.js?v=20260725-growth1"></script>
+<script src="app.js?v=20260725-growth2"></script>
 </body>
 </html>
