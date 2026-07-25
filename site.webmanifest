@@ -1,0 +1,17 @@
+{
+  "name": "LUMIÈRE",
+  "short_name": "LUMIÈRE",
+  "description": "Human hair wigs with worldwide shipping and 30-day returns.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf6ef",
+  "theme_color": "#1a1612",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

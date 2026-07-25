@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIÈRE — Premium Human Hair Wigs</title>
+<meta name="description" content="Premium human hair wigs with HD lace, worldwide shipping, and 30-day returns.">
+<meta name="theme-color" content="#f8f3ec">
+<link rel="canonical" href="https://lumiereluxehair.com/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LUMIÈRE">
+<meta property="og:title" content="LUMIÈRE — Premium Human Hair Wigs">
+<meta property="og:description" content="Premium human hair wigs with HD lace, worldwide shipping, and 30-day returns.">
+<meta property="og:url" content="https://lumiereluxehair.com/">
+<meta property="og:image" content="https://lumiereluxehair.com/images/lum-011/main_01.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260725">
+<script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script id="pageSchema" type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"LUMIÈRE","url":"https://lumiereluxehair.com","email":"msun09897@gmail.com"}</script>
+</head>
+<body>
+
+<!-- 公告条 -->
+<div class="announcement">
+  <span>✦  Free Worldwide Shipping on Orders Over $199  ✦  30-Day Returns  ✦</span>
+</div>
+
+<!-- 导航 -->
+<header class="header">
+  <nav class="nav container">
+    <a href="/" class="logo" onclick="showPage('home'); return false;">
+      <span class="logo-mark">L</span>
+      <span class="logo-text">LUMIÈRE</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" onclick="showPage('home'); return false;">Home</a></li>
+      <li><a href="/?page=shop" onclick="showPage('shop'); return false;">Shop All</a></li>
+      <li><a href="/?page=about" onclick="showPage('about'); return false;">Our Story</a></li>
+      <li><a href="/?page=contact" onclick="showPage('contact'); return false;">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button type="button" class="mobile-menu-btn" id="mobileMenuBtn"
+              aria-label="Open navigation menu" aria-controls="mobileNav" aria-expanded="false"
+              onclick="toggleMobileNav()">
+        <span></span><span></span><span></span>
+      </button>
+      <button type="button" class="cart-btn" aria-label="Open shopping bag" aria-controls="cartDrawer" aria-expanded="false" onclick="toggleCart()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 3h2l2.4 12.5a2 2 0 002 1.5h9.7a2 2 0 002-1.6L23 6H6"/>
+          <circle cx="9" cy="21" r="1.5"/>
+          <circle cx="18" cy="21" r="1.5"/>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </nav>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <a href="/" onclick="showPage('home'); return false;">Home</a>
+    <a href="/?page=shop" onclick="showPage('shop'); return false;">Shop All</a>
+    <a href="/?page=about" onclick="showPage('about'); return false;">Our Story</a>
+    <a href="/?page=contact" onclick="showPage('contact'); return false;">Contact</a>
+  </nav>
+</header>
+
+<!-- 首页 -->
+<main id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content container">
+      <p class="hero-eyebrow">— Est. 2025 · Crafted by hand —</p>
+      <h1 class="hero-title">Real Hair.<br><em>Real Beautiful.</em></h1>
+      <p class="hero-sub">Human hair wigs with carefully finished lace, versatile textures, and fit options designed for confident everyday wear.</p>
+      <button class="btn-primary" onclick="showPage('shop')">Shop the Collection →</button>
+    </div>
+    <div class="hero-decor">
+      <span class="decor-line"></span>
+      <span class="decor-text">No. 01 — The Atelier</span>
+    </div>
+  </section>
+
+  <section class="features container">
+    <div class="feature">
+      <div class="feature-num">01</div>
+      <h3>Human Hair</h3>
+      <p>Selected for a soft feel, natural movement, and flexible styling.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-num">02</div>
+      <h3>Fine Lace Construction</h3>
+      <p>Designed for a natural-looking hairline with careful placement and blending.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-num">03</div>
+      <h3>Care Guidance Included</h3>
+      <p>Simple wear, wash, storage, and heat-styling guidance helps protect your piece.</p>
+    </div>
+  </section>
+
+  <section class="featured container">
+    <div class="section-head">
+      <p class="eyebrow">— Collection Highlights —</p>
+      <h2>Featured styles</h2>
+    </div>
+    <div class="product-grid" id="featuredGrid"></div>
+    <div style="text-align:center; margin-top:48px;">
+      <button class="btn-secondary" onclick="showPage('shop')">View All Styles</button>
+    </div>
+  </section>
+
+  <section class="reviews container" aria-labelledby="why-lumiere-title">
+    <div class="section-head">
+      <p class="eyebrow">— Before You Choose —</p>
+      <h2 id="why-lumiere-title">Find the right piece for you</h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <h3>Choose your texture</h3>
+        <p class="review-text">Compare straight, wavy, and curly finishes to match your everyday look and styling routine.</p>
+        <div class="review-author">
+          <a class="text-link" href="/?page=shop" onclick="showPage('shop'); return false;">Browse all textures →</a>
+        </div>
+      </div>
+      <div class="review-card">
+        <h3>Check length and density</h3>
+        <p class="review-text">Each product lists its available length, density, lace construction, and cap details before you order.</p>
+        <div class="review-author">
+          <a class="text-link" href="/?page=shop" onclick="showPage('shop'); return false;">Compare styles →</a>
+        </div>
+      </div>
+      <div class="review-card">
+        <h3>Ask before ordering</h3>
+        <p class="review-text">Need help choosing a color or construction? Contact customer care before placing your request.</p>
+        <div class="review-author">
+          <a class="text-link" href="/?page=contact" onclick="showPage('contact'); return false;">Contact customer care →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 商品列表页 -->
+<main id="page-shop" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— The Collection —</p>
+      <h1>All Styles</h1>
+      <p class="page-sub">Curated pieces, crafted for the modern woman.</p>
+    </div>
+  </section>
+  <section class="shop-filters container">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="shopSearch" placeholder="Search styles…" oninput="applyFilters()" autocomplete="off">
+      <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear">✕</button>
+    </div>
+    <div class="filter-row">
+      <div class="filter-group">
+        <span class="filter-label">Style</span>
+        <div class="filter-btns" id="filterStyle">
+          <button class="filter-btn active" onclick="selectFilter('style','',this)">All</button>
+          <button class="filter-btn" onclick="selectFilter('style','straight',this)">Straight</button>
+          <button class="filter-btn" onclick="selectFilter('style','curly',this)">Curly</button>
+          <button class="filter-btn" onclick="selectFilter('style','wavy',this)">Wavy</button>
+          <button class="filter-btn" onclick="selectFilter('style','short',this)">Short</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Length</span>
+        <div class="filter-btns" id="filterLength">
+          <button class="filter-btn active" onclick="selectFilter('length','',this)">All</button>
+          <button class="filter-btn" onclick="selectFilter('length','short',this)">Short ≤16"</button>
+          <button class="filter-btn" onclick="selectFilter('length','medium',this)">Medium 18–22"</button>
+          <button class="filter-btn" onclick="selectFilter('length','long',this)">Long ≥24"</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="container" style="padding: 32px 24px 120px;">
+    <div class="product-grid" id="shopGrid"></div>
+    <div class="no-results" id="shopNoResults" style="display:none;">
+      <p>No styles match your search.</p>
+      <button class="btn-secondary" onclick="resetFilters()">Clear filters</button>
+    </div>
+  </section>
+</main>
+
+<!-- 商品详情页 -->
+<main id="page-product" class="page">
+  <section class="container product-detail" id="productDetail"></section>
+  <section id="product-detail-gallery"></section>
+</main>
+
+<!-- 关于页 -->
+<main id="page-about" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Our Story —</p>
+      <h1>A craft, not a trend.</h1>
+    </div>
+  </section>
+  <section class="about-content container">
+    <div class="about-grid">
+      <div>
+        <p>LUMIÈRE is an online wig boutique focused on a clear, considered shopping experience.</p>
+        <p>Our collection brings together human-hair styles in straight, wavy, curly, bob, and highlighted finishes. Each product page lists the available lace construction, density, lengths, colors, and cap details so you can compare before ordering.</p>
+        <p>Because color, fit, and lace preferences are personal, customer care is available by email before you submit an order request.</p>
+        <p>Choose the details that suit your routine, then care for your piece with the guidance included with your order.</p>
+        <p class="about-signature">— The LUMIÈRE Team</p>
+      </div>
+      <div class="about-stats">
+        <div><strong>8 styles</strong><span>in the current collection</span></div>
+        <div><strong>Worldwide</strong><span>shipping available</span></div>
+        <div><strong>30 days</strong><span>easy returns</span></div>
+        <div><strong>Email support</strong><span>before and after ordering</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 联系页 -->
+<main id="page-contact" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Get in Touch —</p>
+      <h1>We'd love to hear from you.</h1>
+    </div>
+  </section>
+  <section class="container" style="padding: 60px 24px 120px; max-width: 640px;">
+    <div class="contact-info">
+      <p><strong>Customer Care</strong><br>msun09897@gmail.com</p>
+      <p><strong>Hours</strong><br>Monday – Friday, 9am – 6pm EST</p>
+      <p><strong>Response Time</strong><br>Within 24 hours, always.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Shipping Policy -->
+<main id="page-shipping" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Legal —</p>
+      <h1>Shipping Policy</h1>
+      <p class="page-sub">Last updated: July 2026</p>
+    </div>
+  </section>
+  <section class="container policy-content">
+    <h2>Processing Time</h2>
+    <p>After we confirm product availability and receive payment, orders are normally prepared within <strong>1–3 business days</strong> (Monday through Friday, excluding public holidays). You will receive an email once your order has been dispatched.</p>
+
+    <h2>Shipping Rates & Delivery Times</h2>
+    <p>We ship worldwide. Delivery estimates are from the date of dispatch.</p>
+    <table class="policy-table">
+      <thead><tr><th>Order Value</th><th>Shipping Fee</th><th>Estimated Delivery</th></tr></thead>
+      <tbody>
+        <tr><td>Under $199</td><td>$15.00 flat rate</td><td>7–15 business days</td></tr>
+        <tr><td>$199 and above</td><td><strong>FREE</strong></td><td>7–15 business days</td></tr>
+      </tbody>
+    </table>
+    <p>Delivery times are estimates and may vary due to carrier delays, customs processing, or factors beyond our control. We are not responsible for delays caused by customs authorities.</p>
+
+    <h2>Order Tracking</h2>
+    <p>Once your order has shipped, you will receive a tracking number by email within <strong>48 hours</strong> of dispatch. You can use this number to track your package directly on the carrier's website. If you have not received tracking information within 5 business days of your order confirmation, please contact us at <strong>msun09897@gmail.com</strong>.</p>
+
+    <h2>Customs, Duties & Taxes</h2>
+    <p>LUMIÈRE ships internationally. Your order may be subject to import duties, taxes, and customs fees levied by the destination country. These charges are the <strong>buyer's sole responsibility</strong> and are not included in our product prices or shipping fees. We recommend contacting your local customs office for more information before placing your order.</p>
+
+    <h2>Incorrect Address</h2>
+    <p>Please ensure your shipping address is correct at the time of purchase. LUMIÈRE is not responsible for packages delivered to an incorrect address provided by the customer. If you notice an error, contact us immediately at msun09897@gmail.com — we will do our best to amend the address before dispatch.</p>
+
+    <h2>Lost or Damaged Packages</h2>
+    <p>If your package arrives damaged or is confirmed lost by the carrier, please contact us within 14 days of the estimated delivery date. We will work with the carrier to resolve the issue and, where applicable, arrange a replacement or refund.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about your shipment? Email us at <strong>msun09897@gmail.com</strong>. We respond within 24 hours on business days.</p>
+  </section>
+</main>
+
+<!-- Returns & Refunds -->
+<main id="page-returns" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Legal —</p>
+      <h1>Returns &amp; Refunds</h1>
+      <p class="page-sub">Last updated: July 2026</p>
+    </div>
+  </section>
+  <section class="container policy-content">
+    <h2>Our 30-Day Return Policy</h2>
+    <p>We want you to love your LUMIÈRE piece. If you are not completely satisfied, you may request a return within <strong>30 days</strong> of the delivery date.</p>
+
+    <h2>Eligibility Requirements</h2>
+    <p>To be eligible for a return, your item must meet <strong>all</strong> of the following conditions:</p>
+    <ul>
+      <li>Returned within 30 days of the confirmed delivery date.</li>
+      <li>Unworn, unaltered, and undamaged.</li>
+      <li>In its original packaging with all tags, nets, and accessories included.</li>
+      <li>Free from any styling products, perfume, or odors.</li>
+    </ul>
+
+    <h2>Non-Returnable Items</h2>
+    <p>For hygiene and safety reasons, the following items <strong>cannot be returned or exchanged</strong>:</p>
+    <ul>
+      <li>Any wig or hair extension that has been removed from its sealed packaging and tried on or worn.</li>
+      <li>Items marked as "Final Sale" at the time of purchase.</li>
+      <li>Custom or bespoke orders.</li>
+    </ul>
+    <p>We take hygiene seriously, and we appreciate your understanding of this policy.</p>
+
+    <h2>How to Initiate a Return</h2>
+    <ol>
+      <li>Email us at <strong>msun09897@gmail.com</strong> with your order number and reason for return.</li>
+      <li>Our team will review your request and respond within 2 business days with return instructions.</li>
+      <li>Pack the item securely in its original packaging and ship it to the address we provide.</li>
+      <li>Share the return tracking number with us via email.</li>
+    </ol>
+
+    <h2>Return Shipping Costs</h2>
+    <p>Customers are responsible for all return shipping costs unless the item arrived damaged or we shipped the wrong product. We recommend using a trackable shipping service. LUMIÈRE is not responsible for returned items lost in transit.</p>
+
+    <h2>Refunds</h2>
+    <p>Once we receive and inspect your return, we will notify you by email. If approved, your refund will be processed to your original payment method within <strong>5–7 business days</strong>. Please note that your bank or payment provider may take additional time to post the credit.</p>
+
+    <h2>Exchanges</h2>
+    <p>We gladly offer exchanges for a different color or length of the same style, subject to availability and the return eligibility requirements above. To request an exchange, please follow the same return initiation process and note your preferred replacement.</p>
+
+    <h2>Damaged or Incorrect Items</h2>
+    <p>If you receive a damaged, defective, or incorrect item, please email msun09897@gmail.com within <strong>7 days</strong> of delivery with your order number and photographs of the issue. We will arrange a replacement or full refund at no additional cost to you.</p>
+  </section>
+</main>
+
+<!-- Privacy Policy -->
+<main id="page-privacy" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Legal —</p>
+      <h1>Privacy Policy</h1>
+      <p class="page-sub">Last updated: July 2026</p>
+    </div>
+  </section>
+  <section class="container policy-content">
+    <p class="policy-intro">LUMIÈRE ("we", "us", or "our") is committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you visit our website or make a purchase.</p>
+
+    <h2>1. Information We Collect</h2>
+    <p><strong>Information you provide directly:</strong></p>
+    <ul>
+      <li>Name and contact details (email address, phone number)</li>
+      <li>Shipping and billing address</li>
+      <li>Order and payment status, including transaction references supplied by a payment provider when payment is enabled. We do not collect or store complete card numbers.</li>
+      <li>Communications you send us (emails, inquiries)</li>
+    </ul>
+    <p><strong>Information collected automatically:</strong></p>
+    <ul>
+      <li>Technical information normally sent with a website request, such as browser type, device type, and IP address in hosting logs</li>
+      <li>Shopping cart contents stored locally in your browser</li>
+    </ul>
+
+    <h2>2. How We Use Your Information</h2>
+    <ul>
+      <li>To process and fulfill your orders, including sending order confirmations and tracking information.</li>
+      <li>To communicate with you regarding your purchases or inquiries.</li>
+      <li>To improve our website and user experience.</li>
+      <li>To comply with legal obligations.</li>
+    </ul>
+
+    <h2>3. Local Storage and Cookies</h2>
+    <p>Our shopping bag uses local browser storage so your selected items remain available when you return. We do not currently set advertising or analytics cookies. Your browser settings can clear this stored information at any time.</p>
+
+    <h2>4. Sharing of Information</h2>
+    <p>We do not sell, rent, or trade your personal information. We may share your data with:</p>
+    <ul>
+      <li><strong>Order communication providers:</strong> to deliver your order request and related emails.</li>
+      <li><strong>Payment providers:</strong> only when you choose an enabled payment option, and only as needed to process the transaction.</li>
+      <li><strong>Shipping carriers:</strong> to deliver your order (name and address only).</li>
+      <li><strong>Legal authorities:</strong> if required by law or to protect our rights.</li>
+    </ul>
+
+    <h2>5. Data Retention</h2>
+    <p>We retain personal data only for as long as reasonably necessary to handle your request or order, meet record-keeping obligations, resolve disputes, and enforce our agreements. The exact period may vary by record type and applicable law.</p>
+
+    <h2>6. Your Rights (GDPR & Global)</h2>
+    <p>Depending on your location, you may have the following rights regarding your personal data:</p>
+    <ul>
+      <li><strong>Right of access:</strong> request a copy of the data we hold about you.</li>
+      <li><strong>Right to rectification:</strong> request correction of inaccurate data.</li>
+      <li><strong>Right to erasure:</strong> request deletion of your data ("right to be forgotten").</li>
+      <li><strong>Right to restriction:</strong> request that we limit how we use your data.</li>
+      <li><strong>Right to data portability:</strong> receive your data in a structured, machine-readable format.</li>
+      <li><strong>Right to object:</strong> object to processing based on legitimate interests or for direct marketing.</li>
+    </ul>
+    <p>To exercise any applicable rights, email us at <strong>msun09897@gmail.com</strong>. We will respond within the period required by applicable law.</p>
+
+    <h2>7. Data Security</h2>
+    <p>This website uses HTTPS in transit. We do not collect or store complete card numbers on this website. If online payment is enabled, payment details are entered through the selected payment provider's secure flow. No internet transmission or storage method can be guaranteed to be completely secure.</p>
+
+    <h2>8. Children's Privacy</h2>
+    <p>Our website is not directed to individuals under the age of 16. We do not knowingly collect personal data from children. If you believe we have inadvertently collected such data, please contact us immediately.</p>
+
+    <h2>9. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last updated" date. Continued use of our website after changes constitutes acceptance of the revised policy.</p>
+
+    <h2>10. Contact</h2>
+    <p>For any privacy-related questions or requests, contact us at: <strong>msun09897@gmail.com</strong></p>
+  </section>
+</main>
+
+<!-- Terms of Service -->
+<main id="page-terms" class="page">
+  <section class="page-header">
+    <div class="container">
+      <p class="eyebrow">— Legal —</p>
+      <h1>Terms of Service</h1>
+      <p class="page-sub">Last updated: July 2026</p>
+    </div>
+  </section>
+  <section class="container policy-content">
+    <p class="policy-intro">Please read these Terms of Service ("Terms") carefully before using our website or placing an order. By accessing our site or purchasing from us, you agree to be bound by these Terms.</p>
+
+    <h2>1. About Us</h2>
+    <p>This website is operated by LUMIÈRE. By using this site, you confirm that you are at least 18 years of age and have the legal capacity to enter into a binding agreement.</p>
+
+    <h2>2. Products</h2>
+    <p>We reserve the right to modify or discontinue products at any time without notice. All product descriptions, images, and pricing are as accurate as possible, but we do not warrant that product descriptions or other content is accurate, complete, or error-free. Colors may appear slightly different due to monitor settings.</p>
+
+    <h2>3. Pricing & Payment</h2>
+    <p>All prices are displayed in US Dollars (USD) unless otherwise indicated. Prices are subject to change without notice. We reserve the right to refuse or cancel orders where a pricing error has occurred.</p>
+    <p>Submitting the checkout form sends an order request; it does not charge you or guarantee availability. We will confirm product availability, the final total, and the available payment method by email. Full payment is required before an accepted order is prepared and dispatched.</p>
+
+    <h2>4. Order Acceptance</h2>
+    <p>Your order request constitutes an offer to purchase. We reserve the right to accept or decline any request, including where an item is unavailable or a pricing error has occurred. An order is confirmed only when you receive our written confirmation after availability and payment arrangements have been agreed.</p>
+
+    <h2>5. Shipping & Delivery</h2>
+    <p>Shipping terms are governed by our <a href="/?page=shipping" onclick="showPage('shipping'); return false;">Shipping Policy</a>, which forms part of these Terms. Risk of loss and title for products pass to you upon delivery to the shipping carrier.</p>
+
+    <h2>6. Returns & Refunds</h2>
+    <p>Returns and refunds are governed by our <a href="/?page=returns" onclick="showPage('returns'); return false;">Returns & Refunds Policy</a>, which forms part of these Terms.</p>
+
+    <h2>7. Intellectual Property</h2>
+    <p>All content on this website — including text, images, logos, graphics, and design — is the property of LUMIÈRE and is protected by applicable copyright and intellectual property laws. You may not reproduce, distribute, or use any content without our prior written consent.</p>
+
+    <h2>8. Disclaimer of Warranties</h2>
+    <p>Our website and products are provided on an "as is" basis. To the fullest extent permitted by law, we disclaim all warranties, express or implied, including but not limited to implied warranties of merchantability and fitness for a particular purpose.</p>
+
+    <h2>9. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by applicable law, LUMIÈRE shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our website or products, even if we have been advised of the possibility of such damages. Our total liability to you for any claim shall not exceed the amount paid by you for the relevant order.</p>
+
+    <h2>10. Indemnification</h2>
+    <p>You agree to indemnify and hold harmless LUMIÈRE and its officers, employees, and agents from any claims, liabilities, damages, and expenses (including legal fees) arising from your use of this website, your violation of these Terms, or your infringement of any third-party rights.</p>
+
+    <h2>11. Governing Law & Dispute Resolution</h2>
+    <p>These Terms shall be governed by and construed in accordance with applicable law. In the event of a dispute, we encourage you to contact us first at msun09897@gmail.com so we can attempt to resolve the matter informally. If a resolution cannot be reached, disputes shall be subject to the exclusive jurisdiction of the competent courts.</p>
+
+    <h2>12. Changes to These Terms</h2>
+    <p>We reserve the right to update or modify these Terms at any time. Changes will be effective upon posting to this website. Your continued use of our site following any changes constitutes your acceptance of the revised Terms.</p>
+
+    <h2>13. Contact</h2>
+    <p>For any questions regarding these Terms, please contact us at: <strong>msun09897@gmail.com</strong></p>
+  </section>
+</main>
+
+<!-- 购物车抽屉 -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping bag" aria-hidden="true">
+  <div class="cart-header">
+    <h3>Your Bag</h3>
+    <button type="button" class="cart-close" aria-label="Close shopping bag" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-footer" id="cartFooter"></div>
+</aside>
+
+<!-- 结账弹窗 -->
+<div class="modal-overlay" id="checkoutOverlay" onclick="closeCheckout()"></div>
+<div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Checkout" aria-hidden="true">
+  <div class="modal-header">
+    <h3>Request Your Order</h3>
+    <button type="button" class="modal-close" onclick="closeCheckout()" aria-label="Close">✕</button>
+  </div>
+  <div class="modal-body">
+    <!-- 订单摘要 -->
+    <div id="checkoutSummary"></div>
+
+    <!-- 填写表单 -->
+    <form id="checkoutForm" onsubmit="submitOrder(event)">
+      <p class="co-section-title">Shipping Information</p>
+      <div class="co-row">
+        <div class="co-field">
+          <label for="coName">Full Name <span>*</span></label>
+          <input id="coName" type="text" name="customer_name" placeholder="Jane Smith" autocomplete="name" required>
+        </div>
+        <div class="co-field">
+          <label for="coEmail">Email <span>*</span></label>
+          <input id="coEmail" type="email" name="customer_email" placeholder="jane@email.com" autocomplete="email" required>
+        </div>
+      </div>
+      <div class="co-field">
+        <label for="coPhone">Phone <span>*</span></label>
+        <small class="co-field-hint" id="coPhoneHint">We need this for shipping carriers and customs clearance</small>
+        <input id="coPhone" type="tel" name="customer_phone" placeholder="Phone (required for shipping)" autocomplete="tel" aria-describedby="coPhoneHint" required>
+      </div>
+      <div class="co-field">
+        <label for="coStreet">Street Address <span>*</span></label>
+        <input id="coStreet" type="text" name="address_street" placeholder="123 Main St, Apt 4B" autocomplete="street-address" required>
+      </div>
+      <div class="co-row">
+        <div class="co-field">
+          <label for="coCity">City <span>*</span></label>
+          <input id="coCity" type="text" name="address_city" autocomplete="address-level2" required>
+        </div>
+        <div class="co-field">
+          <label for="coState">State / Province</label>
+          <input id="coState" type="text" name="address_state" autocomplete="address-level1">
+        </div>
+      </div>
+      <div class="co-row">
+        <div class="co-field">
+          <label for="coZip">ZIP / Postal Code</label>
+          <input id="coZip" type="text" name="address_zip" autocomplete="postal-code">
+        </div>
+        <div class="co-field">
+          <label for="coCountry">Country <span>*</span></label>
+          <input id="coCountry" type="text" name="address_country" placeholder="United States" autocomplete="country-name" required>
+        </div>
+      </div>
+      <div class="co-field">
+        <label for="coNotes">Order Notes <em>(optional)</em></label>
+        <textarea id="coNotes" name="order_notes" rows="2" placeholder="Special requests, colour preferences…"></textarea>
+      </div>
+      <button type="submit" class="btn-checkout" id="coSubmitBtn">Send Order Request</button>
+      <p class="co-legal">This form sends an order request and does not charge you. By continuing you agree to our
+        <a href="/?page=terms" onclick="closeCheckout();showPage('terms');return false;">Terms of Service</a> and
+        <a href="/?page=privacy" onclick="closeCheckout();showPage('privacy');return false;">Privacy Policy</a>.
+        Availability and payment instructions will be sent after review.
+      </p>
+    </form>
+
+    <!-- 成功状态 -->
+    <div id="orderSuccess" class="order-success" role="status" aria-live="polite" style="display:none;">
+      <div class="success-icon">✦</div>
+      <h3>Order Request Received</h3>
+      <p>Thank you, <strong id="successName"></strong>.<br>
+        A confirmation has been sent to <strong id="successEmail"></strong>.</p>
+      <p class="success-orderid">Order ID: <strong id="successOrderId"></strong></p>
+      <p>We'll confirm availability and follow up with payment instructions within 24 hours.</p>
+      <button class="btn-secondary" onclick="closeCheckout(); showPage('shop');">Continue Shopping</button>
+    </div>
+
+    <!-- 错误状态 -->
+    <div id="orderError" class="order-error" role="alert" aria-live="assertive" style="display:none;">
+      <div class="error-icon">!</div>
+      <h4>Something went wrong</h4>
+      <p>Your order could not be sent. Please try again, or screenshot your order and contact us at <strong>msun09897@gmail.com</strong>.</p>
+      <div class="error-actions">
+        <button class="btn-primary" onclick="$('orderError').style.display='none'; $('coSubmitBtn').click();">Try Again</button>
+        <button class="btn-secondary" onclick="closeCheckout();">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 信任徽章 -->
+<section class="trust-badges">
+  <div class="container trust-badges-grid">
+    <div class="trust-badge">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <span>Secure HTTPS Connection</span>
+    </div>
+    <div class="trust-badge">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="3" width="15" height="13" rx="1"/>
+        <path d="M16 8h4l3 5v3h-7V8z"/>
+        <circle cx="5.5" cy="18.5" r="2.5"/>
+        <circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+      <span>Free Worldwide Shipping ($199+)</span>
+    </div>
+    <div class="trust-badge">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/>
+      </svg>
+      <span>Human Hair Styles</span>
+    </div>
+    <div class="trust-badge">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 4v6h6"/>
+        <path d="M23 20v-6h-6"/>
+        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/>
+      </svg>
+      <span>30-Day Easy Returns</span>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <div class="logo">
+        <span class="logo-mark">L</span>
+        <span class="logo-text">LUMIÈRE</span>
+      </div>
+      <p class="footer-tag">Hair, hand-crafted.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="/?page=shop" onclick="showPage('shop'); return false;">All Styles</a>
+      <a href="/?page=shop" onclick="showPage('shop'); return false;">Lace Front</a>
+      <a href="/?page=shop" onclick="showPage('shop'); return false;">Closure Wigs</a>
+    </div>
+    <div>
+      <h4>Help</h4>
+      <a href="/?page=contact" onclick="showPage('contact'); return false;">Contact</a>
+      <a href="/?page=shipping" onclick="showPage('shipping'); return false;">Shipping Policy</a>
+      <a href="/?page=returns" onclick="showPage('returns'); return false;">Returns &amp; Refunds</a>
+      <a href="/?page=privacy" onclick="showPage('privacy'); return false;">Privacy Policy</a>
+      <a href="/?page=terms" onclick="showPage('terms'); return false;">Terms of Service</a>
+    </div>
+    <div>
+      <h4>Customer Care</h4>
+      <p>Questions about fit, color, or ordering?</p>
+      <a class="footer-email" href="mailto:msun09897@gmail.com">Email customer care</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 LUMIÈRE. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="products.js?v=20260725"></script>
+<script src="app.js?v=20260725"></script>
+</body>
+</html>
