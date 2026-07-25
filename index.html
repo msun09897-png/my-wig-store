@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LUMIÈRE — Premium Human Hair Wigs</title>
 <meta name="description" content="Premium human hair wigs with HD lace, worldwide shipping, and 30-day returns.">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#f8f3ec">
 <link rel="canonical" href="https://lumiereluxehair.com/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -16,11 +17,13 @@
 <meta property="og:url" content="https://lumiereluxehair.com/">
 <meta property="og:image" content="https://lumiereluxehair.com/images/lum-011/main_01.webp">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LUMIÈRE — Premium Human Hair Wigs">
+<meta name="twitter:description" content="Premium human hair wigs with HD lace, worldwide shipping, and 30-day returns.">
+<meta name="twitter:image" content="https://lumiereluxehair.com/images/lum-011/main_01.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260725-paypal1">
-<script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link rel="stylesheet" href="style.css?v=20260725-growth1">
 <script src="https://www.paypalobjects.com/ncp/cart/cart.js" data-merchant-id="KWR6CWBTTXL8E"></script>
 <script id="pageSchema" type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"LUMIÈRE","url":"https://lumiereluxehair.com","email":"msun09897@gmail.com"}</script>
 </head>
@@ -53,7 +56,6 @@
       <div class="paypal-cart-nav" aria-label="View secure PayPal cart">
         <paypal-cart-button data-id="pp-view-cart"></paypal-cart-button>
       </div>
-      <span class="cart-count" id="cartCount" hidden>0</span>
     </div>
   </nav>
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
@@ -131,7 +133,7 @@
       </div>
       <div class="review-card">
         <h3>Ask before ordering</h3>
-        <p class="review-text">Need help choosing a color or construction? Contact customer care before placing your request.</p>
+        <p class="review-text">Need help choosing a color or construction? Contact customer care before completing checkout.</p>
         <div class="review-author">
           <a class="text-link" href="/?page=contact" onclick="showPage('contact'); return false;">Contact customer care →</a>
         </div>
@@ -370,7 +372,6 @@
     <h2>4. Sharing of Information</h2>
     <p>We do not sell, rent, or trade your personal information. We may share your data with:</p>
     <ul>
-      <li><strong>Order communication providers:</strong> to deliver order-related emails.</li>
       <li><strong>PayPal:</strong> to provide the shopping cart, collect checkout details, process PayPal, card, or other available payments, and help prevent fraud.</li>
       <li><strong>Shipping carriers:</strong> to deliver your order (name and address only).</li>
       <li><strong>Legal authorities:</strong> if required by law or to protect our rights.</li>
@@ -459,106 +460,6 @@
   </section>
 </main>
 
-<!-- 购物车抽屉 -->
-<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()" hidden></div>
-<aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping bag" aria-hidden="true" hidden>
-  <div class="cart-header">
-    <h3>Your Bag</h3>
-    <button type="button" class="cart-close" aria-label="Close shopping bag" onclick="toggleCart()">✕</button>
-  </div>
-  <div class="cart-body" id="cartBody"></div>
-  <div class="cart-footer" id="cartFooter"></div>
-</aside>
-
-<!-- 结账弹窗 -->
-<div class="modal-overlay" id="checkoutOverlay" onclick="closeCheckout()" hidden></div>
-<div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Checkout" aria-hidden="true" hidden>
-  <div class="modal-header">
-    <h3>Request Your Order</h3>
-    <button type="button" class="modal-close" onclick="closeCheckout()" aria-label="Close">✕</button>
-  </div>
-  <div class="modal-body">
-    <!-- 订单摘要 -->
-    <div id="checkoutSummary"></div>
-
-    <!-- 填写表单 -->
-    <form id="checkoutForm" onsubmit="submitOrder(event)">
-      <p class="co-section-title">Shipping Information</p>
-      <div class="co-row">
-        <div class="co-field">
-          <label for="coName">Full Name <span>*</span></label>
-          <input id="coName" type="text" name="customer_name" placeholder="Jane Smith" autocomplete="name" required>
-        </div>
-        <div class="co-field">
-          <label for="coEmail">Email <span>*</span></label>
-          <input id="coEmail" type="email" name="customer_email" placeholder="jane@email.com" autocomplete="email" required>
-        </div>
-      </div>
-      <div class="co-field">
-        <label for="coPhone">Phone <span>*</span></label>
-        <small class="co-field-hint" id="coPhoneHint">We need this for shipping carriers and customs clearance</small>
-        <input id="coPhone" type="tel" name="customer_phone" placeholder="Phone (required for shipping)" autocomplete="tel" aria-describedby="coPhoneHint" required>
-      </div>
-      <div class="co-field">
-        <label for="coStreet">Street Address <span>*</span></label>
-        <input id="coStreet" type="text" name="address_street" placeholder="123 Main St, Apt 4B" autocomplete="street-address" required>
-      </div>
-      <div class="co-row">
-        <div class="co-field">
-          <label for="coCity">City <span>*</span></label>
-          <input id="coCity" type="text" name="address_city" autocomplete="address-level2" required>
-        </div>
-        <div class="co-field">
-          <label for="coState">State / Province</label>
-          <input id="coState" type="text" name="address_state" autocomplete="address-level1">
-        </div>
-      </div>
-      <div class="co-row">
-        <div class="co-field">
-          <label for="coZip">ZIP / Postal Code</label>
-          <input id="coZip" type="text" name="address_zip" autocomplete="postal-code">
-        </div>
-        <div class="co-field">
-          <label for="coCountry">Country <span>*</span></label>
-          <input id="coCountry" type="text" name="address_country" placeholder="United States" autocomplete="country-name" required>
-        </div>
-      </div>
-      <div class="co-field">
-        <label for="coNotes">Order Notes <em>(optional)</em></label>
-        <textarea id="coNotes" name="order_notes" rows="2" placeholder="Special requests, colour preferences…"></textarea>
-      </div>
-      <button type="submit" class="btn-checkout" id="coSubmitBtn">Send Order Request</button>
-      <p class="co-legal">This form sends an order request and does not charge you. By continuing you agree to our
-        <a href="/?page=terms" onclick="closeCheckout();showPage('terms');return false;">Terms of Service</a> and
-        <a href="/?page=privacy" onclick="closeCheckout();showPage('privacy');return false;">Privacy Policy</a>.
-        Availability and payment instructions will be sent after review.
-      </p>
-    </form>
-
-    <!-- 成功状态 -->
-    <div id="orderSuccess" class="order-success" role="status" aria-live="polite" style="display:none;">
-      <div class="success-icon">✦</div>
-      <h3>Order Request Received</h3>
-      <p>Thank you, <strong id="successName"></strong>.<br>
-        A confirmation has been sent to <strong id="successEmail"></strong>.</p>
-      <p class="success-orderid">Order ID: <strong id="successOrderId"></strong></p>
-      <p>We'll confirm availability and follow up with payment instructions within 24 hours.</p>
-      <button class="btn-secondary" onclick="closeCheckout(); showPage('shop');">Continue Shopping</button>
-    </div>
-
-    <!-- 错误状态 -->
-    <div id="orderError" class="order-error" role="alert" aria-live="assertive" style="display:none;">
-      <div class="error-icon">!</div>
-      <h4>Something went wrong</h4>
-      <p>Your order could not be sent. Please try again, or screenshot your order and contact us at <strong>msun09897@gmail.com</strong>.</p>
-      <div class="error-actions">
-        <button class="btn-primary" onclick="$('orderError').style.display='none'; $('coSubmitBtn').click();">Try Again</button>
-        <button class="btn-secondary" onclick="closeCheckout();">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- 信任徽章 -->
 <section class="trust-badges">
   <div class="container trust-badges-grid">
@@ -631,6 +532,6 @@
 </footer>
 
 <script src="products.js?v=20260725"></script>
-<script src="app.js?v=20260725-paypal1"></script>
+<script src="app.js?v=20260725-growth1"></script>
 </body>
 </html>

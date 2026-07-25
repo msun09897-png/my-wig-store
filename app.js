@@ -9,25 +9,11 @@ const CONFIG = {
   // 货币符号
   currency: '$',
 
-  // 你的接单邮箱
-  orderEmail: 'msun09897@gmail.com',
-
   // 上线 Google Analytics 后填入，例如 G-XXXXXXXXXX
   ga4MeasurementId: '',
 
   // PayPal 商业账户应用的公开 Client ID。不要在前端放 Secret。
   paypalClientId: '',
-
-  // ── EmailJS 配置 ──────────────────────────────
-  // 1. 去 emailjs.com 注册后,在 Account → API Keys 找到 Public Key
-  // 2. 创建一个 Email Service,记下 Service ID
-  // 3. 创建两个 Email Template,记下各自的 Template ID
-  //    template_order   : 发给你(店主)的订单通知
-  //    template_confirm : 发给客户的确认邮件
-  emailjs_public_key:      '7-ZFvmpvafF6YcAyf',
-  emailjs_service_id:      'service_lumiere',
-  emailjs_template_order:  'template_order',
-  emailjs_template_confirm:'template_confirm',
 };
 
 const PAYPAL = {
@@ -85,35 +71,12 @@ function mountPayPalProduct(productId, attempt = 0) {
   }
 }
 
-// ============================================
-// 状态
-// ============================================
-function loadCart() {
-  try {
-    const saved = JSON.parse(localStorage.getItem('lumiere_cart') || '[]');
-    return Array.isArray(saved) ? saved.filter(i => i && i.key && i.qty > 0) : [];
-  } catch {
-    try { localStorage.removeItem('lumiere_cart'); } catch {}
-    return [];
-  }
-}
-
-let cart = [];
 let currentProduct = null;
 
 // ============================================
 // 工具函数
 // ============================================
 function $(id) { return document.getElementById(id); }
-
-function saveCart() {
-  try {
-    localStorage.setItem('lumiere_cart', JSON.stringify(cart));
-  } catch (err) {
-    console.warn('Shopping bag could not be saved in this browser.', err);
-  }
-  updateCartUI();
-}
 
 function fmt(n) { return CONFIG.currency + n.toFixed(2); }
 
@@ -182,9 +145,16 @@ function setMeta(name, productId) {
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', meta.description);
   document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonical);
   document.querySelector('meta[property="og:image"]')?.setAttribute('content', image);
+  document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', meta.title);
+  document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', meta.description);
+  document.querySelector('meta[name="twitter:image"]')?.setAttribute('content', image);
 
   const schema = $('pageSchema');
   if (schema) {
+    const availableVariants = product?.variants?.filter(variant => variant.inStock) || [];
+    const variantPrices = availableVariants.map(variant => variant.price);
+    const lowPrice = variantPrices.length ? Math.min(...variantPrices) : product?.price;
+    const highPrice = variantPrices.length ? Math.max(...variantPrices) : product?.price;
     const data = product
       ? {
           '@context': 'https://schema.org',
@@ -194,20 +164,48 @@ function setMeta(name, productId) {
           image: (product.images || [product.image]).map(src => new URL(src, CONFIG.siteUrl + '/').href),
           sku: product.id,
           brand: { '@type': 'Brand', name: CONFIG.brand },
-          offers: {
-            '@type': 'Offer',
-            url: canonical,
-            priceCurrency: 'USD',
-            price: String(product.price),
-            availability: 'https://schema.org/InStock'
-          }
+          material: 'Human hair',
+          category: 'Wigs',
+          offers: availableVariants.length > 1
+            ? {
+                '@type': 'AggregateOffer',
+                url: canonical,
+                priceCurrency: 'USD',
+                lowPrice: String(lowPrice),
+                highPrice: String(highPrice),
+                offerCount: availableVariants.length,
+                availability: 'https://schema.org/InStock'
+              }
+            : {
+                '@type': 'Offer',
+                url: canonical,
+                priceCurrency: 'USD',
+                price: String(lowPrice),
+                availability: availableVariants.length === 0 && product.variants
+                  ? 'https://schema.org/OutOfStock'
+                  : 'https://schema.org/InStock',
+                itemCondition: 'https://schema.org/NewCondition'
+              }
         }
       : {
           '@context': 'https://schema.org',
-          '@type': 'Organization',
-          name: CONFIG.brand,
-          url: CONFIG.siteUrl,
-          email: CONFIG.supportEmail
+          '@graph': [
+            {
+              '@type': 'Organization',
+              '@id': `${CONFIG.siteUrl}/#organization`,
+              name: CONFIG.brand,
+              url: CONFIG.siteUrl,
+              email: CONFIG.supportEmail
+            },
+            {
+              '@type': 'WebSite',
+              '@id': `${CONFIG.siteUrl}/#website`,
+              name: `${CONFIG.brand} Human Hair Wigs`,
+              url: CONFIG.siteUrl,
+              publisher: { '@id': `${CONFIG.siteUrl}/#organization` },
+              inLanguage: 'en'
+            }
+          ]
         };
     schema.textContent = JSON.stringify(data);
   }
@@ -530,273 +528,7 @@ function selectOption(type, value, btn) {
 }
 
 // ============================================
-// 购物车
-// ============================================
-function addToCart() {
-  if (!currentProduct) {
-    showPage('shop');
-    return;
-  }
-  const btn = $('addToBagBtn');
-  if (btn && btn.disabled) return; // blocked for out-of-stock
-
-  const v = currentProduct.variants
-    ? findVariant(currentProduct.selectedColor, currentProduct.selectedLength)
-    : null;
-  if (currentProduct.variants && (!v || !v.inStock)) {
-    alert('Please select an available color and length.');
-    return;
-  }
-  const price = v ? v.price : currentProduct.price;
-  const image = (v && v.image) || (currentProduct.images || [currentProduct.image])[0];
-
-  const key      = currentProduct.id + '-' + currentProduct.selectedColor + '-' + currentProduct.selectedLength;
-  const existing = cart.find(i => i.key === key);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({
-      key,
-      id:       currentProduct.id,
-      name:     currentProduct.name,
-      subtitle: currentProduct.subtitle,
-      image,
-      price,
-      color:    currentProduct.selectedColor,
-      length:   currentProduct.selectedLength,
-      qty: 1
-    });
-  }
-  saveCart();
-  trackEvent('add_to_cart', {
-    currency: 'USD',
-    value: price,
-    item_id: currentProduct.id,
-    item_name: currentProduct.name,
-    item_variant: `${currentProduct.selectedColor} / ${currentProduct.selectedLength}`
-  });
-  toggleCart(true);
-}
-
-function changeQty(key, delta) {
-  const item = cart.find(i => i.key === key);
-  if (!item) return;
-  item.qty += delta;
-  if (item.qty <= 0) cart = cart.filter(i => i.key !== key);
-  saveCart();
-}
-
-function removeItem(key) {
-  cart = cart.filter(i => i.key !== key);
-  saveCart();
-}
-
-function updateCartUI() {
-  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
-  $('cartCount').textContent = totalQty;
-  $('cartCount').style.display = totalQty > 0 ? 'flex' : 'none';
-
-  if (cart.length === 0) {
-    $('cartBody').innerHTML = `
-      <div class="cart-empty">
-        <p>Your bag is empty.</p>
-        <button class="btn-secondary" onclick="toggleCart(); showPage('shop');">Discover styles</button>
-      </div>
-    `;
-    $('cartFooter').innerHTML = '';
-    return;
-  }
-
-  $('cartBody').innerHTML = cart.map(i => `
-    <div class="cart-item">
-      <div class="cart-item-img"><img src="${i.image}" alt="${i.name}"></div>
-      <div class="cart-item-info">
-        <h4>${i.name}</h4>
-        <p class="cart-item-meta">${i.color} · ${i.length}</p>
-        <div class="cart-qty">
-          <button type="button" aria-label="Decrease quantity of ${i.name}" onclick="changeQty('${i.key}', -1)">−</button>
-          <span>${i.qty}</span>
-          <button type="button" aria-label="Increase quantity of ${i.name}" onclick="changeQty('${i.key}', 1)">+</button>
-        </div>
-      </div>
-      <div class="cart-item-actions">
-        <span class="cart-item-price">${fmt(i.price * i.qty)}</span>
-        <button type="button" class="cart-remove" onclick="removeItem('${i.key}')">Remove</button>
-      </div>
-    </div>
-  `).join('');
-
-  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = subtotal >= 199 ? 0 : 15;
-  const total = subtotal + shipping;
-
-  $('cartFooter').innerHTML = `
-    <div class="cart-total">
-      <span>Subtotal</span>
-      <span>${fmt(subtotal)}</span>
-    </div>
-    <p class="cart-note">${shipping === 0 ? '✓ Free shipping unlocked' : `Add ${fmt(199 - subtotal)} for free shipping`} · Duties and taxes may apply</p>
-    <button type="button" class="btn-checkout" onclick="openCheckout()">Continue — ${fmt(total)}</button>
-  `;
-}
-
-function toggleCart(forceOpen) {
-  const drawer = $('cartDrawer');
-  const overlay = $('cartOverlay');
-  const button = document.querySelector('[aria-controls="cartDrawer"]');
-  const open = forceOpen !== undefined ? forceOpen : !drawer.classList.contains('open');
-  drawer.classList.toggle('open', open);
-  overlay.classList.toggle('open', open);
-  drawer.setAttribute('aria-hidden', String(!open));
-  button?.setAttribute('aria-expanded', String(open));
-  button?.setAttribute('aria-label', open ? 'Close shopping bag' : 'Open shopping bag');
-  document.body.style.overflow = open ? 'hidden' : '';
-}
-
-// ============================================
-// 结账弹窗
-// ============================================
-function openCheckout() {
-  if (cart.length === 0) return;
-  toggleCart(false);
-
-  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = subtotal >= 199 ? 0 : 15;
-  const total    = subtotal + shipping;
-
-  // 渲染订单摘要
-  $('checkoutSummary').innerHTML = `
-    <div class="co-summary-title">Order Summary</div>
-    ${cart.map(i => `
-      <div class="co-item">
-        <img src="${i.image}" alt="">
-        <div class="co-item-info">
-          <strong>${i.name}</strong>
-          <span>${i.color} · ${i.length} · Qty ${i.qty}</span>
-        </div>
-        <span class="co-item-price">${fmt(i.price * i.qty)}</span>
-      </div>`).join('')}
-    <div class="co-totals">
-      <span>Subtotal</span><span>${fmt(subtotal)}</span>
-      <span>Shipping</span><span>${shipping === 0 ? '<em>Free</em>' : fmt(shipping)}</span>
-      <span>Duties &amp; taxes</span><span>Not included</span>
-      <strong>Estimated total</strong><strong>${fmt(total)}</strong>
-    </div>
-  `;
-
-  // 重置表单到初始状态
-  const form = $('checkoutForm');
-  form.reset();
-  form.style.display = '';
-  $('orderSuccess').style.display = 'none';
-  $('orderError').style.display   = 'none';
-  const btn = $('coSubmitBtn');
-  btn.disabled = false;
-  btn.textContent = 'Send Order Request';
-
-  $('checkoutOverlay').classList.add('open');
-  $('checkoutModal').classList.add('open');
-  $('checkoutModal').setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  window.setTimeout(() => $('coName')?.focus(), 0);
-  trackEvent('begin_checkout', { currency: 'USD', value: total, items: cart.length });
-}
-
-function closeCheckout() {
-  $('checkoutOverlay').classList.remove('open');
-  $('checkoutModal').classList.remove('open');
-  $('checkoutModal').setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
-
-async function submitOrder(e) {
-  e.preventDefault();
-  const form = e.target;
-  const btn  = $('coSubmitBtn');
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-  const data = Object.fromEntries(new FormData(form));
-
-  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = subtotal >= 199 ? 0 : 15;
-  const total    = subtotal + shipping;
-
-  // order_id: LUM + 时间戳后6位
-  const orderId = 'LUM' + String(Date.now()).slice(-6);
-
-  // {{#orders}} 循环数据 — name 含颜色和长度
-  const orders = cart.map(i => ({
-    name:  `${i.name} — ${i.color}, ${i.length}`,
-    units: i.qty,
-    price: (i.price * i.qty).toFixed(2)
-  }));
-
-  // 国家放最前面
-  const shippingAddr = [
-    data.address_country,
-    data.address_street,
-    data.address_city,
-    data.address_state,
-    data.address_zip
-  ].filter(Boolean).join(', ');
-
-  const params = {
-    order_id:         orderId,
-    customer_name:    data.customer_name,
-    customer_email:   data.customer_email,
-    customer_phone:   data.customer_phone || '—',
-    shipping_address: shippingAddr,
-    order_notes:      data.order_notes    || '—',
-    orders,                                          // {{#orders}} 循环
-    cost: {
-      shipping: shipping === 0 ? 'Free' : shipping.toFixed(2),
-      taxes:    'Not included',
-      total:    total.toFixed(2)
-    }
-  };
-
-  btn.disabled    = true;
-  btn.textContent = 'Sending…';
-  $('orderError').style.display = 'none';
-
-  try {
-    // 发给店主
-    await emailjs.send(
-      CONFIG.emailjs_service_id,
-      CONFIG.emailjs_template_order,
-      { ...params, to_email: CONFIG.orderEmail }
-    );
-    // 发给客户
-    await emailjs.send(
-      CONFIG.emailjs_service_id,
-      CONFIG.emailjs_template_confirm,
-      { ...params, to_email: data.customer_email }
-    );
-
-    cart = [];
-    saveCart();
-    form.style.display = 'none';
-    $('orderSuccess').style.display = 'flex';
-    $('successName').textContent    = data.customer_name;
-    $('successEmail').textContent   = data.customer_email;
-    $('successOrderId').textContent = orderId;
-    trackEvent('order_request_submitted', {
-      currency: 'USD',
-      value: total,
-      order_id: orderId
-    });
-  } catch (err) {
-    console.error('EmailJS error:', err);
-    btn.disabled    = false;
-    btn.textContent = 'Send Order Request';
-    $('orderError').style.display = 'flex';
-  }
-}
-
-// ============================================
-// 订阅
+// 数据分析
 // ============================================
 function initAnalytics() {
   if (!CONFIG.ga4MeasurementId) return;
@@ -814,18 +546,9 @@ function initAnalytics() {
 // 初始化
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-  // 初始化 EmailJS
-  if (
-    CONFIG.emailjs_public_key &&
-    !CONFIG.emailjs_public_key.startsWith('YOUR_') &&
-    typeof window.emailjs !== 'undefined'
-  ) {
-    window.emailjs.init({ publicKey: CONFIG.emailjs_public_key });
-  }
   initAnalytics();
   initPayPalCart();
   renderProducts();
-  updateCartUI();
   handleRoute();
 });
 
@@ -833,8 +556,6 @@ window.addEventListener('popstate', handleRoute);
 window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
     closeMobileNav();
-    if ($('cartDrawer')?.classList.contains('open')) toggleCart(false);
-    if ($('checkoutModal')?.classList.contains('open')) closeCheckout();
   }
 });
 
