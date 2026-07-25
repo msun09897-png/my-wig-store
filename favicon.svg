@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="LUMIÈRE">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ARELVIENNE">
   <rect width="64" height="64" rx="14" fill="#1a1612"/>
-  <path d="M19 15h8L21 44h18l-2 7H10l9-36Z" fill="#faf6ef"/>
-  <path d="M35 15h9l-7 36h-9l7-36Z" fill="#b08968"/>
+  <path d="M11 50 28 14h8l17 36h-9l-4-9H24l-4 9h-9Zm16-17h10l-5-12-5 12Z" fill="#faf6ef"/>
+  <path d="M24 41h16l3 7H21l3-7Z" fill="#b08968"/>
 </svg>

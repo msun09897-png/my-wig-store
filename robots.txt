@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lumiereluxehair.com/sitemap.xml
+Sitemap: https://arelvienne.com/sitemap.xml

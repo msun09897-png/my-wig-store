@@ -2,8 +2,8 @@
 // 配置区 — 上线前修改这里
 // ============================================
 const CONFIG = {
-  brand: 'LUMIÈRE',
-  siteUrl: 'https://lumiereluxehair.com',
+  brand: 'ARELVIENNE',
+  siteUrl: 'https://arelvienne.com',
   supportEmail: 'msun09897@gmail.com',
 
   // 货币符号
@@ -85,40 +85,40 @@ function fmt(n) { return CONFIG.currency + n.toFixed(2); }
 // ============================================
 const PAGE_META = {
   home: {
-    title: 'LUMIÈRE — Premium Human Hair Wigs',
+    title: 'ARELVIENNE — Premium Human Hair Wigs',
     description: 'Premium human hair wigs with HD lace, worldwide shipping, and 30-day returns.'
   },
   shop: {
-    title: 'Shop Human Hair Wigs | LUMIÈRE',
-    description: 'Shop LUMIÈRE human hair wigs by texture, length, color, and lace construction.'
+    title: 'Shop Human Hair Wigs | ARELVIENNE',
+    description: 'Shop ARELVIENNE human hair wigs by texture, length, color, and lace construction.'
   },
   about: {
-    title: 'Our Story | LUMIÈRE',
-    description: 'Learn about LUMIÈRE and our approach to carefully selected human hair wigs.'
+    title: 'Our Story | ARELVIENNE',
+    description: 'Learn about ARELVIENNE and our approach to carefully selected human hair wigs.'
   },
   guide: {
-    title: 'How to Choose a Human Hair Wig | LUMIÈRE Guide',
+    title: 'How to Choose a Human Hair Wig | ARELVIENNE Guide',
     description: 'Learn how to choose wig lace, density, length, texture, color, and cap construction before buying a human hair wig.'
   },
   contact: {
-    title: 'Contact LUMIÈRE',
-    description: 'Contact LUMIÈRE customer care for product, shipping, and order support.'
+    title: 'Contact ARELVIENNE',
+    description: 'Contact ARELVIENNE customer care for product, shipping, and order support.'
   },
   shipping: {
-    title: 'Shipping Policy | LUMIÈRE',
-    description: 'Read LUMIÈRE processing, shipping, customs, and delivery information.'
+    title: 'Shipping Policy | ARELVIENNE',
+    description: 'Read ARELVIENNE processing, shipping, customs, and delivery information.'
   },
   returns: {
-    title: 'Returns & Refunds | LUMIÈRE',
-    description: 'Read the LUMIÈRE 30-day return and refund policy.'
+    title: 'Returns & Refunds | ARELVIENNE',
+    description: 'Read the ARELVIENNE 30-day return and refund policy.'
   },
   privacy: {
-    title: 'Privacy Policy | LUMIÈRE',
-    description: 'Learn how LUMIÈRE collects, uses, and protects customer information.'
+    title: 'Privacy Policy | ARELVIENNE',
+    description: 'Learn how ARELVIENNE collects, uses, and protects customer information.'
   },
   terms: {
-    title: 'Terms of Service | LUMIÈRE',
-    description: 'Read the terms that apply when using the LUMIÈRE website or placing an order.'
+    title: 'Terms of Service | ARELVIENNE',
+    description: 'Read the terms that apply when using the ARELVIENNE website or placing an order.'
   }
 };
 
@@ -132,7 +132,7 @@ function setMeta(name, productId) {
   const product = name === 'product' ? PRODUCTS.find(p => p.id === productId) : null;
   const meta = product
     ? {
-        title: `${product.name} | Human Hair Wig | LUMIÈRE`,
+        title: `${product.name} | Human Hair Wig | ARELVIENNE`,
         description: product.description,
         image: (product.images || [product.image])[0]
       }
