@@ -30,6 +30,61 @@ const CONFIG = {
   emailjs_template_confirm:'template_confirm',
 };
 
+const PAYPAL = {
+  merchantId: 'KWR6CWBTTXL8E',
+  products: {
+    'lum-011': [{ label: 'Choose length', id: 'KP3HVJJ7WKXV4' }],
+    'lum-010': [{ label: 'Choose length & density', id: 'QTZ5UNUSEC2KQ' }],
+    'lum-009': [
+      { label: '150% Density — choose length', id: 'V5BFQPGJPJ8ZY' },
+      { label: '180% Density — choose length', id: 'T9ZJAEGHSU2NW' },
+    ],
+    'lum-012': [{ label: 'Natural Black · Short Bob', id: '2N33RDAMSQX7W' }],
+    'lum-013': [{ label: 'Natural Black · 16 inch · 200% Density', id: '2QMQBXLXZEX7Y' }],
+    'lum-014': [{ label: 'Choose length', id: '4G3DLY34JJYFC' }],
+    'lum-015': [{ label: 'Choose length', id: 'W5Q6MM8BRK3J8' }],
+    'lum-016': [{ label: 'Choose length', id: '8PWSUPUXX3TBN' }],
+  },
+};
+
+let paypalCartReady = false;
+
+function initPayPalCart(attempt = 0) {
+  if (window.cartPaypal?.Cart) {
+    if (!paypalCartReady) {
+      window.cartPaypal.Cart({ id: 'pp-view-cart' });
+      paypalCartReady = true;
+    }
+    return;
+  }
+  if (attempt < 40) window.setTimeout(() => initPayPalCart(attempt + 1), 250);
+}
+
+function mountPayPalProduct(productId, attempt = 0) {
+  const mount = $('paypalPurchase');
+  const buttons = PAYPAL.products[productId] || [];
+  if (!mount || buttons.length === 0) return;
+
+  if (attempt === 0) {
+    mount.innerHTML = buttons.map(button => `
+      <div class="paypal-product-option">
+        <p class="paypal-option-label">${button.label}</p>
+        <paypal-add-to-cart-button data-id="${button.id}"></paypal-add-to-cart-button>
+      </div>
+    `).join('');
+  }
+
+  if (window.cartPaypal?.AddToCart) {
+    buttons.forEach(button => window.cartPaypal.AddToCart({ id: button.id }));
+    return;
+  }
+  if (attempt < 40) {
+    window.setTimeout(() => mountPayPalProduct(productId, attempt + 1), 250);
+  } else {
+    mount.innerHTML = `<p class="paypal-load-error">Secure checkout could not load. Please refresh the page or email <a href="mailto:${CONFIG.supportEmail}">${CONFIG.supportEmail}</a> for help.</p>`;
+  }
+}
+
 // ============================================
 // 状态
 // ============================================
@@ -43,7 +98,7 @@ function loadCart() {
   }
 }
 
-let cart = loadCart();
+let cart = [];
 let currentProduct = null;
 
 // ============================================
@@ -351,57 +406,13 @@ function renderProductDetail(id) {
     };
   }
 
-  // ── Option buttons ───────────────────────────────────────────────
-  let colorHTML = '', lengthHTML = '';
-
-  if (p.variants) {
-    const colors  = [...new Set(p.variants.map(v => v.color))];
-    const lengths = [...new Set(p.variants.map(v => v.length))];
-    const def     = p.variants.find(v => v.inStock) || p.variants[0];
-
-    colorHTML = `
-      <div class="detail-options">
-        <label>Color</label>
-        <div class="option-group" id="colorOptions">
-          ${colors.map(c => `<button type="button" class="option-btn${c === def.color ? ' active' : ''}" data-value="${c}" aria-pressed="${c === def.color}" onclick="selectOption('color','${c}',this)">${c}</button>`).join('')}
-        </div>
-      </div>`;
-    lengthHTML = `
-      <div class="detail-options">
-        <label>Length</label>
-        <div class="option-group" id="lengthOptions">
-          ${lengths.map(l => `<button type="button" class="option-btn${l === def.length ? ' active' : ''}" data-value="${l}" aria-pressed="${l === def.length}" onclick="selectOption('length','${l}',this)">${l}</button>`).join('')}
-        </div>
-      </div>`;
-  } else {
-    const defLenIdx = Math.floor(p.lengths.length / 2);
-    colorHTML = `
-      <div class="detail-options">
-        <label>Color</label>
-        <div class="option-group" id="colorOptions">
-          ${p.colors.map((c, i) => `<button type="button" class="option-btn${i === 0 ? ' active' : ''}" data-value="${c}" aria-pressed="${i === 0}" onclick="selectOption('color','${c}',this)">${c}</button>`).join('')}
-        </div>
-      </div>`;
-    lengthHTML = `
-      <div class="detail-options">
-        <label>Length</label>
-        <div class="option-group" id="lengthOptions">
-          ${p.lengths.map((l, i) => `<button type="button" class="option-btn${i === defLenIdx ? ' active' : ''}" data-value="${l}" aria-pressed="${i === defLenIdx}" onclick="selectOption('length','${l}',this)">${l}</button>`).join('')}
-        </div>
-      </div>`;
-  }
-
-  // ── Initial price & Add-to-Bag state ────────────────────────────
-  let initPrice, initDisabled, initBtnLabel;
+  // ── Initial price ───────────────────────────────────────────────
+  let initPrice;
   if (p.variants) {
     const def  = p.variants.find(v => v.inStock) || p.variants[0];
     initPrice  = def.price;
-    initDisabled = !def.inStock;
-    initBtnLabel = def.inStock ? `Add to Bag — ${fmt(def.price)}` : 'Out of Stock';
   } else {
     initPrice    = p.price;
-    initDisabled = false;
-    initBtnLabel = `Add to Bag — ${fmt(p.price)}`;
   }
 
   const stackedImgs = (p.images || []).map((src, index) =>
@@ -413,16 +424,23 @@ function renderProductDetail(id) {
     <div class="detail-info">
       <p class="breadcrumb"><a href="${routeUrl('shop')}" onclick="showPage('shop'); return false;">Shop</a> · ${p.subtitle}</p>
       <h1>${p.name}</h1>
-      <p class="detail-price" id="detailPrice">${fmt(initPrice)}</p>
+      <p class="detail-price" id="detailPrice">From ${fmt(initPrice)}</p>
       <p class="detail-desc">${p.description}</p>
-      ${colorHTML}
-      ${lengthHTML}
       <ul class="detail-features">
         ${p.features.map(f => `<li>${f}</li>`).join('')}
       </ul>
-      <button type="button" class="btn-add" id="addToBagBtn" onclick="addToCart()"${initDisabled ? ' disabled' : ''}>${initBtnLabel}</button>
+      <section class="paypal-purchase" aria-labelledby="paypalPurchaseTitle">
+        <div class="paypal-purchase-head">
+          <p class="eyebrow">— Secure checkout —</p>
+          <h2 id="paypalPurchaseTitle">Select options and add to cart</h2>
+          <p>Pay securely with PayPal, eligible cards, or Apple Pay. PayPal will collect your delivery address at checkout.</p>
+        </div>
+        <div id="paypalPurchase" aria-live="polite"></div>
+        <p class="paypal-shipping-note">${p.id === 'lum-012' ? '$15 worldwide shipping for this item.' : 'Free worldwide shipping for this item.'} Duties and import taxes may apply.</p>
+      </section>
     </div>
   `;
+  mountPayPalProduct(p.id);
 
   // ── Detail gallery (full-width section below) ────────────────────
   const detailGalleryEl = $('product-detail-gallery');
@@ -805,6 +823,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.emailjs.init({ publicKey: CONFIG.emailjs_public_key });
   }
   initAnalytics();
+  initPayPalCart();
   renderProducts();
   updateCartUI();
   handleRoute();

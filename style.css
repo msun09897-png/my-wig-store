@@ -19,6 +19,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 html { scroll-behavior: smooth; }
 
@@ -186,6 +187,18 @@ body {
   align-items: center;
   justify-content: center;
   font-weight: 500;
+}
+
+.paypal-cart-nav {
+  width: 126px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.paypal-cart-nav paypal-cart-button {
+  width: 100%;
 }
 
 /* ============ 页面切换 ============ */
@@ -821,6 +834,70 @@ textarea:focus-visible {
 .btn-add:disabled:hover {
   background: var(--bone);
   transform: none;
+}
+
+.paypal-purchase {
+  padding: 28px;
+  border: 1px solid var(--bone);
+  background: var(--cream);
+}
+
+.paypal-purchase-head {
+  margin-bottom: 22px;
+}
+
+.paypal-purchase-head .eyebrow {
+  margin-bottom: 8px;
+}
+
+.paypal-purchase-head h2 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.paypal-purchase-head > p:last-child,
+.paypal-shipping-note {
+  color: var(--soil);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.paypal-product-option + .paypal-product-option {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--bone);
+}
+
+.paypal-option-label {
+  margin-bottom: 10px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.paypal-product-option paypal-add-to-cart-button {
+  display: block;
+  width: 100%;
+}
+
+.paypal-shipping-note {
+  margin-top: 18px;
+}
+
+.paypal-load-error {
+  padding: 16px;
+  border: 1px solid var(--rose);
+  color: var(--soil);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.paypal-load-error a {
+  color: var(--rose-deep);
 }
 
 .detail-price-old {
@@ -1726,6 +1803,7 @@ textarea:focus-visible {
   .nav-links { display: none; }
   .nav { padding: 16px 20px; }
   .logo-text { font-size: 17px; letter-spacing: 0.22em; }
+  .paypal-cart-nav { width: 112px; }
   .mobile-menu-btn { display: flex; }
   .mobile-nav.open {
     display: flex;
@@ -1753,6 +1831,7 @@ textarea:focus-visible {
   .hero-bg::after { display: none; }
   .product-detail { grid-template-columns: 1fr; gap: 40px; padding: 32px 24px 0; }
   .detail-info { position: static; }
+  .paypal-purchase { padding: 20px 16px; }
   .carousel-btn { width: 36px; height: 36px; font-size: 22px; }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
