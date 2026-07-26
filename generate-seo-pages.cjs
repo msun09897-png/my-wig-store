@@ -59,12 +59,12 @@ const PAGE_META = {
   },
   shipping: {
     title: 'Shipping Policy | ARELVIENNE',
-    description: 'Read ARELVIENNE processing times, shipping charges, tracking, customs, and delivery information.',
+    description: 'Read ARELVIENNE free worldwide shipping, processing times, tracking, customs, and delivery information.',
     schemaType: 'WebPage'
   },
   returns: {
     title: 'Returns & Refunds | ARELVIENNE',
-    description: 'Read the ARELVIENNE 30-day return eligibility, exchange, and refund conditions.',
+    description: 'Read the ARELVIENNE 30-day return eligibility and refund conditions.',
     schemaType: 'WebPage'
   },
   privacy: {
@@ -187,7 +187,7 @@ function staticProductDetail(product) {
       </ul>
       <div class="static-checkout-note">
         <p>Secure PayPal checkout options load when JavaScript is enabled.</p>
-        <p><a href="/shipping.html">Shipping information</a> · <a href="/returns.html">30-day return conditions</a> · <a href="/contact.html">Ask customer care</a></p>
+      <p><a href="/shipping.html">Free worldwide shipping</a> · <a href="/returns.html">30-day returns on eligible items</a> · <a href="/contact.html">Ask customer care</a></p>
       </div>
     </div>
   </div>`;
@@ -335,7 +335,7 @@ function buildMerchantFeed(products) {
     const route = PRODUCT_ROUTES[product.id];
     const range = priceRange(product);
     const image = absoluteUrl((product.images || [product.image])[0]);
-    const shippingPrice = product.id === 'lum-012' ? '15.00' : '0.00';
+    const shippingPrice = '0.00';
     const title = `${product.name} — ${product.subtitle}`;
     const availability = availableVariants(product).length === 0 && product.variants ? 'out_of_stock' : 'in_stock';
     return `    <item>

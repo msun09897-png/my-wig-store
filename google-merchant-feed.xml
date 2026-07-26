@@ -117,7 +117,7 @@
       <g:shipping>
         <g:country>US</g:country>
         <g:service>Standard</g:service>
-        <g:price>15.00 USD</g:price>
+        <g:price>0.00 USD</g:price>
         <g:min_handling_time>1</g:min_handling_time>
         <g:max_handling_time>3</g:max_handling_time>
         <g:min_transit_time>7</g:min_transit_time>

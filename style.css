@@ -1858,8 +1858,20 @@ textarea:focus-visible {
   .search-wrap { max-width: 100%; }
   .hero-content { padding: 60px 24px; }
   .hero-bg::after { display: none; }
-  .product-detail { grid-template-columns: 1fr; gap: 40px; padding: 32px 24px 0; }
-  .detail-info { position: static; }
+  .product-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 32px 24px 0;
+  }
+  .product-detail-images { display: contents; }
+  .product-detail-images .stacked-image { order: 3; }
+  .product-detail-images .stacked-image:first-child { order: 1; }
+  .detail-info {
+    order: 2;
+    position: static;
+    padding: 32px 0 44px;
+  }
   .paypal-purchase { padding: 20px 16px; }
   .carousel-btn { width: 36px; height: 36px; font-size: 22px; }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }

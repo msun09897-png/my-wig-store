@@ -493,7 +493,7 @@ function renderProductDetail(id) {
           <p>Pay securely with PayPal, eligible cards, or Apple Pay. PayPal will collect your delivery address at checkout.</p>
         </div>
         <div id="paypalPurchase" aria-live="polite"></div>
-        <p class="paypal-shipping-note">${p.id === 'lum-012' ? '$15 worldwide shipping for this item.' : 'Free worldwide shipping for this item.'} Duties and import taxes may apply.</p>
+        <p class="paypal-shipping-note">Free worldwide shipping for this item. Duties and import taxes may apply.</p>
         <div class="purchase-policy-links">
           <p>By completing checkout, you agree to our
             <a href="${routeUrl('terms')}" onclick="showPage('terms'); return false;">Terms</a>
@@ -503,7 +503,7 @@ function renderProductDetail(id) {
           <p>
             <a href="${routeUrl('shipping')}" onclick="showPage('shipping'); return false;">Shipping: 1–3 business days processing, then an estimated 7–15 business days</a>
             ·
-            <a href="${routeUrl('returns')}" onclick="showPage('returns'); return false;">30-day return conditions</a>
+            <a href="${routeUrl('returns')}" onclick="showPage('returns'); return false;">30-day returns on eligible items</a>
           </p>
         </div>
       </section>
