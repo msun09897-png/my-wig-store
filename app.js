@@ -472,12 +472,16 @@ function renderProductDetail(id) {
     initPrice    = p.price;
   }
 
-  const stackedImgs = (p.images || []).map((src, index) =>
-    `<div class="stacked-image"><img src="${src}" alt="${p.name}" loading="${index === 0 ? 'eager' : 'lazy'}"${index === 0 ? ' fetchpriority="high"' : ''}></div>`
+  const productImages = p.images || [];
+  const primaryImage = productImages.slice(0, 1).map(src =>
+    `<div class="stacked-image"><img src="${src}" alt="${p.name}" loading="eager" fetchpriority="high"></div>`
+  ).join('');
+  const secondaryImages = productImages.slice(1).map((src, index) =>
+    `<div class="stacked-image"><img src="${src}" alt="${p.name} view ${index + 2}" loading="lazy"></div>`
   ).join('');
 
   $('productDetail').innerHTML = `
-    <div class="product-detail-images">${stackedImgs}</div>
+    <div class="product-detail-images product-detail-images-primary">${primaryImage}</div>
     <div class="detail-info">
       <p class="breadcrumb"><a href="${routeUrl('shop')}" onclick="showPage('shop'); return false;">Shop</a> · ${p.subtitle}</p>
       <h1>${p.name}</h1>
@@ -508,6 +512,7 @@ function renderProductDetail(id) {
         </div>
       </section>
     </div>
+    <div class="product-detail-images product-detail-images-secondary">${secondaryImages}</div>
   `;
   mountPayPalProduct(p.id);
 
