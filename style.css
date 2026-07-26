@@ -626,7 +626,8 @@ textarea:focus-visible {
 .product-detail {
   display: grid;
   grid-template-columns: 60% 40%;
-  gap: 40px;
+  column-gap: 40px;
+  row-gap: 0;
   padding: 60px 32px 0;
   align-items: start;
 }
@@ -708,9 +709,21 @@ textarea:focus-visible {
 }
 
 .detail-info {
+  grid-column: 2;
+  grid-row: 1 / span 2;
   padding-top: 20px;
   position: static;
   align-self: start;
+}
+
+.product-detail-images-primary {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.product-detail-images-secondary {
+  grid-column: 1;
+  grid-row: 2;
 }
 
 .breadcrumb {
@@ -1824,7 +1837,13 @@ textarea:focus-visible {
 /* ============ 响应式 ============ */
 @media (min-width: 769px) and (max-width: 1199px) {
   .product-grid { grid-template-columns: repeat(3, 1fr); gap: 4px; }
-  .product-detail { grid-template-columns: 1fr; gap: 32px; }
+  .product-detail { grid-template-columns: 1fr; row-gap: 32px; }
+  .product-detail-images-primary,
+  .product-detail-images-secondary,
+  .detail-info {
+    grid-column: 1;
+    grid-row: auto;
+  }
   .detail-info { position: static; }
 }
 
@@ -1864,14 +1883,13 @@ textarea:focus-visible {
     gap: 0;
     padding: 32px 24px 0;
   }
-  .product-detail-images { display: contents; }
-  .product-detail-images .stacked-image { order: 3; }
-  .product-detail-images .stacked-image:first-child { order: 1; }
+  .product-detail-images-primary { order: 1; }
   .detail-info {
     order: 2;
     position: static;
     padding: 32px 0 44px;
   }
+  .product-detail-images-secondary { order: 3; }
   .paypal-purchase { padding: 20px 16px; }
   .carousel-btn { width: 36px; height: 36px; font-size: 22px; }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
