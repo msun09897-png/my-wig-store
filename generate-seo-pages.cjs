@@ -11,7 +11,7 @@ const vm = require('vm');
 
 const SITE_URL = 'https://arelvienne.com';
 const BRAND = 'ARELVIENNE';
-const SUPPORT_EMAIL = 'msun09897@gmail.com';
+const SUPPORT_EMAIL = 'support@arelvienne.com';
 const LAST_MODIFIED = '2026-07-25';
 
 const PAGE_ROUTES = {

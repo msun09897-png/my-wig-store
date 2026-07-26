@@ -4,7 +4,7 @@
 const CONFIG = {
   brand: 'ARELVIENNE',
   siteUrl: 'https://arelvienne.com',
-  supportEmail: 'msun09897@gmail.com',
+  supportEmail: 'support@arelvienne.com',
 
   // 货币符号
   currency: '$',
