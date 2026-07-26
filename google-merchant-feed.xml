@@ -3,110 +3,246 @@
   <channel>
     <title>ARELVIENNE Human Hair Wigs</title>
     <link>https://arelvienne.com/</link>
-    <description>Premium human hair wigs with HD lace and worldwide shipping.</description>
+    <description>Human hair wigs with lace construction, international shipping, and published return conditions.</description>
 
     <item>
       <g:id>lum-011</g:id>
-      <title><![CDATA[The Cascade Wave — 13x6 HD Lace Deep Wave Human Hair Wig]]></title>
-      <description><![CDATA[A deep-wave human-hair wig with a full, defined texture and transparent 13x6 lace. The longer lace area offers flexible parting, while the adjustable cap helps you refine the fit.]]></description>
-      <link>https://arelvienne.com/?product=lum-011</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Cascade Wave — 13x6 HD Lace Wig | Human Hair · Deep Wave</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>A deep-wave human-hair wig with a full, defined texture and transparent 13x6 lace. The longer lace area offers flexible parting, while the adjustable cap helps you refine the fit.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/cascade-deep-wave-human-hair-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-011/main_01.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>309.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
 
     <item>
       <g:id>lum-010</g:id>
-      <title><![CDATA[The Platinum Bob — 13x4 HD Lace #613 Human Hair Bob]]></title>
-      <description><![CDATA[A straight #613 blonde human-hair bob with transparent 13x4 lace. Choose from four lengths and two density options for a shorter, polished silhouette.]]></description>
-      <link>https://arelvienne.com/?product=lum-010</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Platinum Bob — 13x4 HD Lace Bob | Human Hair · #613</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>A straight #613 blonde human-hair bob with transparent 13x4 lace. Choose from four lengths and two density options for a shorter, polished silhouette.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/platinum-blonde-bob-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-010/main_01.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>199.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
 
     <item>
       <g:id>lum-009</g:id>
-      <title><![CDATA[The Signature Straight — 13x6 HD Lace Human Hair Wig]]></title>
-      <description><![CDATA[A straight human-hair wig with transparent 13x6 lace and flexible parting space. Available in two density options and lengths from 16 to 30 inches.]]></description>
-      <link>https://arelvienne.com/?product=lum-009</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Signature Straight — 13x6 HD Lace Wig | Human Hair</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>A straight human-hair wig with transparent 13x6 lace and flexible parting space. Available in two density options and lengths from 16 to 30 inches.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/signature-straight-human-hair-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-009/main_01.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>289.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
 
     <item>
       <g:id>lum-012</g:id>
-      <title><![CDATA[The Water Wave Bob — Short Human Hair Lace Wig]]></title>
-      <description><![CDATA[Soft water-wave texture in an easy short silhouette. Lightweight, face-framing, and ready for everyday wear, this human-hair bob gives natural movement with a polished finish.]]></description>
-      <link>https://arelvienne.com/?product=lum-012</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Water Wave Bob — Short Water Wave Lace Wig | 100% Human Hair</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>Soft water-wave texture in an easy short silhouette. Lightweight, face-framing, and ready for everyday wear, this human-hair bob gives natural movement with a polished finish that still feels effortless.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/water-wave-bob-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-012/main_01.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>159.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>15.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
 
     <item>
       <g:id>lum-013</g:id>
-      <title><![CDATA[The Bouncy Curl Closure — 5x5 Glueless Human Hair Wig]]></title>
-      <description><![CDATA[Soft, springy curls with a polished 5x5 closure finish. This glueless human-hair wig gives full 200% density, natural movement, and an easy wear-and-go fit.]]></description>
-      <link>https://arelvienne.com/?product=lum-013</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Bouncy Curl Closure — 5x5 Glueless Lace Wig | 200% Density Human Hair</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>Soft, springy curls with a polished 5x5 closure finish. This glueless human-hair wig gives full 200% density, natural movement, and an easy wear-and-go fit for days when you want volume without fuss.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/bouncy-curl-closure-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-013/main_01_front_hero.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>289.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
 
     <item>
       <g:id>lum-014</g:id>
-      <title><![CDATA[The Champagne Body Wave — #613 Blonde Human Hair Wig]]></title>
-      <description><![CDATA[A luminous #613 blonde body-wave wig with soft movement and a polished 13x4 lace-front finish. Airy, bright, and easy to style with the natural softness of human hair.]]></description>
-      <link>https://arelvienne.com/?product=lum-014</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Champagne Body Wave — 13x4 Lace Front Wig | #613 Blonde Body Wave Human Hair</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>A luminous #613 blonde body-wave wig with soft movement and a polished lace-front finish. Airy, bright, and easy to style, it brings a champagne-blonde glow without losing the natural softness of human hair.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/champagne-blonde-body-wave-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-014/01_front_hero_613_blonde_wig.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>219.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
 
     <item>
       <g:id>lum-015</g:id>
-      <title><![CDATA[The Honey Noir Straight — 1B/27 Highlight Human Hair Wig]]></title>
-      <description><![CDATA[A sleek 1B/27 highlight lace-front wig with honey-blonde ribbons through a natural noir base. Smooth, glossy, face-brightening, and polished for everyday wear.]]></description>
-      <link>https://arelvienne.com/?product=lum-015</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Honey Noir Straight — 13x4 Transparent Lace Wig | 1B/27 Highlight Human Hair</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>A sleek 1B/27 highlight lace-front wig with honey-blonde ribbons through a natural noir base. Smooth, glossy, and face-brightening, it gives everyday polish with a warmer, dimensional finish.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/honey-noir-highlight-straight-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-015/main_01_front_hero.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>349.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
 
     <item>
       <g:id>lum-016</g:id>
-      <title><![CDATA[The Burgundy Bob Closure — 5x5 Human Hair Bob Wig]]></title>
-      <description><![CDATA[A polished burgundy bob with a clean 5x5 closure and silky bone-straight finish. Short, glossy, and easy to wear with a rich wine-red color.]]></description>
-      <link>https://arelvienne.com/?product=lum-016</link>
+      <g:structured_title>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>The Burgundy Bob Closure — 5x5 Lace Bob Wig | Burgundy Bone-Straight Human Hair</g:content>
+      </g:structured_title>
+      <g:structured_description>
+        <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
+        <g:content>A polished burgundy bob with a clean 5x5 closure and silky bone-straight finish. Short, glossy, and easy to wear, it gives a rich wine-red statement without losing everyday softness.</g:content>
+      </g:structured_description>
+      <link>https://arelvienne.com/burgundy-bob-closure-wig.html</link>
       <g:image_link>https://arelvienne.com/images/lum-016/a_high_resolution_studio_lit_fashion_beauty_port.webp</g:image_link>
       <g:availability>in_stock</g:availability>
       <g:price>199.00 USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>ARELVIENNE</g:brand>
+      <g:identifier_exists>no</g:identifier_exists>
+      <g:adult>no</g:adult>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
+      <g:shipping>
+        <g:country>US</g:country>
+        <g:service>Standard</g:service>
+        <g:price>0.00 USD</g:price>
+        <g:min_handling_time>1</g:min_handling_time>
+        <g:max_handling_time>3</g:max_handling_time>
+        <g:min_transit_time>7</g:min_transit_time>
+        <g:max_transit_time>15</g:max_transit_time>
+      </g:shipping>
     </item>
   </channel>
 </rss>

@@ -888,6 +888,35 @@ textarea:focus-visible {
   margin-top: 18px;
 }
 
+.purchase-policy-links {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--bone);
+  color: var(--soil);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.purchase-policy-links p + p {
+  margin-top: 7px;
+}
+
+.purchase-policy-links a,
+.static-checkout-note a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.static-checkout-note {
+  padding: 18px;
+  border: 1px solid var(--bone);
+  background: var(--cream);
+  color: var(--soil);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
 .paypal-load-error {
   padding: 16px;
   border: 1px solid var(--rose);

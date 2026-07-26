@@ -122,10 +122,34 @@ const PAGE_META = {
   }
 };
 
+const PAGE_ROUTES = {
+  home: '/',
+  shop: '/shop.html',
+  guide: '/wig-guide.html',
+  about: '/about.html',
+  contact: '/contact.html',
+  shipping: '/shipping.html',
+  returns: '/returns.html',
+  privacy: '/privacy.html',
+  terms: '/terms.html'
+};
+
+const PRODUCT_ROUTES = {
+  'lum-009': '/signature-straight-human-hair-wig.html',
+  'lum-010': '/platinum-blonde-bob-wig.html',
+  'lum-011': '/cascade-deep-wave-human-hair-wig.html',
+  'lum-012': '/water-wave-bob-wig.html',
+  'lum-013': '/bouncy-curl-closure-wig.html',
+  'lum-014': '/champagne-blonde-body-wave-wig.html',
+  'lum-015': '/honey-noir-highlight-straight-wig.html',
+  'lum-016': '/burgundy-bob-closure-wig.html'
+};
+
 function routeUrl(name, productId) {
-  if (name === 'home') return '/';
-  if (name === 'product' && productId) return `/?product=${encodeURIComponent(productId)}`;
-  return `/?page=${encodeURIComponent(name)}`;
+  if (name === 'product' && productId) {
+    return PRODUCT_ROUTES[productId] || `/?product=${encodeURIComponent(productId)}`;
+  }
+  return PAGE_ROUTES[name] || `/?page=${encodeURIComponent(name)}`;
 }
 
 function setMeta(name, productId) {
@@ -270,9 +294,14 @@ function showPage(name, productId, options = {}) {
 }
 
 function handleRoute() {
+  const pathname = location.pathname.replace(/\/{2,}/g, '/');
   const params = new URLSearchParams(location.search);
-  const productId = params.get('product');
-  const page = params.get('page');
+  const productIdFromPath = Object.keys(PRODUCT_ROUTES)
+    .find(id => PRODUCT_ROUTES[id] === pathname);
+  const pageFromPath = Object.keys(PAGE_ROUTES)
+    .find(name => PAGE_ROUTES[name] === pathname || (name === 'home' && pathname === '/index.html'));
+  const productId = productIdFromPath || params.get('product');
+  const page = pageFromPath || params.get('page');
   if (productId && PRODUCTS.some(p => p.id === productId)) {
     showPage('product', productId, { updateHistory: false });
   } else if (page && PAGE_META[page]) {
@@ -465,6 +494,18 @@ function renderProductDetail(id) {
         </div>
         <div id="paypalPurchase" aria-live="polite"></div>
         <p class="paypal-shipping-note">${p.id === 'lum-012' ? '$15 worldwide shipping for this item.' : 'Free worldwide shipping for this item.'} Duties and import taxes may apply.</p>
+        <div class="purchase-policy-links">
+          <p>By completing checkout, you agree to our
+            <a href="${routeUrl('terms')}" onclick="showPage('terms'); return false;">Terms</a>
+            and acknowledge our
+            <a href="${routeUrl('privacy')}" onclick="showPage('privacy'); return false;">Privacy Policy</a>.
+          </p>
+          <p>
+            <a href="${routeUrl('shipping')}" onclick="showPage('shipping'); return false;">Shipping: 1–3 business days processing, then an estimated 7–15 business days</a>
+            ·
+            <a href="${routeUrl('returns')}" onclick="showPage('returns'); return false;">30-day return conditions</a>
+          </p>
+        </div>
       </section>
     </div>
   `;
