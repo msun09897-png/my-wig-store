@@ -9,8 +9,8 @@ const CONFIG = {
   // 货币符号
   currency: '$',
 
-  // 上线 Google Analytics 后填入，例如 G-XXXXXXXXXX
-  ga4MeasurementId: '',
+  // Google Analytics 4 web stream
+  ga4MeasurementId: 'G-BLRPGQR6G3',
 
   // PayPal 商业账户应用的公开 Client ID。不要在前端放 Secret。
   paypalClientId: '',
@@ -266,9 +266,8 @@ function setMeta(name, productId) {
 }
 
 function trackEvent(name, params = {}) {
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: name, ...params });
-  if (typeof window.gtag === 'function') window.gtag('event', name, params);
+  if (!analyticsStarted || typeof window.gtag !== 'function') return;
+  window.gtag('event', name, params);
 }
 
 function showPage(name, productId, options = {}) {
@@ -604,25 +603,122 @@ function selectOption(type, value, btn) {
 }
 
 // ============================================
-// 数据分析
+// 数据分析与访客同意
 // ============================================
-function initAnalytics() {
-  if (!CONFIG.ga4MeasurementId) return;
+const ANALYTICS_CONSENT_KEY = 'arelvienne_analytics_consent';
+let analyticsStarted = false;
+
+function getAnalyticsConsent() {
+  try {
+    return window.localStorage.getItem(ANALYTICS_CONSENT_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function saveAnalyticsConsent(value) {
+  try {
+    window.localStorage.setItem(ANALYTICS_CONSENT_KEY, value);
+  } catch {
+    // The choice still applies for the current page when storage is unavailable.
+  }
+}
+
+function startAnalytics() {
+  if (!CONFIG.ga4MeasurementId || analyticsStarted) return;
+  analyticsStarted = true;
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag('consent', 'default', {
+    analytics_storage: 'granted',
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied'
+  });
+  window.gtag('js', new Date());
+  window.gtag('config', CONFIG.ga4MeasurementId, {
+    anonymize_ip: true,
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false
+  });
+
   const script = document.createElement('script');
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(CONFIG.ga4MeasurementId)}`;
   document.head.appendChild(script);
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function () { window.dataLayer.push(arguments); };
-  window.gtag('js', new Date());
-  window.gtag('config', CONFIG.ga4MeasurementId, { anonymize_ip: true });
+}
+
+function closeAnalyticsBanner() {
+  $('analyticsConsent')?.remove();
+}
+
+function showAnalyticsBanner() {
+  closeAnalyticsBanner();
+  const banner = document.createElement('section');
+  banner.id = 'analyticsConsent';
+  banner.className = 'analytics-consent';
+  banner.setAttribute('role', 'dialog');
+  banner.setAttribute('aria-labelledby', 'analyticsConsentTitle');
+  banner.setAttribute('aria-describedby', 'analyticsConsentText');
+  banner.innerHTML = `
+    <div class="analytics-consent-copy">
+      <h2 id="analyticsConsentTitle">Your privacy choices</h2>
+      <p id="analyticsConsentText">We use Google Analytics 4 to understand visits and improve our store. Analytics stays off unless you allow it. Necessary storage for checkout and security may still be used. <a href="/privacy.html">Privacy Policy</a></p>
+    </div>
+    <div class="analytics-consent-actions">
+      <button type="button" class="analytics-consent-secondary" data-analytics-choice="denied">Necessary only</button>
+      <button type="button" class="analytics-consent-primary" data-analytics-choice="granted">Allow analytics</button>
+    </div>
+  `;
+
+  banner.querySelectorAll('[data-analytics-choice]').forEach(button => {
+    button.addEventListener('click', () => {
+      const choice = button.dataset.analyticsChoice;
+      saveAnalyticsConsent(choice);
+      if (choice === 'denied' && analyticsStarted) {
+        window.gtag?.('consent', 'update', {
+          analytics_storage: 'denied',
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied'
+        });
+        window.location.reload();
+        return;
+      }
+      closeAnalyticsBanner();
+      if (choice === 'granted') startAnalytics();
+    });
+  });
+  document.body.appendChild(banner);
+}
+
+function initAnalyticsConsent() {
+  if (!CONFIG.ga4MeasurementId) return;
+
+  const footer = document.querySelector('footer');
+  if (footer && !$('analyticsSettings')) {
+    const settings = document.createElement('button');
+    settings.id = 'analyticsSettings';
+    settings.type = 'button';
+    settings.className = 'analytics-settings';
+    settings.textContent = 'Cookie settings';
+    settings.addEventListener('click', showAnalyticsBanner);
+    footer.appendChild(settings);
+  }
+
+  const consent = getAnalyticsConsent();
+  if (consent === 'granted') {
+    startAnalytics();
+  } else if (consent !== 'denied') {
+    showAnalyticsBanner();
+  }
 }
 
 // ============================================
 // 初始化
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-  initAnalytics();
+  initAnalyticsConsent();
   initPayPalCart();
   renderProducts();
   handleRoute();
