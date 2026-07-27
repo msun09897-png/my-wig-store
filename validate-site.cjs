@@ -47,6 +47,56 @@ const allVariants = products.flatMap(product =>
   (product.variants || []).map(variant => ({ product, variant }))
 );
 const expectedVariantCount = 22;
+const indexNowKey = 'a13da8f942954c0499bbf1244f00ff19';
+const marketingChannels = {
+  pinterest: ['organic_social', 'profile'],
+  instagram: ['organic_social', 'profile'],
+  tiktok: ['organic_social', 'profile'],
+  youtube: ['organic_video', 'channel'],
+  facebook: ['organic_social', 'profile'],
+  reddit: ['community', 'helpful_answers'],
+  quora: ['community', 'helpful_answers']
+};
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let quoted = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const character = text[index];
+    const next = text[index + 1];
+    if (quoted && character === '"' && next === '"') {
+      field += '"';
+      index += 1;
+    } else if (character === '"') {
+      quoted = !quoted;
+    } else if (!quoted && character === ',') {
+      row.push(field);
+      field = '';
+    } else if (!quoted && (character === '\n' || character === '\r')) {
+      if (character === '\r' && next === '\n') index += 1;
+      row.push(field);
+      if (row.some(value => value !== '')) rows.push(row);
+      row = [];
+      field = '';
+    } else {
+      field += character;
+    }
+  }
+  if (field || row.length) {
+    row.push(field);
+    rows.push(row);
+  }
+  return rows;
+}
+
+function csvRecords(file) {
+  const rows = parseCsv(fs.readFileSync(file, 'utf8'));
+  const headers = rows.shift() || [];
+  return rows.map(row => Object.fromEntries(headers.map((header, index) => [header, row[index] ?? ''])));
+}
 
 for (const file of expectedPages) {
   if (!fs.existsSync(file)) {
@@ -167,6 +217,21 @@ for (const { product, variant } of allVariants) {
     errors.push(`${variant.sku}: Merchant color or size is missing`);
   }
   if (!link?.includes(`variant=${variant.sku}`)) errors.push(`${variant.sku}: Merchant variant link is invalid`);
+  if (link) {
+    const trackedLink = new URL(link.replaceAll('&amp;', '&'));
+    if (trackedLink.searchParams.get('utm_source') !== 'google') {
+      errors.push(`${variant.sku}: Merchant link is missing Google UTM source`);
+    }
+    if (trackedLink.searchParams.get('utm_medium') !== 'organic_shopping') {
+      errors.push(`${variant.sku}: Merchant link is missing organic shopping UTM medium`);
+    }
+    if (trackedLink.searchParams.get('utm_campaign') !== 'free_listings') {
+      errors.push(`${variant.sku}: Merchant link is missing free listings UTM campaign`);
+    }
+    if (trackedLink.searchParams.get('utm_content') !== variant.sku) {
+      errors.push(`${variant.sku}: Merchant UTM content must match the SKU`);
+    }
+  }
 
   if ((product.variants || []).length > 1) {
     if (groupId !== product.id) errors.push(`${variant.sku}: Merchant item_group_id must be ${product.id}`);
@@ -179,6 +244,113 @@ for (const { product, variant } of allVariants) {
       errors.push(`${variant.sku}: Merchant variant option density is missing`);
     }
   }
+}
+
+if (!fs.existsSync('pinterest-catalog.csv')) {
+  errors.push('pinterest-catalog.csv: missing');
+} else {
+  const pinterestRecords = csvRecords('pinterest-catalog.csv');
+  if (pinterestRecords.length !== expectedVariantCount) {
+    errors.push(`pinterest-catalog.csv: expected ${expectedVariantCount} variants, found ${pinterestRecords.length}`);
+  }
+  if (new Set(pinterestRecords.map(record => record.id)).size !== pinterestRecords.length) {
+    errors.push('pinterest-catalog.csv: variant IDs must be unique');
+  }
+  for (const { product, variant } of allVariants) {
+    const record = pinterestRecords.find(item => item.id === variant.sku);
+    if (!record) {
+      errors.push(`pinterest-catalog.csv: missing ${variant.sku}`);
+      continue;
+    }
+    if (Number.parseFloat(record.price) !== Number(variant.price)) {
+      errors.push(`${variant.sku}: Pinterest price does not match products.js`);
+    }
+    if (record.availability !== (variant.inStock ? 'in stock' : 'out of stock')) {
+      errors.push(`${variant.sku}: Pinterest availability does not match products.js`);
+    }
+    if (!record.title || !record.description || !record.image_link) {
+      errors.push(`${variant.sku}: Pinterest title, description, or image is missing`);
+    }
+    if (record.brand !== 'ARELVIENNE') errors.push(`${variant.sku}: Pinterest brand is invalid`);
+    if (record.google_product_category !== '181') {
+      errors.push(`${variant.sku}: Pinterest Google product category must be 181`);
+    }
+    const trackedLink = new URL(record.link);
+    if (trackedLink.searchParams.get('variant') !== variant.sku) {
+      errors.push(`${variant.sku}: Pinterest variant link is invalid`);
+    }
+    if (trackedLink.searchParams.get('utm_source') !== 'pinterest') {
+      errors.push(`${variant.sku}: Pinterest link is missing Pinterest UTM source`);
+    }
+    if (trackedLink.searchParams.get('utm_medium') !== 'organic_shopping') {
+      errors.push(`${variant.sku}: Pinterest link is missing organic shopping UTM medium`);
+    }
+    if (trackedLink.searchParams.get('utm_campaign') !== 'product_catalog') {
+      errors.push(`${variant.sku}: Pinterest link is missing product catalog UTM campaign`);
+    }
+    if (trackedLink.searchParams.get('utm_content') !== variant.sku) {
+      errors.push(`${variant.sku}: Pinterest UTM content must match the SKU`);
+    }
+    if ((product.variants || []).length > 1 && record.item_group_id !== product.id) {
+      errors.push(`${variant.sku}: Pinterest item_group_id must be ${product.id}`);
+    }
+  }
+}
+
+if (!fs.existsSync('marketing-utm-links.csv')) {
+  errors.push('marketing-utm-links.csv: missing');
+} else {
+  const marketingRecords = csvRecords('marketing-utm-links.csv');
+  const expectedDestinationCount = 3 + products.length;
+  const expectedMarketingCount = Object.keys(marketingChannels).length * expectedDestinationCount;
+  if (marketingRecords.length !== expectedMarketingCount) {
+    errors.push(
+      `marketing-utm-links.csv: expected ${expectedMarketingCount} links, found ${marketingRecords.length}`
+    );
+  }
+  for (const record of marketingRecords) {
+    const expected = marketingChannels[record.utm_source];
+    if (!expected) {
+      errors.push(`marketing-utm-links.csv: unknown source ${record.utm_source}`);
+      continue;
+    }
+    const [medium, campaign] = expected;
+    const url = new URL(record.url);
+    if (url.host !== 'arelvienne.com') errors.push(`${record.platform}: UTM URL has an invalid host`);
+    if (url.searchParams.get('utm_source') !== record.utm_source) {
+      errors.push(`${record.platform}: UTM source does not match URL`);
+    }
+    if (record.utm_medium !== medium || url.searchParams.get('utm_medium') !== medium) {
+      errors.push(`${record.platform}: UTM medium is invalid`);
+    }
+    if (record.utm_campaign !== campaign || url.searchParams.get('utm_campaign') !== campaign) {
+      errors.push(`${record.platform}: UTM campaign is invalid`);
+    }
+    if (!record.utm_content || url.searchParams.get('utm_content') !== record.utm_content) {
+      errors.push(`${record.platform}: UTM content is missing or inconsistent`);
+    }
+  }
+}
+
+if (!fs.existsSync('indexnow-urls.txt')) {
+  errors.push('indexnow-urls.txt: missing');
+} else {
+  const indexNowUrls = fs.readFileSync('indexnow-urls.txt', 'utf8')
+    .split(/\r?\n/)
+    .map(value => value.trim())
+    .filter(Boolean);
+  if (indexNowUrls.length !== sitemapUrls.length) {
+    errors.push(`indexnow-urls.txt: expected ${sitemapUrls.length} URLs, found ${indexNowUrls.length}`);
+  }
+  if (indexNowUrls.some((url, index) => url !== sitemapUrls[index])) {
+    errors.push('indexnow-urls.txt: URLs must match sitemap.xml in order');
+  }
+}
+
+if (!fs.existsSync(`${indexNowKey}.txt`)) {
+  errors.push(`${indexNowKey}.txt: IndexNow key file is missing`);
+} else if (fs.readFileSync(`${indexNowKey}.txt`, 'utf8').trim() !== indexNowKey) {
+  errors.push(`${indexNowKey}.txt: IndexNow key content does not match its filename`);
 }
 
 const appSource = fs.readFileSync('app.js', 'utf8');
@@ -201,6 +373,7 @@ if (errors.length) {
 } else {
   console.log(
     `Validation passed: ${expectedPages.length} pages, ${products.length} products, ` +
-    `${allVariants.length} Merchant variants, ${sitemapUrls.length} sitemap URLs.`
+    `${allVariants.length} Merchant/Pinterest variants, ${sitemapUrls.length} sitemap/IndexNow URLs, ` +
+    `${Object.keys(marketingChannels).length} tracked marketing channels.`
   );
 }

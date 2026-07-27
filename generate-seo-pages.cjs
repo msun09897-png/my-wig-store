@@ -13,6 +13,8 @@ const SITE_URL = 'https://arelvienne.com';
 const BRAND = 'ARELVIENNE';
 const SUPPORT_EMAIL = 'support@arelvienne.com';
 const LAST_MODIFIED = '2026-07-27';
+const INDEXNOW_KEY = 'a13da8f942954c0499bbf1244f00ff19';
+const GOOGLE_PRODUCT_CATEGORY = '181';
 
 const PAGE_ROUTES = {
   shop: '/shop.html',
@@ -35,6 +37,16 @@ const PRODUCT_ROUTES = {
   'lum-015': '/honey-noir-highlight-straight-wig.html',
   'lum-016': '/burgundy-bob-closure-wig.html'
 };
+
+const MARKETING_CHANNELS = [
+  { platform: 'Pinterest profile', source: 'pinterest', medium: 'organic_social', campaign: 'profile' },
+  { platform: 'Instagram bio', source: 'instagram', medium: 'organic_social', campaign: 'profile' },
+  { platform: 'TikTok bio', source: 'tiktok', medium: 'organic_social', campaign: 'profile' },
+  { platform: 'YouTube channel', source: 'youtube', medium: 'organic_video', campaign: 'channel' },
+  { platform: 'Facebook page', source: 'facebook', medium: 'organic_social', campaign: 'profile' },
+  { platform: 'Reddit answers', source: 'reddit', medium: 'community', campaign: 'helpful_answers' },
+  { platform: 'Quora answers', source: 'quora', medium: 'community', campaign: 'helpful_answers' }
+];
 
 const PAGE_META = {
   shop: {
@@ -100,6 +112,10 @@ function escapeXml(value) {
   return escapeHtml(value);
 }
 
+function escapeCsv(value) {
+  return `"${String(value ?? '').replaceAll('"', '""')}"`;
+}
+
 function absoluteUrl(path) {
   return new URL(path, `${SITE_URL}/`).href;
 }
@@ -147,6 +163,24 @@ function variantTitle(product, variant) {
 function variantLink(route, variant) {
   const url = new URL(route, `${SITE_URL}/`);
   url.searchParams.set('variant', variant.sku);
+  return url.href;
+}
+
+function trackedUrl(path, { source, medium, campaign, content }) {
+  const url = new URL(path, `${SITE_URL}/`);
+  url.searchParams.set('utm_source', source);
+  url.searchParams.set('utm_medium', medium);
+  url.searchParams.set('utm_campaign', campaign);
+  if (content) url.searchParams.set('utm_content', content);
+  return url.href;
+}
+
+function trackedVariantLink(route, variant, tracking) {
+  const url = new URL(variantLink(route, variant));
+  url.searchParams.set('utm_source', tracking.source);
+  url.searchParams.set('utm_medium', tracking.medium);
+  url.searchParams.set('utm_campaign', tracking.campaign);
+  url.searchParams.set('utm_content', variant.sku);
   return url.href;
 }
 
@@ -362,6 +396,117 @@ function buildSitemap(products) {
   );
 }
 
+function buildPinterestCatalog(products) {
+  const headers = [
+    'id',
+    'title',
+    'description',
+    'link',
+    'image_link',
+    'additional_image_link',
+    'price',
+    'availability',
+    'condition',
+    'brand',
+    'google_product_category',
+    'product_type',
+    'item_group_id',
+    'color',
+    'size',
+    'material'
+  ];
+  const rows = products.flatMap(product => {
+    const route = PRODUCT_ROUTES[product.id];
+    const images = (product.images || [product.image]).map(absoluteUrl);
+    const variants = product.variants?.length
+      ? product.variants
+      : [{ sku: product.id, color: '', length: '', price: product.price, inStock: true }];
+
+    return variants.map(variant => {
+      const dimensions = variantDimensions(variant);
+      return [
+        variant.sku,
+        variantTitle(product, variant),
+        product.description,
+        trackedVariantLink(route, variant, {
+          source: 'pinterest',
+          medium: 'organic_shopping',
+          campaign: 'product_catalog'
+        }),
+        images[0],
+        images.slice(1, 11).join(','),
+        `${Number(variant.price).toFixed(2)} USD`,
+        variant.inStock ? 'in stock' : 'out of stock',
+        'new',
+        BRAND,
+        GOOGLE_PRODUCT_CATEGORY,
+        'Hair Extensions & Wigs > Wigs',
+        variants.length > 1 ? product.id : '',
+        merchantColor(dimensions.color),
+        dimensions.length,
+        'Human Hair'
+      ].map(escapeCsv).join(',');
+    });
+  });
+
+  fs.writeFileSync(
+    'pinterest-catalog.csv',
+    `${headers.map(escapeCsv).join(',')}\n${rows.join('\n')}\n`,
+    'utf8'
+  );
+}
+
+function buildMarketingLinks(products) {
+  const destinations = [
+    { name: 'Home', path: '/', content: 'home' },
+    { name: 'Shop', path: PAGE_ROUTES.shop, content: 'shop' },
+    { name: 'Wig guide', path: PAGE_ROUTES.guide, content: 'wig_guide' },
+    ...products.map(product => ({
+      name: product.name,
+      path: PRODUCT_ROUTES[product.id],
+      content: product.id
+    }))
+  ];
+  const headers = [
+    'platform',
+    'destination',
+    'url',
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_content'
+  ];
+  const rows = MARKETING_CHANNELS.flatMap(channel =>
+    destinations.map(destination => [
+      channel.platform,
+      destination.name,
+      trackedUrl(destination.path, {
+        source: channel.source,
+        medium: channel.medium,
+        campaign: channel.campaign,
+        content: destination.content
+      }),
+      channel.source,
+      channel.medium,
+      channel.campaign,
+      destination.content
+    ].map(escapeCsv).join(','))
+  );
+
+  fs.writeFileSync(
+    'marketing-utm-links.csv',
+    `${headers.map(escapeCsv).join(',')}\n${rows.join('\n')}\n`,
+    'utf8'
+  );
+}
+
+function buildIndexNowUrls() {
+  const sitemap = fs.readFileSync('sitemap.xml', 'utf8');
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+  fs.writeFileSync('indexnow-urls.txt', `${urls.join('\n')}\n`, 'utf8');
+  fs.writeFileSync(`${INDEXNOW_KEY}.txt`, `${INDEXNOW_KEY}\n`, 'utf8');
+}
+
 function buildMerchantFeed(products) {
   const items = products.flatMap(product => {
     const route = PRODUCT_ROUTES[product.id];
@@ -397,7 +542,11 @@ function buildMerchantFeed(products) {
         <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
         <g:content>${escapeXml(product.description)}</g:content>
       </g:structured_description>
-      <link>${escapeXml(variantLink(route, variant))}</link>
+      <link>${escapeXml(trackedVariantLink(route, variant, {
+        source: 'google',
+        medium: 'organic_shopping',
+        campaign: 'free_listings'
+      }))}</link>
       <g:canonical_link>${SITE_URL}${route}</g:canonical_link>
       <g:image_link>${escapeXml(image)}</g:image_link>
       ${additionalImages.map(src => `<g:additional_image_link>${escapeXml(src)}</g:additional_image_link>`).join('\n      ')}
@@ -442,5 +591,11 @@ const products = loadProducts();
 buildPages(products);
 buildSitemap(products);
 buildMerchantFeed(products);
+buildPinterestCatalog(products);
+buildMarketingLinks(products);
+buildIndexNowUrls();
 
-console.log(`Generated ${Object.keys(PAGE_ROUTES).length} information pages, ${products.length} product pages, sitemap.xml, and google-merchant-feed.xml.`);
+console.log(
+  `Generated ${Object.keys(PAGE_ROUTES).length} information pages, ${products.length} product pages, ` +
+  'Google/Pinterest feeds, marketing UTM links, sitemap.xml, and IndexNow URL list.'
+);
