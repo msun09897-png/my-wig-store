@@ -39,10 +39,10 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: 'Natural Black', length: '16inch/40cm', price: 309,  inStock: true },
-      { color: 'Natural Black', length: '20inch/50cm', price: 379,  inStock: true },
-      { color: 'Natural Black', length: '24inch/60cm', price: 499,  inStock: true },
-      { color: 'Natural Black', length: '28inch/70cm', price: 679,  inStock: true },
+      { sku: 'lum-011-16', color: 'Natural Black', length: '16inch/40cm', price: 309, inStock: true },
+      { sku: 'lum-011-20', color: 'Natural Black', length: '20inch/50cm', price: 379, inStock: true },
+      { sku: 'lum-011-24', color: 'Natural Black', length: '24inch/60cm', price: 499, inStock: true },
+      { sku: 'lum-011-28', color: 'Natural Black', length: '28inch/70cm', price: 679, inStock: true },
     ],
     featured: true,
   },
@@ -78,11 +78,11 @@ const PRODUCTS = [
     ],
     variants: [
       // ── 10 inch ──
-      { color: '#613 Platinum · 150% Density', length: '10inch/25cm', price: 229, inStock: true },
-      { color: '#613 Platinum · 180% Density', length: '10inch/25cm', price: 259, inStock: true },
+      { sku: 'lum-010-10-150', color: '#613 Platinum · 150% Density', length: '10inch/25cm', price: 229, inStock: true },
+      { sku: 'lum-010-10-180', color: '#613 Platinum · 180% Density', length: '10inch/25cm', price: 259, inStock: true },
       // ── 12 inch ──
-      { color: '#613 Platinum · 150% Density', length: '12inch/30cm', price: 259, inStock: true },
-      { color: '#613 Platinum · 180% Density', length: '12inch/30cm', price: 289, inStock: true },
+      { sku: 'lum-010-12-150', color: '#613 Platinum · 150% Density', length: '12inch/30cm', price: 259, inStock: true },
+      { sku: 'lum-010-12-180', color: '#613 Platinum · 180% Density', length: '12inch/30cm', price: 289, inStock: true },
     ],
     featured: true,
   },
@@ -118,14 +118,14 @@ const PRODUCTS = [
     ],
     variants: [
       // ── 16 inch · 150% Density ──
-      { color: 'Natural Black · 150% Density', length: '16inch/40cm', price: 289, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '16inch/40cm', price: 319, inStock: true },
+      { sku: 'lum-009-16-150', color: 'Natural Black · 150% Density', length: '16inch/40cm', price: 289, inStock: true },
+      { sku: 'lum-009-16-180', color: 'Natural Black · 180% Density', length: '16inch/40cm', price: 319, inStock: true },
       // ── 20 inch ──
-      { color: 'Natural Black · 150% Density', length: '20inch/50cm', price: 349, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '20inch/50cm', price: 379, inStock: true },
+      { sku: 'lum-009-20-150', color: 'Natural Black · 150% Density', length: '20inch/50cm', price: 349, inStock: true },
+      { sku: 'lum-009-20-180', color: 'Natural Black · 180% Density', length: '20inch/50cm', price: 379, inStock: true },
       // ── 24 inch ──
-      { color: 'Natural Black · 150% Density', length: '24inch/60cm', price: 449, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '24inch/60cm', price: 479, inStock: true },
+      { sku: 'lum-009-24-150', color: 'Natural Black · 150% Density', length: '24inch/60cm', price: 449, inStock: true },
+      { sku: 'lum-009-24-180', color: 'Natural Black · 180% Density', length: '24inch/60cm', price: 479, inStock: true },
     ],
     featured: true,
   },
@@ -160,7 +160,7 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: 'Natural Black', length: 'Short Bob', price: 159, inStock: true },
+      { sku: 'lum-012-short', color: 'Natural Black', length: 'Short Bob', price: 159, inStock: true },
     ],
     featured: true,
   },
@@ -200,7 +200,7 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: 'Natural Black', length: '16inch/40cm', price: 289, inStock: true },
+      { sku: 'lum-013-16-200', color: 'Natural Black', length: '16inch/40cm', price: 289, inStock: true },
     ],
     featured: true,
   },
@@ -240,9 +240,9 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: '#613 Blonde Body Wave', length: '10inch/25cm', price: 229, inStock: true },
-      { color: '#613 Blonde Body Wave', length: '12inch/30cm', price: 239, inStock: true },
-      { color: '#613 Blonde Body Wave', length: '14inch/35cm', price: 259, inStock: true },
+      { sku: 'lum-014-10', color: '#613 Blonde Body Wave', length: '10inch/25cm', price: 229, inStock: true },
+      { sku: 'lum-014-12', color: '#613 Blonde Body Wave', length: '12inch/30cm', price: 239, inStock: true },
+      { sku: 'lum-014-14', color: '#613 Blonde Body Wave', length: '14inch/35cm', price: 259, inStock: true },
     ],
     featured: true,
   },
@@ -280,8 +280,8 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: '1B/27 Honey Noir', length: '18inch/45cm', price: 349, inStock: true },
-      { color: '1B/27 Honey Noir', length: '20inch/50cm', price: 449, inStock: true },
+      { sku: 'lum-015-18', color: '1B/27 Honey Noir', length: '18inch/45cm', price: 349, inStock: true },
+      { sku: 'lum-015-20', color: '1B/27 Honey Noir', length: '20inch/50cm', price: 449, inStock: true },
     ],
     featured: true,
   },
@@ -317,7 +317,7 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: 'Burgundy Wine', length: '12inch/30cm', price: 259, inStock: true },
+      { sku: 'lum-016-12', color: 'Burgundy Wine', length: '12inch/30cm', price: 259, inStock: true },
     ],
     featured: true,
   }

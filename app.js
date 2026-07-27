@@ -41,6 +41,11 @@ function initPayPalCart(attempt = 0) {
       window.cartPaypal.Cart({ id: 'pp-view-cart' });
       paypalCartReady = true;
     }
+    const cartButton = document.querySelector('paypal-cart-button[data-id="pp-view-cart"]');
+    if (cartButton && !paypalCartAnalyticsReady) {
+      cartButton.addEventListener('click', trackPayPalCartOpen, { capture: true });
+      paypalCartAnalyticsReady = true;
+    }
     return;
   }
   if (attempt < 40) window.setTimeout(() => initPayPalCart(attempt + 1), 250);
@@ -58,6 +63,17 @@ function mountPayPalProduct(productId, attempt = 0) {
         <paypal-add-to-cart-button data-id="${button.id}"></paypal-add-to-cart-button>
       </div>
     `).join('');
+    mount.querySelectorAll('paypal-add-to-cart-button').forEach((element, index) => {
+      element.addEventListener(
+        'click',
+        event => {
+          if (isPayPalAddToCartAction(event)) {
+            trackPayPalAddToCart(productId, buttons[index]);
+          }
+        },
+        { capture: true }
+      );
+    });
   }
 
   if (window.cartPaypal?.AddToCart) {
@@ -72,6 +88,8 @@ function mountPayPalProduct(productId, attempt = 0) {
 }
 
 let currentProduct = null;
+let lastCartAnalyticsItem = null;
+let paypalCartAnalyticsReady = false;
 
 // ============================================
 // 工具函数
@@ -152,8 +170,9 @@ function routeUrl(name, productId) {
   return PAGE_ROUTES[name] || `/?page=${encodeURIComponent(name)}`;
 }
 
-function setMeta(name, productId) {
+function setMeta(name, productId, variantSku) {
   const product = name === 'product' ? PRODUCTS.find(p => p.id === productId) : null;
+  const selectedVariant = product?.variants?.find(variant => variant.sku === variantSku);
   const meta = product
     ? {
         title: `${product.name} | Human Hair Wig | ARELVIENNE`,
@@ -194,11 +213,22 @@ function setMeta(name, productId) {
           name: product.name,
           description: product.description,
           image: (product.images || [product.image]).map(src => new URL(src, CONFIG.siteUrl + '/').href),
-          sku: product.id,
+          sku: selectedVariant?.sku || product.id,
           brand: { '@type': 'Brand', name: CONFIG.brand },
           material: 'Human hair',
           category: 'Wigs',
-          offers: availableVariants.length > 1
+          offers: selectedVariant
+            ? {
+                '@type': 'Offer',
+                url: `${canonical}?variant=${encodeURIComponent(selectedVariant.sku)}`,
+                priceCurrency: 'USD',
+                price: String(selectedVariant.price),
+                availability: selectedVariant.inStock
+                  ? 'https://schema.org/InStock'
+                  : 'https://schema.org/OutOfStock',
+                itemCondition: 'https://schema.org/NewCondition'
+              }
+            : availableVariants.length > 1
             ? {
                 '@type': 'AggregateOffer',
                 url: canonical,
@@ -228,7 +258,7 @@ function setMeta(name, productId) {
             image,
             mainEntityOfPage: canonical,
             datePublished: '2026-07-25',
-            dateModified: '2026-07-25',
+            dateModified: '2026-07-27',
             author: {
               '@type': 'Organization',
               name: CONFIG.brand,
@@ -265,9 +295,117 @@ function setMeta(name, productId) {
   }
 }
 
+function getDefaultVariant(product) {
+  return product?.variants?.find(variant => variant.inStock) || product?.variants?.[0] || null;
+}
+
+function getSelectedVariant(product = currentProduct) {
+  if (!product?.variants) return null;
+  return product.variants.find(variant =>
+    variant.color === product.selectedColor && variant.length === product.selectedLength
+  ) || product.variants.find(variant => variant.sku === product.selectedSku) || getDefaultVariant(product);
+}
+
+function ga4Item(product, variant, options = {}) {
+  const price = Number(variant?.price ?? product?.price);
+  const variantLabel = options.variantLabel ||
+    [variant?.color, variant?.length].filter(Boolean).join(' · ') ||
+    undefined;
+  return {
+    item_id: options.itemId || variant?.sku || product.id,
+    item_name: product.name,
+    item_brand: CONFIG.brand,
+    item_category: 'Human Hair Wigs',
+    ...(variantLabel ? { item_variant: variantLabel } : {}),
+    ...(options.listId ? { item_list_id: options.listId } : {}),
+    ...(options.listName ? { item_list_name: options.listName } : {}),
+    ...(Number.isFinite(options.index) ? { index: options.index } : {}),
+    price,
+    quantity: options.quantity || 1
+  };
+}
+
+function ecommerceParams(items, extra = {}) {
+  const value = items.reduce((sum, item) =>
+    sum + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
+  return {
+    currency: 'USD',
+    value: Number(value.toFixed(2)),
+    items,
+    ...extra
+  };
+}
+
+function isPayPalAddToCartAction(event) {
+  const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+  return path.some(node => {
+    if (!(node instanceof HTMLElement)) return false;
+    const isButton = node.matches('button, input[type="submit"], [role="button"]');
+    if (!isButton) return false;
+    const label = [
+      node.getAttribute('aria-label'),
+      node.getAttribute('title'),
+      node.getAttribute('value'),
+      node.textContent
+    ].filter(Boolean).join(' ');
+    return /(add.*cart|添加.*购物车|ajouter.*panier|añadir.*carrito|adicionar.*carrinho|warenkorb|カートに追加|장바구니)/i.test(label);
+  });
+}
+
 function trackEvent(name, params = {}) {
-  if (!analyticsStarted || typeof window.gtag !== 'function') return;
-  window.gtag('event', name, params);
+  if (analyticsStarted && typeof window.gtag === 'function') {
+    window.gtag('event', name, params);
+    return;
+  }
+  if (getAnalyticsConsent() !== 'denied') {
+    pendingAnalyticsEvents.push({ name, params });
+  }
+}
+
+function trackProductList(products, listId, listName) {
+  const items = products.map((product, index) =>
+    ga4Item(product, getDefaultVariant(product), { index, listId, listName })
+  );
+  if (items.length) trackEvent('view_item_list', { item_list_id: listId, item_list_name: listName, items });
+}
+
+function selectProduct(productId, listId, listName) {
+  const product = PRODUCTS.find(item => item.id === productId);
+  if (product) {
+    const item = ga4Item(product, getDefaultVariant(product), { listId, listName });
+    trackEvent('select_item', { item_list_id: listId, item_list_name: listName, items: [item] });
+  }
+  showPage('product', productId);
+}
+
+function trackPayPalAddToCart(productId, paypalButton) {
+  const product = PRODUCTS.find(item => item.id === productId);
+  if (!product) return;
+  const exactVariant = currentProduct?.selectionSource === 'merchant_variant'
+    ? getSelectedVariant(currentProduct)
+    : null;
+  const item = ga4Item(product, exactVariant, {
+    itemId: exactVariant?.sku || product.id,
+    variantLabel: exactVariant
+      ? [exactVariant.color, exactVariant.length].join(' · ')
+      : paypalButton.label
+  });
+  lastCartAnalyticsItem = item;
+  trackEvent('add_to_cart', ecommerceParams([item], {
+    checkout_provider: 'PayPal',
+    selection_source: exactVariant ? 'merchant_variant_link' : 'paypal_hosted_button'
+  }));
+}
+
+function trackPayPalCartOpen() {
+  const fallbackProduct = currentProduct?.id ? PRODUCTS.find(item => item.id === currentProduct.id) : null;
+  const item = lastCartAnalyticsItem ||
+    (fallbackProduct ? ga4Item(fallbackProduct, getSelectedVariant(currentProduct)) : null);
+  trackEvent('paypal_cart_open', { checkout_provider: 'PayPal' });
+  if (!item) return;
+  const params = ecommerceParams([item], { checkout_provider: 'PayPal' });
+  trackEvent('view_cart', params);
+  trackEvent('begin_checkout', { ...params, checkout_step: 'paypal_cart_opened' });
 }
 
 function showPage(name, productId, options = {}) {
@@ -281,11 +419,18 @@ function showPage(name, productId, options = {}) {
   if (name !== 'product') ProductGallery.destroy();
 
   if (name === 'product' && productId) {
-    renderProductDetail(productId);
-    trackEvent('view_item', { item_id: productId, item_name: currentProduct?.name });
+    renderProductDetail(productId, options.variantSku);
+    const variant = getSelectedVariant(currentProduct);
+    trackEvent('view_item', ecommerceParams([
+      ga4Item(currentProduct, variant)
+    ]));
+  } else if (name === 'shop') {
+    trackProductList(PRODUCTS.filter(matchesFilters), 'shop_all', 'Shop All');
+  } else if (name === 'home') {
+    trackProductList(PRODUCTS.filter(product => product.featured), 'featured_styles', 'Featured Styles');
   }
 
-  setMeta(name, productId);
+  setMeta(name, productId, options.variantSku);
   closeMobileNav();
   if (options.updateHistory !== false) {
     history.pushState({ name, productId }, '', routeUrl(name, productId));
@@ -302,7 +447,10 @@ function handleRoute() {
   const productId = productIdFromPath || params.get('product');
   const page = pageFromPath || params.get('page');
   if (productId && PRODUCTS.some(p => p.id === productId)) {
-    showPage('product', productId, { updateHistory: false });
+    showPage('product', productId, {
+      updateHistory: false,
+      variantSku: params.get('variant')
+    });
   } else if (page && PAGE_META[page]) {
     showPage(page, null, { updateHistory: false });
   } else {
@@ -328,7 +476,7 @@ function closeMobileNav() {
 // ============================================
 // 渲染商品卡片
 // ============================================
-function productCardHTML(p) {
+function productCardHTML(p, listId, listName) {
   const tag = p.tag ? `<span class="product-tag">${p.tag}</span>` : '';
   const imgs = p.images || (p.image ? [p.image] : []);
   const secondaryImg = imgs.length > 1
@@ -337,7 +485,7 @@ function productCardHTML(p) {
   return `
     <article class="product-card">
       <a class="product-card-link" href="${routeUrl('product', p.id)}"
-         onclick="showPage('product', '${p.id}'); return false;"
+         onclick="selectProduct('${p.id}', '${listId}', '${listName}'); return false;"
          aria-label="View ${p.name}">
       <div class="product-image">
         ${tag}
@@ -356,7 +504,9 @@ function productCardHTML(p) {
 
 function renderProducts() {
   const featured = PRODUCTS.filter(p => p.featured);
-  $('featuredGrid').innerHTML = featured.map(productCardHTML).join('');
+  $('featuredGrid').innerHTML = featured
+    .map(product => productCardHTML(product, 'featured_styles', 'Featured Styles'))
+    .join('');
   applyFilters();
 }
 
@@ -383,7 +533,9 @@ function applyFilters() {
   const grid = $('shopGrid');
   const noRes = $('shopNoResults');
   if (filtered.length) {
-    grid.innerHTML = filtered.map(productCardHTML).join('');
+    grid.innerHTML = filtered
+      .map(product => productCardHTML(product, 'shop_all', 'Shop All'))
+      .join('');
     if (noRes) noRes.style.display = 'none';
   } else {
     grid.innerHTML = '';
@@ -445,15 +597,22 @@ let carouselIndex = 0;
 let carouselImages = [];
 let touchStartX = 0;
 
-function renderProductDetail(id) {
+function renderProductDetail(id, variantSku) {
   ProductGallery.destroy();
   const p = PRODUCTS.find(x => x.id === id);
   if (!p) return;
 
   // ── Init currentProduct ──────────────────────────────────────────
   if (p.variants) {
-    const def = p.variants.find(v => v.inStock) || p.variants[0];
-    currentProduct = { ...p, selectedColor: def.color, selectedLength: def.length };
+    const requested = p.variants.find(variant => variant.sku === variantSku);
+    const def = requested || p.variants.find(v => v.inStock) || p.variants[0];
+    currentProduct = {
+      ...p,
+      selectedSku: def.sku,
+      selectedColor: def.color,
+      selectedLength: def.length,
+      selectionSource: requested ? 'merchant_variant' : 'default'
+    };
   } else {
     currentProduct = {
       ...p,
@@ -465,8 +624,7 @@ function renderProductDetail(id) {
   // ── Initial price ───────────────────────────────────────────────
   let initPrice;
   if (p.variants) {
-    const def  = p.variants.find(v => v.inStock) || p.variants[0];
-    initPrice  = def.price;
+    initPrice = getSelectedVariant(currentProduct).price;
   } else {
     initPrice    = p.price;
   }
@@ -478,13 +636,18 @@ function renderProductDetail(id) {
   const secondaryImages = productImages.slice(1).map((src, index) =>
     `<div class="stacked-image"><img src="${src}" alt="${p.name} view ${index + 2}" loading="lazy"></div>`
   ).join('');
+  const selectedVariant = getSelectedVariant(currentProduct);
+  const merchantVariantNote = currentProduct.selectionSource === 'merchant_variant'
+    ? `<p class="merchant-variant-note">Selected listing option: ${selectedVariant.color} · ${selectedVariant.length}. Confirm the same option in PayPal before adding to cart.</p>`
+    : '';
 
   $('productDetail').innerHTML = `
     <div class="product-detail-images product-detail-images-primary">${primaryImage}</div>
     <div class="detail-info">
       <p class="breadcrumb"><a href="${routeUrl('shop')}" onclick="showPage('shop'); return false;">Shop</a> · ${p.subtitle}</p>
       <h1>${p.name}</h1>
-      <p class="detail-price" id="detailPrice">From ${fmt(initPrice)}</p>
+      <p class="detail-price" id="detailPrice">${currentProduct.selectionSource === 'merchant_variant' ? '' : 'From '}${fmt(initPrice)}</p>
+      ${merchantVariantNote}
       <p class="detail-desc">${p.description}</p>
       <ul class="detail-features">
         ${p.features.map(f => `<li>${f}</li>`).join('')}
@@ -555,6 +718,10 @@ function updateVariantUI() {
   const v        = findVariant(currentProduct.selectedColor, currentProduct.selectedLength);
   const price    = v ? v.price : currentProduct.price;
   const inStock  = v ? v.inStock : true;
+  if (v) {
+    currentProduct.selectedSku = v.sku;
+    currentProduct.selectionSource = 'site_option';
+  }
 
   // Price display
   const priceEl = $('detailPrice');
@@ -607,6 +774,7 @@ function selectOption(type, value, btn) {
 // ============================================
 const ANALYTICS_CONSENT_KEY = 'arelvienne_analytics_consent';
 let analyticsStarted = false;
+let pendingAnalyticsEvents = [];
 
 function getAnalyticsConsent() {
   try {
@@ -641,6 +809,10 @@ function startAnalytics() {
     allow_google_signals: false,
     allow_ad_personalization_signals: false
   });
+  pendingAnalyticsEvents.forEach(({ name, params }) => {
+    window.gtag('event', name, params);
+  });
+  pendingAnalyticsEvents = [];
 
   const script = document.createElement('script');
   script.async = true;
@@ -676,6 +848,7 @@ function showAnalyticsBanner() {
       const choice = button.dataset.analyticsChoice;
       saveAnalyticsConsent(choice);
       if (choice === 'denied' && analyticsStarted) {
+        pendingAnalyticsEvents = [];
         window.gtag?.('consent', 'update', {
           analytics_storage: 'denied',
           ad_storage: 'denied',
@@ -685,6 +858,7 @@ function showAnalyticsBanner() {
         window.location.reload();
         return;
       }
+      if (choice === 'denied') pendingAnalyticsEvents = [];
       closeAnalyticsBanner();
       if (choice === 'granted') startAnalytics();
     });

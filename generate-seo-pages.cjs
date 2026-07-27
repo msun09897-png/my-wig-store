@@ -12,7 +12,7 @@ const vm = require('vm');
 const SITE_URL = 'https://arelvienne.com';
 const BRAND = 'ARELVIENNE';
 const SUPPORT_EMAIL = 'support@arelvienne.com';
-const LAST_MODIFIED = '2026-07-25';
+const LAST_MODIFIED = '2026-07-27';
 
 const PAGE_ROUTES = {
   shop: '/shop.html',
@@ -116,6 +116,38 @@ function priceRange(product) {
     high: Math.max(...prices),
     count: Math.max(1, prices.length)
   };
+}
+
+function variantDimensions(variant) {
+  const densityMatch = String(variant.color).match(/(\d+)%\s*Density/i);
+  const color = String(variant.color)
+    .replace(/\s*·\s*\d+%\s*Density/i, '')
+    .trim();
+  return {
+    color,
+    length: String(variant.length),
+    ...(densityMatch ? { density: `${densityMatch[1]}%` } : {})
+  };
+}
+
+function merchantColor(color) {
+  return String(color)
+    .replace(/^#613\s+Platinum$/i, 'Platinum Blonde')
+    .replace(/^#613\s+Blonde Body Wave$/i, 'Blonde')
+    .replace(/^1B\/27\s+Honey Noir$/i, 'Natural Black/Honey Blonde');
+}
+
+function variantTitle(product, variant) {
+  const dimensions = variantDimensions(variant);
+  return [product.name, dimensions.color, dimensions.length, dimensions.density]
+    .filter(Boolean)
+    .join(' - ');
+}
+
+function variantLink(route, variant) {
+  const url = new URL(route, `${SITE_URL}/`);
+  url.searchParams.set('variant', variant.sku);
+  return url.href;
 }
 
 function safeJson(data) {
@@ -331,15 +363,32 @@ function buildSitemap(products) {
 }
 
 function buildMerchantFeed(products) {
-  const items = products.map(product => {
+  const items = products.flatMap(product => {
     const route = PRODUCT_ROUTES[product.id];
-    const range = priceRange(product);
     const image = absoluteUrl((product.images || [product.image])[0]);
+    const additionalImages = (product.images || []).slice(1, 11).map(absoluteUrl);
     const shippingPrice = '0.00';
-    const title = `${product.name} — ${product.subtitle}`;
-    const availability = availableVariants(product).length === 0 && product.variants ? 'out_of_stock' : 'in_stock';
-    return `    <item>
-      <g:id>${escapeXml(product.id)}</g:id>
+    const variants = product.variants?.length
+      ? product.variants
+      : [{ sku: product.id, color: '', length: '', price: product.price, inStock: true }];
+
+    return variants.map(variant => {
+      const dimensions = variantDimensions(variant);
+      const title = variantTitle(product, variant);
+      const availability = variant.inStock ? 'in_stock' : 'out_of_stock';
+      const groupFields = variants.length > 1
+        ? `
+      <g:item_group_id>${escapeXml(product.id)}</g:item_group_id>
+      <g:item_group_title>${escapeXml(`${product.name} Human Hair Wig`)}</g:item_group_title>
+      ${Object.entries(dimensions).map(([name, value]) => `<g:variant_option>
+        <g:name>${escapeXml(name)}</g:name>
+        <g:value>${escapeXml(value)}</g:value>
+      </g:variant_option>`).join('\n      ')}`
+        : '';
+
+      return `    <item>
+      <g:id>${escapeXml(variant.sku)}</g:id>${groupFields}
+      <g:title>${escapeXml(title)}</g:title>
       <g:structured_title>
         <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
         <g:content>${escapeXml(title)}</g:content>
@@ -348,14 +397,19 @@ function buildMerchantFeed(products) {
         <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
         <g:content>${escapeXml(product.description)}</g:content>
       </g:structured_description>
-      <link>${SITE_URL}${route}</link>
+      <link>${escapeXml(variantLink(route, variant))}</link>
+      <g:canonical_link>${SITE_URL}${route}</g:canonical_link>
       <g:image_link>${escapeXml(image)}</g:image_link>
+      ${additionalImages.map(src => `<g:additional_image_link>${escapeXml(src)}</g:additional_image_link>`).join('\n      ')}
       <g:availability>${availability}</g:availability>
-      <g:price>${range.low.toFixed(2)} USD</g:price>
+      <g:price>${Number(variant.price).toFixed(2)} USD</g:price>
       <g:condition>new</g:condition>
       <g:brand>${BRAND}</g:brand>
       <g:identifier_exists>no</g:identifier_exists>
       <g:adult>no</g:adult>
+      <g:color>${escapeXml(merchantColor(dimensions.color))}</g:color>
+      <g:size>${escapeXml(dimensions.length)}</g:size>
+      <g:material>Human Hair</g:material>
       <g:product_type>Hair Extensions &amp; Wigs &gt; Wigs</g:product_type>
       <g:shipping>
         <g:country>US</g:country>
@@ -367,6 +421,7 @@ function buildMerchantFeed(products) {
         <g:max_transit_time>15</g:max_transit_time>
       </g:shipping>
     </item>`;
+    });
   }).join('\n\n');
 
   const feed = `<?xml version="1.0" encoding="UTF-8"?>
