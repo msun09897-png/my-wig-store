@@ -40,13 +40,9 @@ const PRODUCTS = [
     ],
     variants: [
       { color: 'Natural Black', length: '16inch/40cm', price: 309,  inStock: true },
-      { color: 'Natural Black', length: '18inch/45cm', price: 339,  inStock: true },
       { color: 'Natural Black', length: '20inch/50cm', price: 379,  inStock: true },
-      { color: 'Natural Black', length: '22inch/55cm', price: 429,  inStock: true },
       { color: 'Natural Black', length: '24inch/60cm', price: 499,  inStock: true },
-      { color: 'Natural Black', length: '26inch/65cm', price: 579,  inStock: true },
       { color: 'Natural Black', length: '28inch/70cm', price: 679,  inStock: true },
-      { color: 'Natural Black', length: '30inch/75cm', price: 769, inStock: true },
     ],
     featured: true,
   },
@@ -54,7 +50,7 @@ const PRODUCTS = [
     id: "lum-010",
     name: "The Platinum Bob",
     subtitle: "13x4 HD Lace Bob | Human Hair · #613",
-    price: 199,
+    price: 229,
     images: [
       'images/lum-010/main_01.webp',
       'images/lum-010/main_02.webp',
@@ -71,7 +67,7 @@ const PRODUCTS = [
       'images/lum-010/lifestyle_02.webp',
       'images/lum-010/lifestyle_03.webp',
     ],
-    description: "A straight #613 blonde human-hair bob with transparent 13x4 lace. Choose from four lengths and two density options for a shorter, polished silhouette.",
+    description: "A straight #613 blonde human-hair bob with transparent 13x4 lace. Choose from 10- and 12-inch lengths with two density options for a shorter, polished silhouette.",
     features: [
       "13x4 transparent lace for front hairline placement",
       "Human hair in a #613 blonde finish",
@@ -81,18 +77,12 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      // ── 8 inch · 齐下巴 Bob ──
-      { color: '#613 Platinum · 150% Density', length: '8inch/20cm',  price: 199, inStock: true },
-      { color: '#613 Platinum · 180% Density', length: '8inch/20cm',  price: 229, inStock: true },
       // ── 10 inch ──
       { color: '#613 Platinum · 150% Density', length: '10inch/25cm', price: 229, inStock: true },
       { color: '#613 Platinum · 180% Density', length: '10inch/25cm', price: 259, inStock: true },
       // ── 12 inch ──
       { color: '#613 Platinum · 150% Density', length: '12inch/30cm', price: 259, inStock: true },
       { color: '#613 Platinum · 180% Density', length: '12inch/30cm', price: 289, inStock: true },
-      // ── 14 inch · 齐肩 Bob ──
-      { color: '#613 Platinum · 150% Density', length: '14inch/35cm', price: 289, inStock: true },
-      { color: '#613 Platinum · 180% Density', length: '14inch/35cm', price: 319, inStock: true },
     ],
     featured: true,
   },
@@ -117,7 +107,7 @@ const PRODUCTS = [
       'images/lum-009/lifestyle_02.webp',
       'images/lum-009/lifestyle_03.webp',
     ],
-    description: "A straight human-hair wig with transparent 13x6 lace and flexible parting space. Available in two density options and lengths from 16 to 30 inches.",
+    description: "A straight human-hair wig with transparent 13x6 lace and flexible parting space. Available in 150% and 180% density at 16, 20, and 24 inches.",
     features: [
       "13x6 transparent lace with flexible parting space",
       "Human hair with a straight finish",
@@ -130,27 +120,12 @@ const PRODUCTS = [
       // ── 16 inch · 150% Density ──
       { color: 'Natural Black · 150% Density', length: '16inch/40cm', price: 289, inStock: true },
       { color: 'Natural Black · 180% Density', length: '16inch/40cm', price: 319, inStock: true },
-      // ── 18 inch ──
-      { color: 'Natural Black · 150% Density', length: '18inch/45cm', price: 319, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '18inch/45cm', price: 349, inStock: true },
       // ── 20 inch ──
       { color: 'Natural Black · 150% Density', length: '20inch/50cm', price: 349, inStock: true },
       { color: 'Natural Black · 180% Density', length: '20inch/50cm', price: 379, inStock: true },
-      // ── 22 inch ──
-      { color: 'Natural Black · 150% Density', length: '22inch/55cm', price: 389, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '22inch/55cm', price: 419, inStock: true },
       // ── 24 inch ──
       { color: 'Natural Black · 150% Density', length: '24inch/60cm', price: 449, inStock: true },
       { color: 'Natural Black · 180% Density', length: '24inch/60cm', price: 479, inStock: true },
-      // ── 26 inch ──
-      { color: 'Natural Black · 150% Density', length: '26inch/65cm', price: 539, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '26inch/65cm', price: 569, inStock: true },
-      // ── 28 inch ──
-      { color: 'Natural Black · 150% Density', length: '28inch/70cm', price: 649, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '28inch/70cm', price: 679, inStock: true },
-      // ── 30 inch ──
-      { color: 'Natural Black · 150% Density', length: '30inch/75cm', price: 729, inStock: true },
-      { color: 'Natural Black · 180% Density', length: '30inch/75cm', price: 759, inStock: true },
     ],
     featured: true,
   },
@@ -233,7 +208,7 @@ const PRODUCTS = [
     id: "lum-014",
     name: "The Champagne Body Wave",
     subtitle: "13x4 Lace Front Wig | #613 Blonde Body Wave Human Hair",
-    price: 219,
+    price: 229,
     images: [
       'images/lum-014/01_front_hero_613_blonde_wig.webp',
       'images/lum-014/02_three_quarter_side_portrait.webp',
@@ -265,7 +240,6 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: '#613 Blonde Body Wave', length: '8inch/20cm', price: 219, inStock: true },
       { color: '#613 Blonde Body Wave', length: '10inch/25cm', price: 229, inStock: true },
       { color: '#613 Blonde Body Wave', length: '12inch/30cm', price: 239, inStock: true },
       { color: '#613 Blonde Body Wave', length: '14inch/35cm', price: 259, inStock: true },
@@ -308,8 +282,6 @@ const PRODUCTS = [
     variants: [
       { color: '1B/27 Honey Noir', length: '18inch/45cm', price: 349, inStock: true },
       { color: '1B/27 Honey Noir', length: '20inch/50cm', price: 449, inStock: true },
-      { color: '1B/27 Honey Noir', length: '22inch/55cm', price: 529, inStock: true },
-      { color: '1B/27 Honey Noir', length: '24inch/60cm', price: 589, inStock: true },
     ],
     featured: true,
   },
@@ -317,7 +289,7 @@ const PRODUCTS = [
     id: "lum-016",
     name: "The Burgundy Bob Closure",
     subtitle: "5x5 Lace Bob Wig | Burgundy Bone-Straight Human Hair",
-    price: 199,
+    price: 259,
     images: [
       'images/lum-016/a_high_resolution_studio_lit_fashion_beauty_port.webp',
       'images/lum-016/a_high_end_beauty_portrait_in_a_studio_a_close_up.webp',
@@ -345,11 +317,7 @@ const PRODUCTS = [
       "Adjustable cap with combs and elastic strap",
     ],
     variants: [
-      { color: 'Burgundy Wine', length: '8inch/20cm', price: 199, inStock: true },
-      { color: 'Burgundy Wine', length: '10inch/25cm', price: 239, inStock: true },
       { color: 'Burgundy Wine', length: '12inch/30cm', price: 259, inStock: true },
-      { color: 'Burgundy Wine', length: '14inch/35cm', price: 289, inStock: true },
-      { color: 'Burgundy Wine', length: '16inch/40cm', price: 319, inStock: true },
     ],
     featured: true,
   }
