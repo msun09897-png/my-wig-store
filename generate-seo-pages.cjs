@@ -12,7 +12,7 @@ const vm = require('vm');
 const SITE_URL = 'https://arelvienne.com';
 const BRAND = 'ARELVIENNE';
 const SUPPORT_EMAIL = 'support@arelvienne.com';
-const LAST_MODIFIED = '2026-07-27';
+const LAST_MODIFIED = '2026-07-30';
 const INDEXNOW_KEY = 'a13da8f942954c0499bbf1244f00ff19';
 const GOOGLE_PRODUCT_CATEGORY = '181';
 

@@ -12,6 +12,9 @@ const CONFIG = {
   // Google Analytics 4 web stream
   ga4MeasurementId: 'G-BLRPGQR6G3',
 
+  // Microsoft Clarity project. Loaded only after analytics consent.
+  clarityProjectId: 'xucr8jc07m',
+
   // PayPal 商业账户应用的公开 Client ID。不要在前端放 Secret。
   paypalClientId: '',
 };
@@ -774,6 +777,7 @@ function selectOption(type, value, btn) {
 // ============================================
 const ANALYTICS_CONSENT_KEY = 'arelvienne_analytics_consent';
 let analyticsStarted = false;
+let clarityStarted = false;
 let pendingAnalyticsEvents = [];
 
 function getAnalyticsConsent() {
@@ -792,32 +796,56 @@ function saveAnalyticsConsent(value) {
   }
 }
 
-function startAnalytics() {
-  if (!CONFIG.ga4MeasurementId || analyticsStarted) return;
-  analyticsStarted = true;
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function () { window.dataLayer.push(arguments); };
-  window.gtag('consent', 'default', {
-    analytics_storage: 'granted',
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied'
+function startClarity() {
+  if (!CONFIG.clarityProjectId || clarityStarted) return;
+  clarityStarted = true;
+
+  window.clarity = window.clarity || function () {
+    (window.clarity.q = window.clarity.q || []).push(arguments);
+  };
+  window.clarity('consentv2', {
+    ad_Storage: 'denied',
+    analytics_Storage: 'granted'
   });
-  window.gtag('js', new Date());
-  window.gtag('config', CONFIG.ga4MeasurementId, {
-    anonymize_ip: true,
-    allow_google_signals: false,
-    allow_ad_personalization_signals: false
-  });
-  pendingAnalyticsEvents.forEach(({ name, params }) => {
-    window.gtag('event', name, params);
-  });
-  pendingAnalyticsEvents = [];
 
   const script = document.createElement('script');
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(CONFIG.ga4MeasurementId)}`;
+  script.src = `https://www.clarity.ms/tag/${encodeURIComponent(CONFIG.clarityProjectId)}?ref=bwt`;
+  script.dataset.arelvienneAnalytics = 'clarity';
   document.head.appendChild(script);
+}
+
+function startAnalytics() {
+  if ((!CONFIG.ga4MeasurementId && !CONFIG.clarityProjectId) || analyticsStarted) return;
+  analyticsStarted = true;
+
+  if (CONFIG.ga4MeasurementId) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('consent', 'default', {
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied'
+    });
+    window.gtag('js', new Date());
+    window.gtag('config', CONFIG.ga4MeasurementId, {
+      anonymize_ip: true,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
+    pendingAnalyticsEvents.forEach(({ name, params }) => {
+      window.gtag('event', name, params);
+    });
+    pendingAnalyticsEvents = [];
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(CONFIG.ga4MeasurementId)}`;
+    document.head.appendChild(script);
+  }
+
+  startClarity();
 }
 
 function closeAnalyticsBanner() {
@@ -835,7 +863,7 @@ function showAnalyticsBanner() {
   banner.innerHTML = `
     <div class="analytics-consent-copy">
       <h2 id="analyticsConsentTitle">Your privacy choices</h2>
-      <p id="analyticsConsentText">We use Google Analytics 4 to understand visits and improve our store. Analytics stays off unless you allow it. Necessary storage for checkout and security may still be used. <a href="/privacy.html">Privacy Policy</a></p>
+      <p id="analyticsConsentText">We use Google Analytics 4 and Microsoft Clarity to understand visits, create heatmaps and session replays, and improve our store. Analytics stays off unless you allow it. Necessary storage for checkout and security may still be used. <a href="/privacy.html">Privacy Policy</a></p>
     </div>
     <div class="analytics-consent-actions">
       <button type="button" class="analytics-consent-secondary" data-analytics-choice="denied">Necessary only</button>
@@ -855,6 +883,11 @@ function showAnalyticsBanner() {
           ad_user_data: 'denied',
           ad_personalization: 'denied'
         });
+        window.clarity?.('consentv2', {
+          ad_Storage: 'denied',
+          analytics_Storage: 'denied'
+        });
+        window.clarity?.('consent', false);
         window.location.reload();
         return;
       }
@@ -867,7 +900,7 @@ function showAnalyticsBanner() {
 }
 
 function initAnalyticsConsent() {
-  if (!CONFIG.ga4MeasurementId) return;
+  if (!CONFIG.ga4MeasurementId && !CONFIG.clarityProjectId) return;
 
   const footer = document.querySelector('footer');
   if (footer && !$('analyticsSettings')) {

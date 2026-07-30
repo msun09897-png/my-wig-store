@@ -20,9 +20,10 @@ The validator currently expects 8 products and 22 sellable variants. It checks v
 SKUs, prices, availability, Merchant grouping, product JSON-LD, images, internal links,
 the sitemap, and the required GA4 ecommerce events.
 
-## GA4 ecommerce funnel
+## Consent-based analytics and ecommerce funnel
 
-Analytics remains disabled until the visitor allows it. After consent, the storefront
-records `view_item_list`, `select_item`, `view_item`, `add_to_cart`, `view_cart`, and
-`begin_checkout`. PayPal remains the source of truth for completed purchases, revenue,
-refunds, and customer payment details.
+Google Analytics 4 and Microsoft Clarity remain disabled until the visitor allows
+analytics. Clarity project `xucr8jc07m` receives analytics consent while advertising
+storage remains denied. After consent, GA4 records `view_item_list`, `select_item`,
+`view_item`, `add_to_cart`, `view_cart`, and `begin_checkout`. PayPal remains the source
+of truth for completed purchases, revenue, refunds, and customer payment details.

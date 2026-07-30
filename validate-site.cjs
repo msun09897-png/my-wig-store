@@ -358,9 +358,28 @@ for (const eventName of ['view_item_list', 'select_item', 'view_item', 'add_to_c
   if (!appSource.includes(`'${eventName}'`)) errors.push(`app.js: missing GA4 ecommerce event ${eventName}`);
 }
 if (!appSource.includes('items:')) errors.push('app.js: GA4 ecommerce events must include an items array');
+if (!appSource.includes("clarityProjectId: 'xucr8jc07m'")) {
+  errors.push('app.js: Microsoft Clarity project ID is missing');
+}
+if (!appSource.includes("window.clarity('consentv2'")) {
+  errors.push('app.js: Microsoft Clarity Consent API V2 is missing');
+}
+if (!appSource.includes("ad_Storage: 'denied'")) {
+  errors.push('app.js: Microsoft Clarity advertising storage must remain denied');
+}
+if (!appSource.includes('startClarity();')) {
+  errors.push('app.js: Microsoft Clarity must start through the consent-gated analytics flow');
+}
+const generatedHtml = expectedPages.map(file => fs.readFileSync(file, 'utf8')).join('\n');
+if (generatedHtml.includes('clarity.ms/tag/')) {
+  errors.push('HTML pages must not load Clarity before analytics consent');
+}
+if (!fs.readFileSync('privacy.html', 'utf8').includes('Microsoft Clarity')) {
+  errors.push('privacy.html: Microsoft Clarity disclosure is missing');
+}
 
 if (/http:\/\/(?!base\.google\.com)/.test(
-  expectedPages.map(file => fs.readFileSync(file, 'utf8')).join('\n') +
+  generatedHtml +
   appSource
 )) {
   errors.push('Insecure http:// reference found');
