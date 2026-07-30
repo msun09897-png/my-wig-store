@@ -46,6 +46,7 @@ Checked on 2026-07-30:
 - Pinterest merchant status: approved.
 - Pinterest retail catalog: 22 in-stock products, 0 failed imports.
 - Bing sitemap: success, 17 discovered URLs.
-- Bing IndexNow: canonical URLs submitted on 2026-07-29.
+- Bing IndexNow: canonical URLs submitted on 2026-07-29 and resubmitted after
+  the Clarity deployment on 2026-07-30 (17 URLs accepted, HTTP 200).
 - Microsoft Clarity: project `xucr8jc07m`, loaded only after analytics consent;
   advertising storage remains denied.
