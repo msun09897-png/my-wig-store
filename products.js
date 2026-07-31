@@ -67,6 +67,14 @@ const PRODUCTS = [
       'images/lum-010/lifestyle_02.webp',
       'images/lum-010/lifestyle_03.webp',
     ],
+    video: {
+      src: 'videos/lum-010/platinum-bob-short-v1.mp4',
+      poster: 'images/lum-010/main_01.webp',
+      title: 'See The Platinum Bob in motion',
+      description: 'Authentic product footage showing the #613 blonde color, transparent lace, and polished short silhouette.',
+      durationSeconds: 26,
+      uploadDate: '2026-07-31',
+    },
     description: "A straight #613 blonde human-hair bob with transparent 13x4 lace. Choose from 10- and 12-inch lengths with two density options for a shorter, polished silhouette.",
     features: [
       "13x4 transparent lace for front hairline placement",

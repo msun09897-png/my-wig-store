@@ -593,6 +593,65 @@ function resetFilters() {
   applyFilters();
 }
 
+function productVideoHTML(product) {
+  if (!product.video) return '';
+  return `
+    <section class="product-video-card" id="product-video" aria-labelledby="productVideoTitle">
+      <div class="product-video-copy">
+        <p class="eyebrow">— Watch the style —</p>
+        <h2 id="productVideoTitle">${product.video.title}</h2>
+        <p id="productVideoDescription">${product.video.description}</p>
+      </div>
+      <div class="product-video-frame">
+        <video
+          controls
+          playsinline
+          preload="metadata"
+          poster="${product.video.poster}"
+          aria-label="${product.name} product video"
+          aria-describedby="productVideoDescription"
+          data-product-video="${product.id}">
+          <source src="${product.video.src}" type="video/mp4">
+          Your browser does not support HTML video.
+        </video>
+      </div>
+    </section>
+  `;
+}
+
+function mountProductVideoTracking(product) {
+  const video = document.querySelector(`[data-product-video="${product.id}"]`);
+  if (!video || !product.video) return;
+
+  const eventParams = {
+    item_id: product.id,
+    item_name: product.name,
+    video_title: product.video.title,
+    video_url: new URL(product.video.src, window.location.href).href
+  };
+  let started = false;
+  let midpointReached = false;
+  let completed = false;
+
+  video.addEventListener('play', () => {
+    if (started) return;
+    started = true;
+    trackEvent('video_start', { ...eventParams, video_percent: 0 });
+  });
+  video.addEventListener('timeupdate', () => {
+    if (midpointReached || !Number.isFinite(video.duration) || video.duration <= 0) return;
+    if ((video.currentTime / video.duration) >= 0.5) {
+      midpointReached = true;
+      trackEvent('video_progress', { ...eventParams, video_percent: 50 });
+    }
+  });
+  video.addEventListener('ended', () => {
+    if (completed) return;
+    completed = true;
+    trackEvent('video_complete', { ...eventParams, video_percent: 100 });
+  });
+}
+
 // ============================================
 // 商品详情 + 轮播
 // ============================================
@@ -639,6 +698,7 @@ function renderProductDetail(id, variantSku) {
   const secondaryImages = productImages.slice(1).map((src, index) =>
     `<div class="stacked-image"><img src="${src}" alt="${p.name} view ${index + 2}" loading="lazy"></div>`
   ).join('');
+  const productVideo = productVideoHTML(p);
   const selectedVariant = getSelectedVariant(currentProduct);
   const merchantVariantNote = currentProduct.selectionSource === 'merchant_variant'
     ? `<p class="merchant-variant-note">Selected listing option: ${selectedVariant.color} · ${selectedVariant.length}. Confirm the same option in PayPal before adding to cart.</p>`
@@ -677,9 +737,10 @@ function renderProductDetail(id, variantSku) {
         </div>
       </section>
     </div>
-    <div class="product-detail-images product-detail-images-secondary">${secondaryImages}</div>
+    <div class="product-detail-images product-detail-images-secondary">${productVideo}${secondaryImages}</div>
   `;
   mountPayPalProduct(p.id);
+  mountProductVideoTracking(p);
 
   // ── Detail gallery (full-width section below) ────────────────────
   const detailGalleryEl = $('product-detail-gallery');

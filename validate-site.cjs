@@ -48,6 +48,7 @@ const allVariants = products.flatMap(product =>
 );
 const expectedVariantCount = 22;
 const indexNowKey = 'a13da8f942954c0499bbf1244f00ff19';
+const platinumVideoPath = 'videos/lum-010/platinum-bob-short-v1.mp4';
 const marketingChannels = {
   pinterest: ['organic_social', 'profile'],
   instagram: ['organic_social', 'profile'],
@@ -358,6 +359,40 @@ for (const eventName of ['view_item_list', 'select_item', 'view_item', 'add_to_c
   if (!appSource.includes(`'${eventName}'`)) errors.push(`app.js: missing GA4 ecommerce event ${eventName}`);
 }
 if (!appSource.includes('items:')) errors.push('app.js: GA4 ecommerce events must include an items array');
+for (const eventName of ['video_start', 'video_progress', 'video_complete']) {
+  if (!appSource.includes(`'${eventName}'`)) errors.push(`app.js: missing product video event ${eventName}`);
+}
+if (!fs.existsSync(platinumVideoPath)) {
+  errors.push(`${platinumVideoPath}: product video is missing`);
+} else {
+  const videoSize = fs.statSync(platinumVideoPath).size;
+  const videoHeader = fs.readFileSync(platinumVideoPath).subarray(4, 8).toString('ascii');
+  if (videoSize < 1024 * 1024) errors.push(`${platinumVideoPath}: video file is unexpectedly small`);
+  if (videoSize > 50 * 1024 * 1024) errors.push(`${platinumVideoPath}: video file is too large for mobile delivery`);
+  if (videoHeader !== 'ftyp') errors.push(`${platinumVideoPath}: file is not a valid MP4 container`);
+}
+const platinumProduct = products.find(product => product.id === 'lum-010');
+if (platinumProduct?.video?.src !== platinumVideoPath) {
+  errors.push('products.js: The Platinum Bob video metadata is missing or inconsistent');
+}
+const platinumHtml = fs.readFileSync(productPages['lum-010'], 'utf8');
+if (!platinumHtml.includes(`<source src="${platinumVideoPath}" type="video/mp4">`)) {
+  errors.push(`${productPages['lum-010']}: product video markup is missing`);
+}
+let platinumSchema = {};
+try {
+  platinumSchema = JSON.parse(
+    platinumHtml.match(/<script id="pageSchema" type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] || '{}'
+  );
+} catch {
+  errors.push(`${productPages['lum-010']}: unable to validate VideoObject structured data`);
+}
+if (platinumSchema.subjectOf?.['@type'] !== 'VideoObject') {
+  errors.push(`${productPages['lum-010']}: VideoObject structured data is missing`);
+}
+if (platinumSchema.subjectOf?.contentUrl !== `https://arelvienne.com/${platinumVideoPath}`) {
+  errors.push(`${productPages['lum-010']}: VideoObject contentUrl is invalid`);
+}
 if (!appSource.includes("clarityProjectId: 'xucr8jc07m'")) {
   errors.push('app.js: Microsoft Clarity project ID is missing');
 }

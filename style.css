@@ -1939,6 +1939,54 @@ textarea:focus-visible {
    PRODUCT DETAIL GALLERY — Full-width section below 2-col grid
    ========================================================================= */
 
+.product-video-card {
+  padding: 34px 24px 40px;
+  color: var(--ivory);
+  background: #20191a;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.product-video-copy {
+  max-width: 520px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+
+.product-video-copy .eyebrow {
+  margin-bottom: 10px;
+  color: #d9b8aa;
+}
+
+.product-video-copy h2 {
+  margin-bottom: 10px;
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 400;
+}
+
+.product-video-copy p:last-child {
+  color: rgba(250,246,239,0.78);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.product-video-frame {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  overflow: hidden;
+  aspect-ratio: 9 / 16;
+  background: #0d0b0b;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+}
+
+.product-video-frame video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: #0d0b0b;
+}
+
 #product-detail-gallery {
   width: 100%;
   display: flex;
@@ -2032,6 +2080,10 @@ textarea:focus-visible {
 }
 
 @media (max-width: 768px) {
+  .product-video-card {
+    padding: 28px 18px 32px;
+  }
+
   .analytics-consent {
     left: 12px;
     right: 12px;

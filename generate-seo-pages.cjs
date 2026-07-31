@@ -12,7 +12,7 @@ const vm = require('vm');
 const SITE_URL = 'https://arelvienne.com';
 const BRAND = 'ARELVIENNE';
 const SUPPORT_EMAIL = 'support@arelvienne.com';
-const LAST_MODIFIED = '2026-07-30';
+const LAST_MODIFIED = '2026-07-31';
 const INDEXNOW_KEY = 'a13da8f942954c0499bbf1244f00ff19';
 const GOOGLE_PRODUCT_CATEGORY = '181';
 
@@ -240,8 +240,22 @@ function staticProductDetail(product) {
         <div class="stacked-image">
           <img src="${escapeHtml(src)}" alt="${escapeHtml(product.name)}${index ? ` view ${index + 1}` : ''}" loading="${index === 0 ? 'eager' : 'lazy'}">
         </div>`).join('');
-  return `<div class="product-detail" id="productDetail">
-    <div class="product-detail-images">${imageMarkup}
+  const videoMarkup = product.video ? `
+        <section class="product-video-card" id="product-video" aria-labelledby="productVideoTitle">
+          <div class="product-video-copy">
+            <p class="eyebrow">— Watch the style —</p>
+            <h2 id="productVideoTitle">${escapeHtml(product.video.title)}</h2>
+            <p id="productVideoDescription">${escapeHtml(product.video.description)}</p>
+          </div>
+          <div class="product-video-frame">
+            <video controls playsinline preload="metadata" poster="${escapeHtml(product.video.poster)}" aria-label="${escapeHtml(product.name)} product video" aria-describedby="productVideoDescription">
+              <source src="${escapeHtml(product.video.src)}" type="video/mp4">
+              Your browser does not support HTML video.
+            </video>
+          </div>
+        </section>` : '';
+  return `<section class="container product-detail" id="productDetail">
+    <div class="product-detail-images">${imageMarkup}${videoMarkup}
     </div>
     <div class="detail-info">
       <p class="breadcrumb"><a href="/shop.html">Shop</a> · ${escapeHtml(product.subtitle)}</p>
@@ -256,7 +270,7 @@ function staticProductDetail(product) {
       <p><a href="/shipping.html">Free worldwide shipping</a> · <a href="/returns.html">30-day returns on eligible items</a> · <a href="/contact.html">Ask customer care</a></p>
       </div>
     </div>
-  </div>`;
+  </section>`;
 }
 
 function productSchema(product) {
@@ -293,7 +307,19 @@ function productSchema(product) {
     brand: { '@type': 'Brand', name: BRAND },
     material: 'Human hair',
     category: 'Wigs',
-    offers: offer
+    offers: offer,
+    ...(product.video ? {
+      subjectOf: {
+        '@type': 'VideoObject',
+        name: product.video.title,
+        description: product.video.description,
+        thumbnailUrl: [absoluteUrl(product.video.poster)],
+        uploadDate: product.video.uploadDate,
+        duration: `PT${product.video.durationSeconds}S`,
+        contentUrl: absoluteUrl(product.video.src),
+        url: `${SITE_URL}${route}#product-video`
+      }
+    } : {})
   };
 }
 
@@ -360,7 +386,10 @@ function buildPages(products) {
     const image = absoluteUrl((product.images || [product.image])[0]);
     const title = `${product.name} | Human Hair Wig | ${BRAND}`;
     let html = activatePage(template, 'product');
-    html = html.replace('<div class="product-detail" id="productDetail"></div>', staticProductDetail(product));
+    html = html.replace(
+      '<section class="container product-detail" id="productDetail"></section>',
+      staticProductDetail(product)
+    );
     html = replaceHead(html, {
       title,
       description: product.description,
