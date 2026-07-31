@@ -115,6 +115,14 @@ const PRODUCTS = [
       'images/lum-009/lifestyle_02.webp',
       'images/lum-009/lifestyle_03.webp',
     ],
+    video: {
+      src: 'videos/lum-009/signature-straight-short-v5.mp4',
+      poster: 'images/lum-009/main_01.webp',
+      title: 'See The Signature Straight in motion',
+      description: 'Authentic product footage showing the natural-black straight texture, sleek movement, and transparent 13x6 lace construction.',
+      durationSeconds: 26,
+      uploadDate: '2026-07-31',
+    },
     description: "A straight human-hair wig with transparent 13x6 lace and flexible parting space. Available in 150% and 180% density at 16, 20, and 24 inches.",
     features: [
       "13x6 transparent lace with flexible parting space",
