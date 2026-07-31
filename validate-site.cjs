@@ -359,6 +359,9 @@ for (const eventName of ['view_item_list', 'select_item', 'view_item', 'add_to_c
   if (!appSource.includes(`'${eventName}'`)) errors.push(`app.js: missing GA4 ecommerce event ${eventName}`);
 }
 if (!appSource.includes('items:')) errors.push('app.js: GA4 ecommerce events must include an items array');
+if (!appSource.includes("'@type': 'VideoObject'")) {
+  errors.push('app.js: runtime product schema must preserve VideoObject data');
+}
 for (const eventName of ['video_start', 'video_progress', 'video_complete']) {
   if (!appSource.includes(`'${eventName}'`)) errors.push(`app.js: missing product video event ${eventName}`);
 }

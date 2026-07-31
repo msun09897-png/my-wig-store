@@ -250,7 +250,19 @@ function setMeta(name, productId, variantSku) {
                   ? 'https://schema.org/OutOfStock'
                   : 'https://schema.org/InStock',
                 itemCondition: 'https://schema.org/NewCondition'
-              }
+              },
+          ...(product.video ? {
+            subjectOf: {
+              '@type': 'VideoObject',
+              name: product.video.title,
+              description: product.video.description,
+              thumbnailUrl: [new URL(product.video.poster, CONFIG.siteUrl + '/').href],
+              uploadDate: product.video.uploadDate,
+              duration: `PT${product.video.durationSeconds}S`,
+              contentUrl: new URL(product.video.src, CONFIG.siteUrl + '/').href,
+              url: `${canonical}#product-video`
+            }
+          } : {})
         }
       : name === 'guide'
         ? {
