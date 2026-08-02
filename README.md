@@ -1,5 +1,16 @@
 # ARELVIENNE Store
 
+Official website: [ARELVIENNE Human Hair Wigs](https://arelvienne.com/)
+
+ARELVIENNE is an independent human-hair wig store offering eight carefully
+selected styles with free worldwide shipping. Shoppers can browse the
+[current collection](https://arelvienne.com/shop.html) or use these practical
+buying guides:
+
+- [13x4 vs 13x6 Lace Wig Guide](https://arelvienne.com/13x4-vs-13x6-lace-wig.html)
+- [150% vs 180% vs 200% Wig Density](https://arelvienne.com/wig-density-guide-150-vs-180-vs-200.html)
+- [Human Hair Wig Length Guide](https://arelvienne.com/human-hair-wig-length-guide.html)
+
 ## Product update workflow
 
 1. Update `products.js`. Every sellable variant must keep a unique, stable `sku`.
@@ -36,3 +47,5 @@ of truth for completed purchases, revenue, refunds, and customer payment details
   metadata-only preload; it does not autoplay.
 - The product schema includes a `VideoObject`, and GA4 records video start,
   50% progress, and completion after analytics consent.
+- The Signature Straight includes a self-hosted 26-second vertical product video
+  with the same consent-based video analytics and structured data.

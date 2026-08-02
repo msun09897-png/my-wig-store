@@ -1717,6 +1717,146 @@ textarea:focus-visible {
   color: var(--soil);
 }
 
+/* ============ SEO buying guides ============ */
+.seo-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 48px;
+}
+
+.seo-guide-card {
+  display: flex;
+  min-height: 190px;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  color: var(--ink) !important;
+  text-decoration: none !important;
+  background: var(--cream);
+  border: 1px solid var(--bone);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.seo-guide-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--rose-deep);
+}
+
+.seo-guide-card strong {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.seo-guide-card span:last-child {
+  color: var(--soil);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.article-kicker {
+  color: var(--rose-deep);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.seo-article-header h1 {
+  max-width: 980px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: clamp(42px, 6vw, 72px);
+}
+
+.seo-article-header .page-sub {
+  max-width: 780px;
+  margin-right: auto;
+  margin-left: auto;
+  line-height: 1.7;
+}
+
+.article-updated {
+  margin-top: 14px;
+  color: var(--soil);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.seo-article {
+  max-width: 860px;
+}
+
+.article-breadcrumb {
+  margin-bottom: 32px;
+  color: var(--soil);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.policy-content h3 {
+  margin: 24px 0 8px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.policy-table-wrap {
+  overflow-x: auto;
+  margin: 16px 0 24px;
+}
+
+.policy-table-wrap .policy-table {
+  min-width: 620px;
+  margin: 0;
+}
+
+.article-cta {
+  margin-top: 56px;
+  padding: 32px;
+  background: var(--cream);
+  border: 1px solid var(--bone);
+}
+
+.article-cta h2 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.article-cta .btn {
+  display: inline-flex;
+  margin-top: 10px;
+  color: var(--ivory);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .seo-guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seo-guide-card {
+    min-height: 0;
+  }
+
+  .seo-article-header {
+    padding-top: 72px;
+  }
+
+  .seo-article {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .article-cta {
+    padding: 24px 20px;
+  }
+}
+
 /* ============ About 署名 ============ */
 .about-signature {
   font-family: var(--serif);

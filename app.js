@@ -178,8 +178,8 @@ function setMeta(name, productId, variantSku) {
   const selectedVariant = product?.variants?.find(variant => variant.sku === variantSku);
   const meta = product
     ? {
-        title: `${product.name} | Human Hair Wig | ARELVIENNE`,
-        description: product.description,
+        title: product.seo?.title || `${product.name} | Human Hair Wig | ARELVIENNE`,
+        description: product.seo?.description || product.description,
         image: (product.images || [product.image])[0]
       }
     : PAGE_META[name] || PAGE_META.home;
@@ -213,7 +213,7 @@ function setMeta(name, productId, variantSku) {
       ? {
           '@context': 'https://schema.org',
           '@type': 'Product',
-          name: product.name,
+          name: product.seo?.schemaName || product.name,
           description: product.description,
           image: (product.images || [product.image]).map(src => new URL(src, CONFIG.siteUrl + '/').href),
           sku: selectedVariant?.sku || product.id,
@@ -519,9 +519,12 @@ function productCardHTML(p, listId, listName) {
 
 function renderProducts() {
   const featured = PRODUCTS.filter(p => p.featured);
-  $('featuredGrid').innerHTML = featured
-    .map(product => productCardHTML(product, 'featured_styles', 'Featured Styles'))
-    .join('');
+  const featuredGrid = $('featuredGrid');
+  if (featuredGrid) {
+    featuredGrid.innerHTML = featured
+      .map(product => productCardHTML(product, 'featured_styles', 'Featured Styles'))
+      .join('');
+  }
   applyFilters();
 }
 
@@ -547,6 +550,7 @@ function applyFilters() {
   const filtered = PRODUCTS.filter(matchesFilters);
   const grid = $('shopGrid');
   const noRes = $('shopNoResults');
+  if (!grid) return;
   if (filtered.length) {
     grid.innerHTML = filtered
       .map(product => productCardHTML(product, 'shop_all', 'Shop All'))
@@ -720,7 +724,7 @@ function renderProductDetail(id, variantSku) {
     <div class="product-detail-images product-detail-images-primary">${primaryImage}</div>
     <div class="detail-info">
       <p class="breadcrumb"><a href="${routeUrl('shop')}" onclick="showPage('shop'); return false;">Shop</a> · ${p.subtitle}</p>
-      <h1>${p.name}</h1>
+      <h1>${p.seo?.h1 || p.name}</h1>
       <p class="detail-price" id="detailPrice">${currentProduct.selectionSource === 'merchant_variant' ? '' : 'From '}${fmt(initPrice)}</p>
       ${merchantVariantNote}
       <p class="detail-desc">${p.description}</p>
@@ -1001,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAnalyticsConsent();
   initPayPalCart();
   renderProducts();
-  handleRoute();
+  if (document.body.dataset.staticArticle !== 'true') handleRoute();
 });
 
 window.addEventListener('popstate', handleRoute);

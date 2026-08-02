@@ -13,6 +13,14 @@ const PRODUCTS = [
     name: "The Cascade Wave",
     subtitle: "13x6 HD Lace Wig | Human Hair · Deep Wave",
     price: 309,
+    seo: {
+      primaryKeyword: "13x6 deep wave human hair wig",
+      title: "13x6 Deep Wave Human Hair Wig | ARELVIENNE",
+      description: "Shop a 13x6 transparent-lace deep-wave human hair wig in natural black. Choose 16 to 28 inches. From $309 with free worldwide shipping.",
+      h1: "The Cascade Wave - 13x6 Deep Wave Human Hair Wig",
+      schemaName: "13x6 Deep Wave Human Hair Wig - The Cascade Wave",
+      catalogTitle: "13x6 Deep Wave Human Hair Wig - The Cascade Wave",
+    },
     images: [
       'images/lum-011/main_01.webp',
       'images/lum-011/main_02.webp',
@@ -51,6 +59,14 @@ const PRODUCTS = [
     name: "The Platinum Bob",
     subtitle: "13x4 HD Lace Bob | Human Hair · #613",
     price: 229,
+    seo: {
+      primaryKeyword: "613 blonde bob human hair wig",
+      title: "#613 Blonde Bob Human Hair Wig | ARELVIENNE",
+      description: "Shop a #613 blonde 13x4 lace bob wig in 10 or 12 inches and 150% or 180% density. Human hair from $229 with free worldwide shipping.",
+      h1: "The Platinum Bob - #613 Blonde 13x4 Lace Wig",
+      schemaName: "#613 Blonde Bob Human Hair Wig - The Platinum Bob",
+      catalogTitle: "#613 Blonde Bob Human Hair Wig - The Platinum Bob",
+    },
     images: [
       'images/lum-010/main_01.webp',
       'images/lum-010/main_02.webp',
@@ -99,6 +115,14 @@ const PRODUCTS = [
     name: "The Signature Straight",
     subtitle: "13x6 HD Lace Wig | Human Hair",
     price: 289,
+    seo: {
+      primaryKeyword: "13x6 straight human hair wig",
+      title: "13x6 Straight Human Hair Wig | ARELVIENNE",
+      description: "Shop a natural-black 13x6 straight human hair wig in 16, 20 or 24 inches and 150% or 180% density. From $289 with free worldwide shipping.",
+      h1: "The Signature Straight - 13x6 Straight Human Hair Wig",
+      schemaName: "13x6 Straight Human Hair Wig - The Signature Straight",
+      catalogTitle: "13x6 Straight Human Hair Wig - The Signature Straight",
+    },
     images: [
       'images/lum-009/main_01.webp',
       'images/lum-009/main_02.webp',
@@ -150,6 +174,14 @@ const PRODUCTS = [
     name: "The Water Wave Bob",
     subtitle: "Short Water Wave Lace Wig | 100% Human Hair",
     price: 159,
+    seo: {
+      primaryKeyword: "short water wave bob human hair wig",
+      title: "Short Water Wave Bob Human Hair Wig | ARELVIENNE",
+      description: "Shop a natural-black short water-wave human hair bob with an adjustable cap and easy everyday movement. $159 with free worldwide shipping.",
+      h1: "The Water Wave Bob - Short Human Hair Wig",
+      schemaName: "Short Water Wave Bob Human Hair Wig - The Water Wave Bob",
+      catalogTitle: "Short Water Wave Bob Human Hair Wig - The Water Wave Bob",
+    },
     images: [
       'images/lum-012/main_01.webp',
       'images/lum-012/main_02.webp',
@@ -185,6 +217,14 @@ const PRODUCTS = [
     name: "The Bouncy Curl Closure",
     subtitle: "5x5 Glueless Lace Wig | 200% Density Human Hair",
     price: 289,
+    seo: {
+      primaryKeyword: "5x5 glueless curly human hair wig",
+      title: "5x5 Glueless Curly Human Hair Wig | ARELVIENNE",
+      description: "Shop a 16-inch 5x5 glueless curly human hair wig with 200% density and a natural-black finish. $289 with free worldwide shipping.",
+      h1: "The Bouncy Curl Closure - 5x5 Glueless Curly Human Hair Wig",
+      schemaName: "5x5 Glueless Curly Human Hair Wig - The Bouncy Curl Closure",
+      catalogTitle: "5x5 Glueless Curly Human Hair Wig - The Bouncy Curl Closure",
+    },
     images: [
       'images/lum-013/main_01_front_hero.webp',
       'images/lum-013/main_02_3quarter_side.webp',
@@ -225,6 +265,14 @@ const PRODUCTS = [
     name: "The Champagne Body Wave",
     subtitle: "13x4 Lace Front Wig | #613 Blonde Body Wave Human Hair",
     price: 229,
+    seo: {
+      primaryKeyword: "613 blonde body wave lace wig",
+      title: "#613 Blonde Body Wave Lace Wig | ARELVIENNE",
+      description: "Shop a #613 blonde 13x4 lace-front body-wave human hair wig in 10, 12 or 14 inches. From $229 with free worldwide shipping.",
+      h1: "The Champagne Body Wave - #613 Blonde 13x4 Lace Wig",
+      schemaName: "#613 Blonde Body Wave Lace Wig - The Champagne Body Wave",
+      catalogTitle: "#613 Blonde Body Wave Lace Wig - The Champagne Body Wave",
+    },
     images: [
       'images/lum-014/01_front_hero_613_blonde_wig.webp',
       'images/lum-014/02_three_quarter_side_portrait.webp',
@@ -267,6 +315,14 @@ const PRODUCTS = [
     name: "The Honey Noir Straight",
     subtitle: "13x4 Transparent Lace Wig | 1B/27 Highlight Human Hair",
     price: 349,
+    seo: {
+      primaryKeyword: "1B/27 highlight straight human hair wig",
+      title: "1B/27 Highlight Straight Human Hair Wig | ARELVIENNE",
+      description: "Shop a 1B/27 honey-blonde highlight straight human hair wig with 13x4 transparent lace, in 18 or 20 inches. From $349 with free shipping.",
+      h1: "The Honey Noir Straight - 1B/27 Highlight 13x4 Lace Wig",
+      schemaName: "1B/27 Highlight Straight Human Hair Wig - The Honey Noir Straight",
+      catalogTitle: "1B/27 Highlight Straight Human Hair Wig - The Honey Noir Straight",
+    },
     images: [
       'images/lum-015/main_01_front_hero.webp',
       'images/lum-015/main_02_3-4_side.webp',
@@ -306,6 +362,14 @@ const PRODUCTS = [
     name: "The Burgundy Bob Closure",
     subtitle: "5x5 Lace Bob Wig | Burgundy Bone-Straight Human Hair",
     price: 259,
+    seo: {
+      primaryKeyword: "burgundy 5x5 closure bob wig",
+      title: "Burgundy 5x5 Closure Bob Wig | ARELVIENNE",
+      description: "Shop a 12-inch burgundy bone-straight human hair bob with a 5x5 lace closure. $259 with free worldwide shipping.",
+      h1: "The Burgundy Bob Closure - 5x5 Burgundy Human Hair Wig",
+      schemaName: "Burgundy 5x5 Closure Bob Wig - The Burgundy Bob Closure",
+      catalogTitle: "Burgundy 5x5 Closure Bob Wig - The Burgundy Bob Closure",
+    },
     images: [
       'images/lum-016/a_high_resolution_studio_lit_fashion_beauty_port.webp',
       'images/lum-016/a_high_end_beauty_portrait_in_a_studio_a_close_up.webp',

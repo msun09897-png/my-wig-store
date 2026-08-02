@@ -22,7 +22,14 @@ node validate-site.cjs
 
 Use the URLs in `marketing-utm-links.csv` for Pinterest, Instagram, TikTok,
 YouTube, Facebook, Reddit, and Quora. The file contains Home, Shop, Wig Guide,
-and all eight product-page destinations.
+three long-tail buying guides, and all eight product-page destinations.
+
+The three long-tail guides are intended for helpful educational posts rather
+than repetitive promotional comments:
+
+- `13x4-vs-13x6-lace-wig.html`
+- `wig-density-guide-150-vs-180-vs-200.html`
+- `human-hair-wig-length-guide.html`
 
 Do not manually change the UTM names. Consistent names keep GA4 traffic-source
 reports clean.
@@ -87,7 +94,8 @@ Checked on 2026-07-30:
 
 - Pinterest merchant status: approved.
 - Pinterest retail catalog: 22 in-stock products, 0 failed imports.
-- Bing sitemap: success, 17 discovered URLs.
+- Bing sitemap: success for the previous 17-URL version. The current generator
+  publishes 20 canonical URLs and should be resubmitted after deployment.
 - Bing IndexNow: canonical URLs submitted on 2026-07-29 and resubmitted after
   the Clarity deployment on 2026-07-30 (17 URLs accepted, HTTP 200).
 - Microsoft Clarity: project `xucr8jc07m`, loaded only after analytics consent;

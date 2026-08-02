@@ -5,6 +5,7 @@
 
 const fs = require('fs');
 const vm = require('vm');
+const seoArticles = require('./seo-articles.cjs');
 
 const expectedPages = [
   'index.html',
@@ -16,6 +17,7 @@ const expectedPages = [
   'returns.html',
   'privacy.html',
   'terms.html',
+  ...seoArticles.map(article => article.route.slice(1)),
   'signature-straight-human-hair-wig.html',
   'platinum-blonde-bob-wig.html',
   'cascade-deep-wave-human-hair-wig.html',
@@ -49,6 +51,11 @@ const allVariants = products.flatMap(product =>
 const expectedVariantCount = 22;
 const indexNowKey = 'a13da8f942954c0499bbf1244f00ff19';
 const platinumVideoPath = 'videos/lum-010/platinum-bob-short-v1.mp4';
+const expectedPayPalButtonIds = [
+  'KP3HVJJ7WKXV4', 'QTZ5UNUSEC2KQ', 'V5BFQPGJPJ8ZY', 'T9ZJAEGHSU2NW',
+  '2N33RDAMSQX7W', '2QMQBXLXZEX7Y', '4G3DLY34JJYFC', 'W5Q6MM8BRK3J8',
+  '8PWSUPUXX3TBN'
+];
 const marketingChannels = {
   pinterest: ['organic_social', 'profile'],
   instagram: ['organic_social', 'profile'],
@@ -138,6 +145,13 @@ for (const product of products) {
   for (const image of [...(product.images || []), ...(product.detailImages || [])]) {
     if (!fs.existsSync(image)) errors.push(`${product.id}: missing product image ${image}`);
   }
+  for (const field of ['primaryKeyword', 'title', 'description', 'h1', 'schemaName', 'catalogTitle']) {
+    if (!product.seo?.[field]) errors.push(`${product.id}: missing SEO field ${field}`);
+  }
+  if ((product.seo?.title || '').length > 60) errors.push(`${product.id}: SEO title exceeds 60 characters`);
+  if ((product.seo?.description || '').length < 100 || (product.seo?.description || '').length > 160) {
+    errors.push(`${product.id}: SEO description must contain 100 to 160 characters`);
+  }
 
   const page = productPages[product.id];
   if (!page) {
@@ -149,6 +163,9 @@ for (const product of products) {
       const schema = JSON.parse(schemaText);
       const variants = product.variants || [];
       if (schema.sku !== product.id) errors.push(`${page}: JSON-LD SKU does not match ${product.id}`);
+      if (schema.name !== product.seo?.schemaName) errors.push(`${page}: JSON-LD name does not match SEO product name`);
+      if (!html.includes(`<title>${product.seo?.title}</title>`)) errors.push(`${page}: SEO title is not synchronized`);
+      if (!html.includes(`<h1>${product.seo?.h1}</h1>`)) errors.push(`${page}: keyword-focused H1 is not synchronized`);
       if (variants.length > 1) {
         if (schema.offers?.['@type'] !== 'AggregateOffer') {
           errors.push(`${page}: expected AggregateOffer`);
@@ -160,6 +177,25 @@ for (const product of products) {
     } catch {
       // The general JSON-LD check above reports malformed markup.
     }
+  }
+}
+
+for (const article of seoArticles) {
+  const file = article.route.slice(1);
+  if (!fs.existsSync(file)) continue;
+  const html = fs.readFileSync(file, 'utf8');
+  if (!html.includes(`<title>${article.title}</title>`)) errors.push(`${file}: article title is not synchronized`);
+  if (!html.includes(`<h1>${article.h1}</h1>`)) errors.push(`${file}: article H1 is not synchronized`);
+  if (!html.includes('data-static-article="true"')) errors.push(`${file}: static article routing guard is missing`);
+  try {
+    const schema = JSON.parse(
+      html.match(/<script id="pageSchema" type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] || '{}'
+    );
+    const types = (schema['@graph'] || []).map(item => item['@type']);
+    if (!types.includes('Article')) errors.push(`${file}: Article structured data is missing`);
+    if (!types.includes('BreadcrumbList')) errors.push(`${file}: BreadcrumbList structured data is missing`);
+  } catch {
+    // The general JSON-LD check above reports malformed markup.
   }
 }
 
@@ -214,6 +250,9 @@ for (const { product, variant } of allVariants) {
     errors.push(`${variant.sku}: Merchant availability does not match products.js`);
   }
   if (!item.includes('<g:title>')) errors.push(`${variant.sku}: Merchant title is missing`);
+  if (!item.includes(product.seo?.catalogTitle || product.name)) {
+    errors.push(`${variant.sku}: Merchant title is not synchronized with the SEO catalog title`);
+  }
   if (!item.includes('<g:color>') || !item.includes('<g:size>')) {
     errors.push(`${variant.sku}: Merchant color or size is missing`);
   }
@@ -272,6 +311,9 @@ if (!fs.existsSync('pinterest-catalog.csv')) {
     if (!record.title || !record.description || !record.image_link) {
       errors.push(`${variant.sku}: Pinterest title, description, or image is missing`);
     }
+    if (!record.title.includes(product.seo?.catalogTitle || product.name)) {
+      errors.push(`${variant.sku}: Pinterest title is not synchronized with the SEO catalog title`);
+    }
     if (record.brand !== 'ARELVIENNE') errors.push(`${variant.sku}: Pinterest brand is invalid`);
     if (record.google_product_category !== '181') {
       errors.push(`${variant.sku}: Pinterest Google product category must be 181`);
@@ -302,7 +344,7 @@ if (!fs.existsSync('marketing-utm-links.csv')) {
   errors.push('marketing-utm-links.csv: missing');
 } else {
   const marketingRecords = csvRecords('marketing-utm-links.csv');
-  const expectedDestinationCount = 3 + products.length;
+  const expectedDestinationCount = 3 + seoArticles.length + products.length;
   const expectedMarketingCount = Object.keys(marketingChannels).length * expectedDestinationCount;
   if (marketingRecords.length !== expectedMarketingCount) {
     errors.push(
@@ -355,6 +397,13 @@ if (!fs.existsSync(`${indexNowKey}.txt`)) {
 }
 
 const appSource = fs.readFileSync('app.js', 'utf8');
+if (!appSource.includes("merchantId: 'KWR6CWBTTXL8E'")) {
+  errors.push('app.js: PayPal merchant ID is missing or changed');
+}
+for (const buttonId of expectedPayPalButtonIds) {
+  const occurrences = (appSource.match(new RegExp(buttonId, 'g')) || []).length;
+  if (occurrences !== 1) errors.push(`app.js: expected PayPal button ${buttonId} exactly once, found ${occurrences}`);
+}
 for (const eventName of ['view_item_list', 'select_item', 'view_item', 'add_to_cart', 'view_cart', 'begin_checkout']) {
   if (!appSource.includes(`'${eventName}'`)) errors.push(`app.js: missing GA4 ecommerce event ${eventName}`);
 }
@@ -395,6 +444,37 @@ if (platinumSchema.subjectOf?.['@type'] !== 'VideoObject') {
 }
 if (platinumSchema.subjectOf?.contentUrl !== `https://arelvienne.com/${platinumVideoPath}`) {
   errors.push(`${productPages['lum-010']}: VideoObject contentUrl is invalid`);
+}
+for (const product of products.filter(item => item.video)) {
+  const page = productPages[product.id];
+  const videoPath = product.video.src;
+  if (!fs.existsSync(videoPath)) {
+    errors.push(`${videoPath}: product video is missing`);
+    continue;
+  }
+  const videoHeader = fs.readFileSync(videoPath).subarray(4, 8).toString('ascii');
+  if (videoHeader !== 'ftyp') errors.push(`${videoPath}: file is not a valid MP4 container`);
+  const html = fs.readFileSync(page, 'utf8');
+  if (!html.includes(`<source src="${videoPath}" type="video/mp4">`)) {
+    errors.push(`${page}: product video markup is missing for ${product.id}`);
+  }
+  try {
+    const schema = JSON.parse(
+      html.match(/<script id="pageSchema" type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] || '{}'
+    );
+    if (schema.subjectOf?.['@type'] !== 'VideoObject') {
+      errors.push(`${page}: VideoObject structured data is missing for ${product.id}`);
+    }
+    if (schema.subjectOf?.contentUrl !== `https://arelvienne.com/${videoPath}`) {
+      errors.push(`${page}: VideoObject contentUrl is invalid for ${product.id}`);
+    }
+  } catch {
+    // The general JSON-LD check above reports malformed markup.
+  }
+}
+const styleSource = fs.readFileSync('style.css', 'utf8');
+if (!/@media\s*\(max-width:\s*768px\)[\s\S]*?\.seo-guide-grid\s*\{[\s\S]*?grid-template-columns:\s*1fr/.test(styleSource)) {
+  errors.push('style.css: mobile layout for SEO guide cards is missing');
 }
 if (!appSource.includes("clarityProjectId: 'xucr8jc07m'")) {
   errors.push('app.js: Microsoft Clarity project ID is missing');

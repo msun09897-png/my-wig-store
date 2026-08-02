@@ -8,11 +8,12 @@
 
 const fs = require('fs');
 const vm = require('vm');
+const SEO_ARTICLES = require('./seo-articles.cjs');
 
 const SITE_URL = 'https://arelvienne.com';
 const BRAND = 'ARELVIENNE';
 const SUPPORT_EMAIL = 'support@arelvienne.com';
-const LAST_MODIFIED = '2026-07-31';
+const LAST_MODIFIED = '2026-08-02';
 const INDEXNOW_KEY = 'a13da8f942954c0499bbf1244f00ff19';
 const GOOGLE_PRODUCT_CATEGORY = '181';
 
@@ -155,7 +156,7 @@ function merchantColor(color) {
 
 function variantTitle(product, variant) {
   const dimensions = variantDimensions(variant);
-  return [product.name, dimensions.color, dimensions.length, dimensions.density]
+  return [product.seo?.catalogTitle || product.name, dimensions.color, dimensions.length, dimensions.density]
     .filter(Boolean)
     .join(' - ');
 }
@@ -259,7 +260,7 @@ function staticProductDetail(product) {
     </div>
     <div class="detail-info">
       <p class="breadcrumb"><a href="/shop.html">Shop</a> · ${escapeHtml(product.subtitle)}</p>
-      <h1>${escapeHtml(product.name)}</h1>
+      <h1>${escapeHtml(product.seo?.h1 || product.name)}</h1>
       <p class="detail-price">From $${priceRange(product).low.toFixed(2)}</p>
       <p class="detail-desc">${escapeHtml(product.description)}</p>
       <ul class="detail-features">
@@ -300,7 +301,7 @@ function productSchema(product) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: product.name,
+    name: product.seo?.schemaName || product.name,
     description: product.description,
     image: images,
     sku: product.id,
@@ -321,6 +322,93 @@ function productSchema(product) {
       }
     } : {})
   };
+}
+
+function articleSchema(article, canonical, image) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${canonical}#article`,
+        headline: article.h1,
+        description: article.description,
+        image,
+        mainEntityOfPage: canonical,
+        datePublished: LAST_MODIFIED,
+        dateModified: LAST_MODIFIED,
+        author: { '@type': 'Organization', name: BRAND, url: SITE_URL },
+        publisher: { '@type': 'Organization', name: BRAND, url: SITE_URL },
+        inLanguage: 'en'
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${canonical}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+          { '@type': 'ListItem', position: 2, name: 'Wig Buying Guide', item: `${SITE_URL}${PAGE_ROUTES.guide}` },
+          { '@type': 'ListItem', position: 3, name: article.h1, item: canonical }
+        ]
+      }
+    ]
+  };
+}
+
+function buildArticlePage(template, article) {
+  const canonical = `${SITE_URL}${article.route}`;
+  const image = absoluteUrl(article.image);
+  const articleBody = article.body.trim().replace(/^[ \t]+$/gm, '');
+  const rawHead = template.match(/<head>[\s\S]*?<\/head>/)?.[0];
+  const rawAnnouncement = template.match(/<div class="announcement">[\s\S]*?<\/div>/)?.[0];
+  const rawHeader = template.match(/<header class="header">[\s\S]*?<\/header>/)?.[0];
+  const rawFooter = template.match(/<footer class="footer">[\s\S]*?<\/footer>/)?.[0];
+  const scripts = [...template.matchAll(/<script src="(?:products|app)\.js[^>]*><\/script>/g)]
+    .map(match => match[0])
+    .join('\n');
+  if (!rawHead || !rawAnnouncement || !rawHeader || !rawFooter || !scripts) {
+    throw new Error(`Could not extract shared layout for ${article.route}`);
+  }
+
+  const head = replaceHead(rawHead, {
+    title: article.title,
+    description: article.description,
+    canonical,
+    image,
+    type: 'article',
+    schema: articleSchema(article, canonical, image)
+  });
+  const removeSpaNavigation = html => html.replace(/ onclick="showPage\([^\"]+return false;"/g, '');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head}
+<body data-static-article="true">
+${rawAnnouncement}
+${removeSpaNavigation(rawHeader)}
+<main id="page-seo-article" class="page active">
+  <section class="page-header seo-article-header">
+    <div class="container">
+      <p class="eyebrow">— ${escapeHtml(article.eyebrow)} —</p>
+      <h1>${escapeHtml(article.h1)}</h1>
+      <p class="page-sub">${escapeHtml(article.intro)}</p>
+      <p class="article-updated">Updated ${LAST_MODIFIED}</p>
+    </div>
+  </section>
+  <article class="container policy-content seo-article">
+    <nav class="article-breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> · <a href="${PAGE_ROUTES.guide}">Wig Buying Guide</a> · ${escapeHtml(article.h1)}</nav>
+    ${articleBody}
+    <aside class="article-cta">
+      <h2>Compare the current ARELVIENNE collection</h2>
+      <p>Review each product's lace, texture, density, length, color and current price before choosing.</p>
+      <a class="btn btn-primary" href="${PAGE_ROUTES.shop}">Shop human hair wigs</a>
+    </aside>
+  </article>
+</main>
+${removeSpaNavigation(rawFooter)}
+${scripts}
+</body>
+</html>
+`;
 }
 
 function pageSchema(pageName, meta, canonical, image) {
@@ -384,7 +472,7 @@ function buildPages(products) {
     if (!route) throw new Error(`Missing clean route for ${product.id}`);
     const canonical = `${SITE_URL}${route}`;
     const image = absoluteUrl((product.images || [product.image])[0]);
-    const title = `${product.name} | Human Hair Wig | ${BRAND}`;
+    const title = product.seo?.title || `${product.name} | Human Hair Wig | ${BRAND}`;
     let html = activatePage(template, 'product');
     html = html.replace(
       '<section class="container product-detail" id="productDetail"></section>',
@@ -392,13 +480,17 @@ function buildPages(products) {
     );
     html = replaceHead(html, {
       title,
-      description: product.description,
+      description: product.seo?.description || product.description,
       canonical,
       image,
       type: 'product',
       schema: productSchema(product)
     });
     fs.writeFileSync(route.slice(1), html, 'utf8');
+  }
+
+  for (const article of SEO_ARTICLES) {
+    fs.writeFileSync(article.route.slice(1), buildArticlePage(template, article), 'utf8');
   }
 }
 
@@ -407,6 +499,7 @@ function buildSitemap(products) {
     { route: '/', priority: '1.0' },
     { route: PAGE_ROUTES.shop, priority: '0.9' },
     { route: PAGE_ROUTES.guide, priority: '0.8' },
+    ...SEO_ARTICLES.map(article => ({ route: article.route, priority: '0.7' })),
     ...products.map(product => ({ route: PRODUCT_ROUTES[product.id], priority: '0.8' })),
     { route: PAGE_ROUTES.about, priority: '0.6' },
     { route: PAGE_ROUTES.contact, priority: '0.6' },
@@ -456,7 +549,7 @@ function buildPinterestCatalog(products) {
       return [
         variant.sku,
         variantTitle(product, variant),
-        product.description,
+        product.seo?.description || product.description,
         trackedVariantLink(route, variant, {
           source: 'pinterest',
           medium: 'organic_shopping',
@@ -490,6 +583,11 @@ function buildMarketingLinks(products) {
     { name: 'Home', path: '/', content: 'home' },
     { name: 'Shop', path: PAGE_ROUTES.shop, content: 'shop' },
     { name: 'Wig guide', path: PAGE_ROUTES.guide, content: 'wig_guide' },
+    ...SEO_ARTICLES.map(article => ({
+      name: article.h1,
+      path: article.route,
+      content: article.content
+    })),
     ...products.map(product => ({
       name: product.name,
       path: PRODUCT_ROUTES[product.id],
@@ -553,7 +651,7 @@ function buildMerchantFeed(products) {
       const groupFields = variants.length > 1
         ? `
       <g:item_group_id>${escapeXml(product.id)}</g:item_group_id>
-      <g:item_group_title>${escapeXml(`${product.name} Human Hair Wig`)}</g:item_group_title>
+      <g:item_group_title>${escapeXml(product.seo?.catalogTitle || `${product.name} Human Hair Wig`)}</g:item_group_title>
       ${Object.entries(dimensions).map(([name, value]) => `<g:variant_option>
         <g:name>${escapeXml(name)}</g:name>
         <g:value>${escapeXml(value)}</g:value>
@@ -569,7 +667,7 @@ function buildMerchantFeed(products) {
       </g:structured_title>
       <g:structured_description>
         <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
-        <g:content>${escapeXml(product.description)}</g:content>
+        <g:content>${escapeXml(product.seo?.description || product.description)}</g:content>
       </g:structured_description>
       <link>${escapeXml(trackedVariantLink(route, variant, {
         source: 'google',
@@ -625,6 +723,6 @@ buildMarketingLinks(products);
 buildIndexNowUrls();
 
 console.log(
-  `Generated ${Object.keys(PAGE_ROUTES).length} information pages, ${products.length} product pages, ` +
+  `Generated ${Object.keys(PAGE_ROUTES).length} information pages, ${SEO_ARTICLES.length} SEO articles, ${products.length} product pages, ` +
   'Google/Pinterest feeds, marketing UTM links, sitemap.xml, and IndexNow URL list.'
 );
