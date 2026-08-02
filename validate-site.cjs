@@ -49,6 +49,30 @@ const allVariants = products.flatMap(product =>
   (product.variants || []).map(variant => ({ product, variant }))
 );
 const expectedVariantCount = 22;
+const expectedVariantPrices = {
+  'lum-011-16': 199,
+  'lum-011-20': 249,
+  'lum-011-24': 329,
+  'lum-011-28': 449,
+  'lum-010-10-150': 149,
+  'lum-010-10-180': 159,
+  'lum-010-12-150': 169,
+  'lum-010-12-180': 179,
+  'lum-009-16-150': 189,
+  'lum-009-16-180': 209,
+  'lum-009-20-150': 239,
+  'lum-009-20-180': 259,
+  'lum-009-24-150': 319,
+  'lum-009-24-180': 339,
+  'lum-012-short': 109,
+  'lum-013-16-200': 179,
+  'lum-014-10': 149,
+  'lum-014-12': 159,
+  'lum-014-14': 169,
+  'lum-015-18': 229,
+  'lum-015-20': 279,
+  'lum-016-12': 169,
+};
 const indexNowKey = 'a13da8f942954c0499bbf1244f00ff19';
 const platinumVideoPath = 'videos/lum-010/platinum-bob-short-v1.mp4';
 const expectedPayPalButtonIds = [
@@ -214,7 +238,16 @@ for (const { product, variant } of allVariants) {
   if (!Number.isFinite(Number(variant.price)) || Number(variant.price) <= 0) {
     errors.push(`${variant.sku}: price must be a positive number`);
   }
+  if (Number(variant.price) !== expectedVariantPrices[variant.sku]) {
+    errors.push(
+      `${variant.sku}: expected launch price ${expectedVariantPrices[variant.sku]}, found ${variant.price}`
+    );
+  }
   if (typeof variant.inStock !== 'boolean') errors.push(`${variant.sku}: inStock must be true or false`);
+}
+
+if (Object.keys(expectedVariantPrices).length !== expectedVariantCount) {
+  errors.push('validate-site.cjs: expected price table must contain exactly 22 variants');
 }
 
 const sitemap = fs.readFileSync('sitemap.xml', 'utf8');
