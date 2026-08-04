@@ -298,6 +298,19 @@ for (const { product, variant } of allVariants) {
   if (!item.includes('<g:color>') || !item.includes('<g:size>')) {
     errors.push(`${variant.sku}: Merchant color or size is missing`);
   }
+  if (!item.includes('<g:age_group>adult</g:age_group>')) {
+    errors.push(`${variant.sku}: Merchant age_group must be adult`);
+  }
+  if (!item.includes('<g:gender>female</g:gender>')) {
+    errors.push(`${variant.sku}: Merchant gender must be female`);
+  }
+  const structuredDescription = item.match(/<g:structured_description>[\s\S]*?<g:content>([\s\S]*?)<\/g:content>[\s\S]*?<\/g:structured_description>/)?.[1] || '';
+  if (structuredDescription.length < 200) {
+    errors.push(`${variant.sku}: Merchant structured description must contain at least 200 characters`);
+  }
+  if (!structuredDescription.includes(variant.length)) {
+    errors.push(`${variant.sku}: Merchant structured description is missing the variant length`);
+  }
   if (!link?.includes(`variant=${variant.sku}`)) errors.push(`${variant.sku}: Merchant variant link is invalid`);
   if (link) {
     const trackedLink = new URL(link.replaceAll('&amp;', '&'));

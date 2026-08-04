@@ -161,6 +161,22 @@ function variantTitle(product, variant) {
     .join(' - ');
 }
 
+function merchantDescription(product, variant) {
+  const dimensions = variantDimensions(variant);
+  const specifications = [
+    `length: ${dimensions.length}`,
+    `color: ${merchantColor(dimensions.color)}`,
+    dimensions.density ? `density: ${dimensions.density}` : '',
+    'material: human hair',
+    'audience: adult women'
+  ].filter(Boolean).join(', ');
+  const features = (product.features || [])
+    .map(feature => String(feature).replace(/[.!?]+$/g, ''))
+    .join('; ');
+
+  return `${product.description} This ${BRAND} variant of ${product.name} has ${specifications}. Product details: ${features}.`;
+}
+
 function variantLink(route, variant) {
   const url = new URL(route, `${SITE_URL}/`);
   url.searchParams.set('variant', variant.sku);
@@ -647,6 +663,7 @@ function buildMerchantFeed(products) {
     return variants.map(variant => {
       const dimensions = variantDimensions(variant);
       const title = variantTitle(product, variant);
+      const description = merchantDescription(product, variant);
       const availability = variant.inStock ? 'in_stock' : 'out_of_stock';
       const groupFields = variants.length > 1
         ? `
@@ -667,7 +684,7 @@ function buildMerchantFeed(products) {
       </g:structured_title>
       <g:structured_description>
         <g:digital_source_type>trained_algorithmic_media</g:digital_source_type>
-        <g:content>${escapeXml(product.seo?.description || product.description)}</g:content>
+        <g:content>${escapeXml(description)}</g:content>
       </g:structured_description>
       <link>${escapeXml(trackedVariantLink(route, variant, {
         source: 'google',
@@ -683,6 +700,8 @@ function buildMerchantFeed(products) {
       <g:brand>${BRAND}</g:brand>
       <g:identifier_exists>no</g:identifier_exists>
       <g:adult>no</g:adult>
+      <g:age_group>adult</g:age_group>
+      <g:gender>female</g:gender>
       <g:color>${escapeXml(merchantColor(dimensions.color))}</g:color>
       <g:size>${escapeXml(dimensions.length)}</g:size>
       <g:material>Human Hair</g:material>
