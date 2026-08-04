@@ -13,7 +13,7 @@ const SEO_ARTICLES = require('./seo-articles.cjs');
 const SITE_URL = 'https://arelvienne.com';
 const BRAND = 'ARELVIENNE';
 const SUPPORT_EMAIL = 'support@arelvienne.com';
-const LAST_MODIFIED = '2026-08-02';
+const LAST_MODIFIED = '2026-08-03';
 const INDEXNOW_KEY = 'a13da8f942954c0499bbf1244f00ff19';
 const GOOGLE_PRODUCT_CATEGORY = '181';
 

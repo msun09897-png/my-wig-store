@@ -90,6 +90,15 @@ const marketingChannels = {
   quora: ['community', 'helpful_answers']
 };
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function parseCsv(text) {
   const rows = [];
   let row = [];
@@ -208,8 +217,8 @@ for (const article of seoArticles) {
   const file = article.route.slice(1);
   if (!fs.existsSync(file)) continue;
   const html = fs.readFileSync(file, 'utf8');
-  if (!html.includes(`<title>${article.title}</title>`)) errors.push(`${file}: article title is not synchronized`);
-  if (!html.includes(`<h1>${article.h1}</h1>`)) errors.push(`${file}: article H1 is not synchronized`);
+  if (!html.includes(`<title>${escapeHtml(article.title)}</title>`)) errors.push(`${file}: article title is not synchronized`);
+  if (!html.includes(`<h1>${escapeHtml(article.h1)}</h1>`)) errors.push(`${file}: article H1 is not synchronized`);
   if (!html.includes('data-static-article="true"')) errors.push(`${file}: static article routing guard is missing`);
   try {
     const schema = JSON.parse(

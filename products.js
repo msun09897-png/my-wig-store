@@ -198,6 +198,14 @@ const PRODUCTS = [
       'images/lum-012/lifestyle_02.webp',
       'images/lum-012/lifestyle_03.webp',
     ],
+    video: {
+      src: 'videos/lum-012/water-wave-bob-short-v2.mp4',
+      poster: 'images/lum-012/main_01.webp',
+      title: 'See The Water Wave Bob in motion',
+      description: 'A short vertical product video showing the natural-black water-wave texture, face-framing bob shape, and adjustable-cap details.',
+      durationSeconds: 24,
+      uploadDate: '2026-08-02',
+    },
     description: "Soft water-wave texture in an easy short silhouette. Lightweight, face-framing, and ready for everyday wear, this human-hair bob gives natural movement with a polished finish that still feels effortless.",
     features: [
       "100% human hair with soft water-wave texture",
